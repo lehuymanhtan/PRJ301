@@ -7,9 +7,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 
 /**
- * Protects /admin/* (admin-only) and /users (any authenticated user).
+ * Protects /admin/* (admin-only), /users, /products, and /cart (any authenticated user).
  */
-@WebFilter(urlPatterns = {"/admin/*", "/users"})
+@WebFilter(urlPatterns = {"/admin/*", "/users", "/products", "/cart"})
 public class AuthFilter implements Filter {
 
     @Override
