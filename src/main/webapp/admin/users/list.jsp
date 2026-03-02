@@ -36,7 +36,10 @@
 <h1>Admin - User Management</h1>
 <nav>
     Welcome, <strong><%= currentUser.getUsername() %></strong> |
+    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a> |
     <a href="${pageContext.request.contextPath}/admin/users">User Management</a> |
+    <a href="${pageContext.request.contextPath}/admin/products">Product Management</a> |
+    <a href="${pageContext.request.contextPath}/admin/suppliers">Supplier Management</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
 
