@@ -57,15 +57,15 @@
            for (CartItem item : cart) { %>
         <tr>
             <td><%= item.getProduct().getName() %></td>
-            <td>$<%= item.getProduct().getPrice() %></td>
+            <td><%= String.format("%,.0f", item.getProduct().getPrice()) %> ₫</td>
             <td><%= item.getQuantity() %></td>
-            <td>$<%= item.getSubtotal() %></td>
+            <td><%= String.format("%,.0f", item.getSubtotal()) %> ₫</td>
         </tr>
     <%  }
        } %>
         <tr class="total-row">
             <td colspan="3" style="text-align:right;">Total:</td>
-            <td>$<%= grandTotal %></td>
+            <td><%= String.format("%,.0f", grandTotal) %> ₫</td>
         </tr>
     </tbody>
 </table>
@@ -88,7 +88,7 @@
         </div>
         <hr>
         <p><strong>Shipping:</strong> Free</p>
-        <p><strong>Total: $<%= grandTotal %></strong></p>
+        <p><strong>Total: <%= String.format("%,.0f", grandTotal) %> ₫</strong></p>
         <br>
         <button type="submit" class="btn btn-confirm">Place Order</button>
         <a href="${pageContext.request.contextPath}/cart" class="btn btn-back"

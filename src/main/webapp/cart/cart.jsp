@@ -72,7 +72,7 @@
                grandTotal += item.getSubtotal(); %>
             <tr>
                 <td><%= item.getProduct().getName() %></td>
-                <td>$<%= item.getProduct().getPrice() %></td>
+                <td><%= String.format("%,.0f", item.getProduct().getPrice()) %> ₫</td>
                 <td>
                     <form class="qty-form"
                           action="${pageContext.request.contextPath}/cart" method="post">
@@ -83,7 +83,7 @@
                         <button type="submit" class="btn btn-save">Update</button>
                     </form>
                 </td>
-                <td>$<%= item.getSubtotal() %></td>
+                <td><%= String.format("%,.0f", item.getSubtotal()) %> ₫</td>
                 <td>
                     <form action="${pageContext.request.contextPath}/cart" method="post">
                         <input type="hidden" name="productId" value="<%= item.getProduct().getId() %>">
@@ -95,7 +95,7 @@
         <% } %>
             <tr class="total-row">
                 <td colspan="3" style="text-align:right;">Total:</td>
-                <td>$<%= grandTotal %></td>
+                <td><%= String.format("%,.0f", grandTotal) %> ₫</td>
                 <td></td>
             </tr>
         </tbody>

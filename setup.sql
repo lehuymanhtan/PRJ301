@@ -70,16 +70,16 @@ GO
 
 -- ====== Sample Data: Products ======
 INSERT INTO Products (name, price, description, stock, importDate, category, supplierId) VALUES
-    (N'Wireless Mouse',       15.99,  N'Ergonomic 2.4GHz wireless mouse',         150, '2025-11-01', N'Electronics',   1),
-    (N'Mechanical Keyboard',  49.99,  N'TKL mechanical keyboard, blue switches',   80, '2025-11-15', N'Electronics',   1),
-    (N'USB-C Hub 7-in-1',     29.99,  N'7-port USB-C hub with HDMI and PD',        60, '2025-12-01', N'Electronics',   2),
-    (N'Laptop Stand',         22.50,  N'Aluminum adjustable laptop stand',         200, '2025-12-10', N'Accessories',   2),
-    (N'Office Chair',        199.00,  N'Ergonomic mesh office chair',               30, '2025-10-20', N'Furniture',     3),
-    (N'Standing Desk',       350.00,  N'Electric height-adjustable standing desk',  15, '2025-10-05', N'Furniture',     3),
-    (N'Webcam 1080p',         39.99,  N'Full HD webcam with built-in microphone',  120, '2026-01-08', N'Electronics',   1),
-    (N'HDMI Cable 2m',         8.50,  N'High-speed HDMI 2.0 cable 2 meters',      300, '2026-01-15', N'Accessories',   2),
-    (N'Desk Lamp LED',        18.00,  N'Dimmable LED desk lamp with USB port',     90, '2026-02-01', N'Accessories',   3),
-    (N'Notebook A5',           3.99,  N'80-page hardcover A5 notebook',            500, '2026-02-10', N'Stationery',  NULL);
+    (N'Wireless Mouse',       399000,   N'Ergonomic 2.4GHz wireless mouse',         150, '2025-11-01', N'Electronics',   1),
+    (N'Mechanical Keyboard',  1249000,  N'TKL mechanical keyboard, blue switches',   80, '2025-11-15', N'Electronics',   1),
+    (N'USB-C Hub 7-in-1',     749000,   N'7-port USB-C hub with HDMI and PD',        60, '2025-12-01', N'Electronics',   2),
+    (N'Laptop Stand',         565000,   N'Aluminum adjustable laptop stand',         200, '2025-12-10', N'Accessories',   2),
+    (N'Office Chair',         4990000,  N'Ergonomic mesh office chair',               30, '2025-10-20', N'Furniture',     3),
+    (N'Standing Desk',        8750000,  N'Electric height-adjustable standing desk',  15, '2025-10-05', N'Furniture',     3),
+    (N'Webcam 1080p',         999000,   N'Full HD webcam with built-in microphone',  120, '2026-01-08', N'Electronics',   1),
+    (N'HDMI Cable 2m',        215000,   N'High-speed HDMI 2.0 cable 2 meters',      300, '2026-01-15', N'Accessories',   2),
+    (N'Desk Lamp LED',        450000,   N'Dimmable LED desk lamp with USB port',     90, '2026-02-01', N'Accessories',   3),
+    (N'Notebook A5',          99000,    N'80-page hardcover A5 notebook',            500, '2026-02-10', N'Stationery',  NULL);
 GO
 
 -- ====== Orders Table ======
@@ -110,32 +110,32 @@ GO
 -- user1 (userId=2): 2 orders
 -- user2 (userId=3): 1 order
 INSERT INTO Orders (userId, totalPrice, status) VALUES
-    (2, 65.98,  N'Completed'),   -- order 1: user1
-    (2, 22.50,  N'Shipped'),     -- order 2: user1
-    (3, 247.99, N'Pending'),     -- order 3: user2
-    (3, 8.50,   N'Cancelled');   -- order 4: user2
+    (2, 2047000,  N'Completed'),   -- order 1: user1
+    (2, 565000,   N'Shipped'),     -- order 2: user1
+    (3, 6187000,  N'Pending'),     -- order 3: user2
+    (3, 215000,   N'Cancelled');   -- order 4: user2
 GO
 
 -- ====== Sample Data: OrderDetails ======
 -- Order 1 (user1, Completed): Wireless Mouse x2 + Mechanical Keyboard x1
 INSERT INTO OrderDetails (orderId, productId, productName, quantity, price) VALUES
-    (1, 1, N'Wireless Mouse',      2, 15.99),
-    (1, 2, N'Mechanical Keyboard', 1, 49.99);
+    (1, 1, N'Wireless Mouse',      2, 399000),
+    (1, 2, N'Mechanical Keyboard', 1, 1249000);
 GO
 
 -- Order 2 (user1, Shipped): Laptop Stand x1
 INSERT INTO OrderDetails (orderId, productId, productName, quantity, price) VALUES
-    (2, 4, N'Laptop Stand', 1, 22.50);
+    (2, 4, N'Laptop Stand', 1, 565000);
 GO
 
 -- Order 3 (user2, Pending): Office Chair x1 + Webcam 1080p x1 + Notebook A5 x1
 INSERT INTO OrderDetails (orderId, productId, productName, quantity, price) VALUES
-    (3, 5, N'Office Chair',  1, 199.00),
-    (3, 7, N'Webcam 1080p',  1,  39.99),
-    (3, 10, N'Notebook A5',  2,   3.99);
+    (3, 5, N'Office Chair',  1, 4990000),
+    (3, 7, N'Webcam 1080p',  1,  999000),
+    (3, 10, N'Notebook A5',  2,   99000);
 GO
 
 -- Order 4 (user2, Cancelled): HDMI Cable 2m x1
 INSERT INTO OrderDetails (orderId, productId, productName, quantity, price) VALUES
-    (4, 8, N'HDMI Cable 2m', 1, 8.50);
+    (4, 8, N'HDMI Cable 2m', 1, 215000);
 GO

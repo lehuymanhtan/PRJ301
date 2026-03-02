@@ -55,7 +55,7 @@
     for (Product p : products) { %>
     <div class="product-card">
         <h3><%= p.getName() %></h3>
-        <div class="price">$<%= p.getPrice() %></div>
+        <div class="price"><%= String.format("%,.0f", p.getPrice()) %> ₫</div>
         <% if (p.getDescription() != null && !p.getDescription().isEmpty()) { %>
             <div class="desc"><%= p.getDescription() %></div>
         <% } %>
