@@ -40,7 +40,7 @@
 <div class="info-box">
     <p><strong>Order ID:</strong> #<%= order.getId() %></p>
     <p><strong>Status:</strong> <%= order.getStatus() %></p>
-    <p><strong>Total:</strong> $<%= order.getTotalPrice() %></p>
+    <p><strong>Total:</strong> <%= String.format("%,.0f", order.getTotalPrice()) %> ₫</p>
 </div>
 
 <h2>Items</h2>
@@ -60,14 +60,14 @@
                total += d.getSubtotal(); %>
         <tr>
             <td><%= d.getProductName() %></td>
-            <td>$<%= d.getPrice() %></td>
+            <td><%= String.format("%,.0f", d.getPrice()) %> ₫</td>
             <td><%= d.getQuantity() %></td>
-            <td>$<%= d.getSubtotal() %></td>
+            <td><%= String.format("%,.0f", d.getSubtotal()) %> ₫</td>
         </tr>
     <%  } %>
         <tr class="total-row">
             <td colspan="3" style="text-align:right;">Total:</td>
-            <td>$<%= total %></td>
+            <td><%= String.format("%,.0f", total) %> ₫</td>
         </tr>
     <% } else { %>
         <tr>

@@ -67,7 +67,7 @@
                String badge = "badge-" + o.getStatus().toLowerCase(); %>
             <tr>
                 <td>#<%= o.getId() %></td>
-                <td>$<%= o.getTotalPrice() %></td>
+                <td><%= String.format("%,.0f", o.getTotalPrice()) %> ₫</td>
                 <td><span class="badge <%= badge %>"><%= o.getStatus() %></span></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= o.getId() %>"

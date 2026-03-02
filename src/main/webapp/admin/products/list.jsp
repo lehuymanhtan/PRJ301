@@ -71,7 +71,7 @@
             <tr>
                 <td><%= p.getId() %></td>
                 <td><%= p.getName() %></td>
-                <td><%= p.getPrice() %></td>
+                <td><%= String.format("%,.0f", p.getPrice()) %> ₫</td>
                 <td><%= p.getStock() %></td>
                 <td><%= p.getCategory() != null ? p.getCategory() : "" %></td>
                 <td><%= p.getImportDate() != null ? p.getImportDate() : "" %></td>

@@ -51,9 +51,9 @@
     </div>
 
     <div class="form-group">
-        <label for="price">Price <span class="req">*</span></label>
-        <input type="number" id="price" name="price" required min="0" step="0.01"
-               value="<%= isEdit ? editProduct.getPrice() : "" %>">
+        <label for="price">Price (₫) <span class="req">*</span></label>
+        <input type="number" id="price" name="price" required min="0" step="1"
+               value="<%= isEdit ? (long)editProduct.getPrice() : "" %>">
     </div>
 
     <div class="form-group">
