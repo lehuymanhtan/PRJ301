@@ -12,12 +12,16 @@ import services.OrderService;
 import services.OrderServiceImpl;
 import util.VNPayUtil;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import util.EmailService;
 
 /**
  * Checkout flow at /checkout.
  *
- * GET  → show order summary + payment form (requires non-empty cart and logged-in user)
- * POST → place the order, clear cart, redirect to success page or VNPay
+ * GET → show order summary + payment form (requires non-empty cart and
+ * logged-in user) POST → place the order, clear cart, redirect to success page
+ * or VNPay
  */
 @WebServlet(urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
@@ -65,7 +69,9 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         String paymentMethod = request.getParameter("paymentMethod");
-        if (paymentMethod == null) paymentMethod = "COD";
+        if (paymentMethod == null) {
+            paymentMethod = "COD";
+        }
 
         // Calculate total
         double total = cart.getTotalCost();
@@ -75,6 +81,7 @@ public class CheckoutServlet extends HttpServlet {
         Integer orderId = orderService.createOrder(order);
 
         // Add order details
+        List<OrderDetail> orderDetailsList = new ArrayList<>();
         for (CartItem item : cart) {
             OrderDetail detail = new OrderDetail(
                     orderId,
@@ -84,8 +91,14 @@ public class CheckoutServlet extends HttpServlet {
                     item.getProduct().getPrice()
             );
             orderService.addOrderDetail(detail);
+            orderDetailsList.add(detail);
         }
-
+        EmailService.sendOrderEmail(
+                user.getEmail(),
+                user.getName(),
+                orderId,
+                orderDetailsList
+        );
         // Store order id in session for result pages
         session.setAttribute("lastOrderId", orderId);
         session.setAttribute("lastPaymentMethod", paymentMethod);
@@ -131,16 +144,15 @@ public class CheckoutServlet extends HttpServlet {
     // ─────────────────────────────────────────────────────────────────────────
     //  Helpers
     // ─────────────────────────────────────────────────────────────────────────
-
     /**
      * Builds an absolute URL for a context-relative path, e.g. "/vnpay-return"
      * → "http://localhost:8080/PRJ301/vnpay-return"
      */
     private String buildAbsoluteUrl(HttpServletRequest req, String contextRelativePath) {
         String scheme = req.getScheme();
-        String host   = req.getServerName();
-        int    port   = req.getServerPort();
-        String ctx    = req.getContextPath();
+        String host = req.getServerName();
+        int port = req.getServerPort();
+        String ctx = req.getContextPath();
 
         StringBuilder sb = new StringBuilder();
         sb.append(scheme).append("://").append(host);
@@ -151,14 +163,18 @@ public class CheckoutServlet extends HttpServlet {
         return sb.toString();
     }
 
-    /** Returns the real client IP, respecting common reverse-proxy headers. */
+    /**
+     * Returns the real client IP, respecting common reverse-proxy headers.
+     */
     private String getClientIp(HttpServletRequest req) {
         String ip = req.getHeader("X-Forwarded-For");
         if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
             return ip.split(",")[0].trim();
         }
         ip = req.getHeader("X-Real-IP");
-        if (ip != null && !ip.isEmpty()) return ip;
+        if (ip != null && !ip.isEmpty()) {
+            return ip;
+        }
         return req.getRemoteAddr();
     }
 }

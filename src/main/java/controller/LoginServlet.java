@@ -34,6 +34,15 @@ public class LoginServlet extends HttpServlet {
         User user = userService.login(username, password);
 
         if (user != null) {
+            if (!user.isVerified()) {
+                // Block login and redirect to verify page
+                request.getSession().setAttribute("pendingVerificationEmail", user.getEmail());
+                request.getSession().setAttribute("successMessage",
+                        "Please verify your email before logging in.");
+                response.sendRedirect(request.getContextPath() + "/verify");
+                return;
+            }
+
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
