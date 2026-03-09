@@ -79,6 +79,12 @@ public class UserDAO {
 
     public void deleteUser(Integer userId) {
         JpaHelper.execute(em -> {
+            // Nullify userId on the user's orders to preserve order history
+            // (userId is now nullable so this satisfies the FK constraint).
+            em.createQuery("UPDATE Order o SET o.userId = NULL WHERE o.userId = :uid")
+              .setParameter("uid", userId)
+              .executeUpdate();
+
             User user = em.find(User.class, userId);
             if (user != null) em.remove(user);
         });

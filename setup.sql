@@ -86,7 +86,7 @@ GO
 CREATE TABLE Orders
 (
     id         INT IDENTITY(1,1) PRIMARY KEY,
-    userId     INT           NOT NULL REFERENCES Users(userId),
+    userId     INT           NULL     REFERENCES Users(userId),
     totalPrice FLOAT         NOT NULL DEFAULT 0,
     status     NVARCHAR(20)  NOT NULL DEFAULT 'Pending'
         CHECK (status IN (N'Pending', N'Processing', N'Shipped', N'Delivered',

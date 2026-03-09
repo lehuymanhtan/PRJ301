@@ -11,7 +11,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "userId", nullable = false)
+    @Column(name = "userId")
     private Integer userId;
 
     @Column(name = "totalPrice", nullable = false)
