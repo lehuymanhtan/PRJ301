@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Users")
@@ -38,6 +39,18 @@ public class User implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(name = "isVerified", nullable = false)
+    private boolean isVerified = false;
+
+    @Column(name = "verificationCode", length = 10)
+    private String verificationCode;
+
+    @Column(name = "verificationToken", length = 100)
+    private String verificationToken;
+
+    @Column(name = "verificationExpiry")
+    private LocalDateTime verificationExpiry;
 
     public User() {}
 
@@ -86,6 +99,18 @@ public class User implements Serializable {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public boolean isVerified() { return isVerified; }
+    public void setVerified(boolean verified) { isVerified = verified; }
+
+    public String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
+
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
+
+    public LocalDateTime getVerificationExpiry() { return verificationExpiry; }
+    public void setVerificationExpiry(LocalDateTime verificationExpiry) { this.verificationExpiry = verificationExpiry; }
 
     @Override
     public String toString() {

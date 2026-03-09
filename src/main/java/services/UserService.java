@@ -3,7 +3,10 @@ package services;
 import dao.UserDAO;
 import models.User;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class UserService {
 
@@ -35,8 +38,9 @@ public class UserService {
 
     /**
      * Register a new user with role "user".
+     * Returns the persisted User with verificationCode and verificationToken set.
      */
-    public void register(String username, String password,
+    public User register(String username, String password,
                          String name, String gender, LocalDate dateOfBirth,
                          String phone, String email) {
         validateUsername(username);
@@ -65,7 +69,56 @@ public class UserService {
                              name.trim(), gender, dateOfBirth,
                              (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null,
                              email.trim());
+        user.setVerified(false);
+        applyNewVerification(user);
         userDAO.insertUser(user);
+        return user;
+    }
+
+    /** Generate a new 6-digit code + UUID token valid for 24 hours and save to DB. */
+    public User refreshVerification(String email) {
+        User user = findByEmail(email);
+        if (user == null) throw new IllegalArgumentException("Email not found");
+        if (user.isVerified()) throw new IllegalArgumentException("Account is already verified");
+        applyNewVerification(user);
+        userDAO.updateUser(user);
+        return user;
+    }
+
+    /** Verify account using the 6-digit code sent to the user's email. */
+    public boolean verifyByCode(String email, String code) {
+        User user = findByEmail(email);
+        if (user == null || user.isVerified()) return false;
+        if (code == null || !code.equals(user.getVerificationCode())) return false;
+        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) return false;
+        clearVerification(user);
+        userDAO.updateUser(user);
+        return true;
+    }
+
+    /** Verify account using the one-click token link from the email. */
+    public boolean verifyByToken(String token) {
+        User user = userDAO.findByVerificationToken(token);
+        if (user == null || user.isVerified()) return false;
+        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) return false;
+        clearVerification(user);
+        userDAO.updateUser(user);
+        return true;
+    }
+
+    private void applyNewVerification(User user) {
+        String code = String.format("%06d", new Random().nextInt(1_000_000));
+        String token = UUID.randomUUID().toString().replace("-", "");
+        user.setVerificationCode(code);
+        user.setVerificationToken(token);
+        user.setVerificationExpiry(LocalDateTime.now().plusHours(24));
+    }
+
+    private void clearVerification(User user) {
+        user.setVerified(true);
+        user.setVerificationCode(null);
+        user.setVerificationToken(null);
+        user.setVerificationExpiry(null);
     }
 
     /**

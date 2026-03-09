@@ -3,7 +3,9 @@ package controller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import models.User;
 import services.UserService;
+import util.EmailService;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -50,9 +52,23 @@ public class RegisterServlet extends HttpServlet {
         }
 
         try {
-            userService.register(username, password, name, gender, dateOfBirth, phone, email);
-            request.getSession().setAttribute("successMessage", "Registration successful! Please login.");
-            response.sendRedirect(request.getContextPath() + "/login");
+            User user = userService.register(username, password, name, gender, dateOfBirth, phone, email);
+
+            // Build the verification link using the token
+            String baseUrl = request.getScheme() + "://" + request.getServerName()
+                    + ":" + request.getServerPort() + request.getContextPath();
+            String verifyLink = baseUrl + "/verify?token=" + user.getVerificationToken();
+
+            // Send verification email (async thread to avoid blocking the request)
+            final String finalEmail = user.getEmail();
+            final String finalName  = user.getName();
+            final String finalCode  = user.getVerificationCode();
+            final String finalLink  = verifyLink;
+            new Thread(() -> EmailService.sendVerificationEmail(finalEmail, finalName, finalCode, finalLink)).start();
+
+            // Store email in session so the verify page can pre-fill it
+            request.getSession().setAttribute("pendingVerificationEmail", user.getEmail());
+            response.sendRedirect(request.getContextPath() + "/verify");
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/register.jsp").forward(request, response);
