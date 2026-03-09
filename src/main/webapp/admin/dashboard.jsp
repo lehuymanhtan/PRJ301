@@ -52,6 +52,7 @@
     <a href="${pageContext.request.contextPath}/admin/products">Products</a> |
     <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
     <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
+    <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
 

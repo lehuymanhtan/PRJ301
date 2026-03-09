@@ -20,10 +20,12 @@
         .msg-error   { color: red;   margin-bottom: 12px; }
         .msg-success { color: green; margin-bottom: 12px; }
         .links { margin-top: 14px; font-size: 13px; text-align: center; }
+        .back-link {font-size: 13px;}
     </style>
 </head>
 <body>
 <div class="box">
+    <a class="back-link" href="${pageContext.request.contextPath}/">Back to store</a>
     <h1>Login</h1>
 
     <% if (request.getAttribute("error") != null) { %>

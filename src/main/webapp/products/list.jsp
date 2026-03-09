@@ -37,11 +37,15 @@
 
 <h1>Products</h1>
 <nav>
-    Welcome, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong> |
+    
+    Welcome, <% if (currentUser != null) {%><strong><%= currentUser.getName() %></strong> |
     <a href="${pageContext.request.contextPath}/users">My Profile</a> |
     <a href="${pageContext.request.contextPath}/cart">View Cart</a> |
     <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
+    <% } else { %><strong>Guest</strong> |
+    <a href="${pageContext.request.contextPath}/login">Login</a>
+    <% } %>
 </nav>
 
 <% if (cartMessage != null) { %>

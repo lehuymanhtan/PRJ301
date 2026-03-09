@@ -6,10 +6,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-/**
- * Protects /admin/* (admin-only), /users, /products, and /cart (any authenticated user).
- */
-@WebFilter(urlPatterns = {"/admin/*", "/users", "/products", "/cart", "/checkout", "/orders"})
+@WebFilter(urlPatterns = {"/admin/*", "/users", "/cart", "/checkout", "/orders"})
 public class AuthFilter implements Filter {
 
     @Override
