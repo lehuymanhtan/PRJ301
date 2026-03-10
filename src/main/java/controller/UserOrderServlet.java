@@ -5,9 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import models.Order;
 import models.OrderDetail;
+import models.RefundRequest;
 import models.User;
 import services.OrderService;
 import services.OrderServiceImpl;
+import services.RefundService;
+import services.RefundServiceImpl;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,7 +23,8 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/orders"})
 public class UserOrderServlet extends HttpServlet {
 
-    private final OrderService orderService = new OrderServiceImpl();
+    private final OrderService  orderService  = new OrderServiceImpl();
+    private final RefundService refundService = new RefundServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,8 +65,10 @@ public class UserOrderServlet extends HttpServlet {
         }
 
         List<OrderDetail> details = orderService.getOrderDetails(id);
+        RefundRequest refund = refundService.findByOrderId(id);
         request.setAttribute("order", order);
         request.setAttribute("details", details);
+        request.setAttribute("refund", refund);
         request.getRequestDispatcher("/orders/detail.jsp").forward(request, response);
     }
 }

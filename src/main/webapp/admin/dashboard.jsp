@@ -61,6 +61,7 @@
     int totalProducts  = (Integer) request.getAttribute("totalProducts");
     int totalSuppliers = (Integer) request.getAttribute("totalSuppliers");
     int totalOrders    = (Integer) request.getAttribute("totalOrders");
+    int totalRefunds   = (Integer) request.getAttribute("totalRefunds");
     @SuppressWarnings("unchecked")
     List<DailyIncome> dailyIncome = (List<DailyIncome>) request.getAttribute("dailyIncome");
     NumberFormat nf = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
@@ -75,6 +76,7 @@
     <a href="${pageContext.request.contextPath}/admin/products">Products</a> |
     <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
     <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
+    <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
     <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
@@ -96,6 +98,10 @@
         <div class="count"><%= totalOrders %></div>
         <div class="label">Orders</div>
     </div>
+    <div class="card" style="border-color:#ddd;">
+        <div class="count" style="color:#e53935;"><%= totalRefunds %></div>
+        <div class="label">Refunds</div>
+    </div>
 </div>
 
 <div class="links">
@@ -105,6 +111,7 @@
         <li><a href="${pageContext.request.contextPath}/admin/products">&#9654; Manage Products</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/suppliers">&#9654; Manage Suppliers</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654; Manage Orders</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654; Manage Refunds</a></li>
     </ul>
 </div>
 

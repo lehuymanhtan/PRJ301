@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, models.Order, models.OrderDetail" %>
+<%@ page import="java.util.List, models.Order, models.OrderDetail, models.RefundRequest" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,6 +29,7 @@
 <%
     Order          order   = (Order)          request.getAttribute("order");
     List<OrderDetail> details = (List<OrderDetail>) request.getAttribute("details");
+    RefundRequest  refund  = (RefundRequest)  request.getAttribute("refund");
 %>
 
 <h1>Order #<%= order.getId() %> Details</h1>
@@ -43,6 +44,13 @@
     <p><strong>User ID:</strong> <%= order.getUserId() %></p>
     <p><strong>Total Price:</strong> <%= String.format("%,.0f", order.getTotalPrice()) %> ₫</p>
     <p><strong>Status:</strong> <%= order.getStatus() %></p>
+    <% if (refund != null) { %>
+    <p><strong>Refund Request:</strong>
+        <a href="${pageContext.request.contextPath}/admin/refunds?action=detail&id=<%= refund.getId() %>">
+            #<%= refund.getId() %> — <%= refund.getStatus() %>
+        </a>
+    </p>
+    <% } %>
 </div>
 
 <h2>Items</h2>

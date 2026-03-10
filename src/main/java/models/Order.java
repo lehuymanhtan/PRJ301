@@ -19,7 +19,7 @@ public class Order implements Serializable {
     private double totalPrice;
 
     @Column(name = "status", length = 20, nullable = false)
-    private String status;  // Pending, Processing, Shipped, Delivered, Completed, Cancelled
+    private String status;  // Pending, Processing, Shipped, Delivered, Completed, Cancelled, Refunded
 
     @Column(name = "createdAt", nullable = false)
     private LocalDate createdAt;

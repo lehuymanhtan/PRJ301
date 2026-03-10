@@ -23,6 +23,7 @@
         .badge-delivered  { background: #d4edda; color: #155724; }
         .badge-completed  { background: #c3e6cb; color: #155724; }
         .badge-cancelled  { background: #f8d7da; color: #721c24; }
+        .badge-refunded   { background: #e8eaf6; color: #283593; }
         .btn { display: inline-block; padding: 4px 10px; text-decoration: none;
                border: 1px solid #999; border-radius: 3px; font-size: 12px; }
         .btn-view   { background: #0277bd; color: white; border-color: #0277bd; }
