@@ -30,6 +30,7 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("totalProducts",  productService.findAll().size());
         request.setAttribute("totalSuppliers", supplierService.findAll().size());
         request.setAttribute("totalOrders",    orderService.getAllOrders().size());
+        request.setAttribute("dailyIncome",    orderService.getDailyIncome());
 
         request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
     }
