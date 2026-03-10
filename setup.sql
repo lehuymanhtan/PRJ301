@@ -94,7 +94,7 @@ CREATE TABLE Orders
     totalPrice FLOAT         NOT NULL DEFAULT 0,
     status     NVARCHAR(20)  NOT NULL DEFAULT 'Pending'
         CHECK (status IN (N'Pending', N'Processing', N'Shipped', N'Delivered',
-                          N'Completed', N'Cancelled', N'Deleted'))
+                          N'Completed', N'Cancelled', N'Deleted', N'Refunded'))
 );
 GO
 
@@ -175,6 +175,22 @@ BEGIN
 END
 GO
 
+-- ====== RefundRequests Table ======
+CREATE TABLE RefundRequests
+(
+    id            INT IDENTITY(1,1) PRIMARY KEY,
+    orderId       INT            NOT NULL REFERENCES Orders(id),
+    userId        INT            NOT NULL REFERENCES Users(userId),
+    reason        NVARCHAR(100)  NOT NULL,
+    description   NVARCHAR(1000) NULL,
+    status        NVARCHAR(30)   NOT NULL DEFAULT 'Pending'
+        CHECK (status IN (N'Pending', N'WaitForReturn', N'Verifying',
+                          N'Done', N'Rejected', N'Cancelled')),
+    returnAddress NVARCHAR(500)  NULL,
+    createdAt     DATETIME2      NOT NULL DEFAULT GETDATE()
+);
+GO
+
 -- ====== Migration: Add email verification columns to existing database ======
 -- Skip this block if you are creating the database fresh from the CREATE TABLE above.
 /*
@@ -187,5 +203,34 @@ GO
 
 -- Mark all pre-existing users as verified so they can still log in.
 UPDATE Users SET isVerified = 1;
+GO
+*/
+
+-- ====== Migration: Add Refunded status to Orders + RefundRequests table ======
+-- Run this block if you already have the database.
+/*
+-- Drop the old CHECK constraint (find the name first with:
+--   SELECT name FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('Orders')
+-- then replace CK__Orders__status__XXXXXXXX with the actual name)
+ALTER TABLE Orders DROP CONSTRAINT CK__Orders__status__XXXXXXXX;
+GO
+ALTER TABLE Orders ADD CONSTRAINT CK_Orders_status
+    CHECK (status IN (N'Pending', N'Processing', N'Shipped', N'Delivered',
+                      N'Completed', N'Cancelled', N'Deleted', N'Refunded'));
+GO
+
+CREATE TABLE RefundRequests
+(
+    id            INT IDENTITY(1,1) PRIMARY KEY,
+    orderId       INT            NOT NULL REFERENCES Orders(id),
+    userId        INT            NOT NULL REFERENCES Users(userId),
+    reason        NVARCHAR(100)  NOT NULL,
+    description   NVARCHAR(1000) NULL,
+    status        NVARCHAR(30)   NOT NULL DEFAULT 'Pending'
+        CHECK (status IN (N'Pending', N'WaitForReturn', N'Verifying',
+                          N'Done', N'Rejected', N'Cancelled')),
+    returnAddress NVARCHAR(500)  NULL,
+    createdAt     DATETIME2      NOT NULL DEFAULT GETDATE()
+);
 GO
 */

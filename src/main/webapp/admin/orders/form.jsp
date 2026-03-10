@@ -57,6 +57,7 @@
             <option value="Delivered"  <%= "Delivered".equals(order.getStatus())  ? "selected" : "" %>>Delivered</option>
             <option value="Completed"  <%= "Completed".equals(order.getStatus())  ? "selected" : "" %>>Completed</option>
             <option value="Cancelled"  <%= "Cancelled".equals(order.getStatus())  ? "selected" : "" %>>Cancelled</option>
+            <option value="Refunded"   <%= "Refunded".equals(order.getStatus())   ? "selected" : "" %>>Refunded</option>
         </select>
 
         <button type="submit" class="btn btn-save">Update Status</button>
