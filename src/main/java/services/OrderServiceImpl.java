@@ -1,6 +1,7 @@
 package services;
 
 import dao.OrderDAO;
+import models.DailyIncome;
 import models.Order;
 import models.OrderDetail;
 import java.util.List;
@@ -47,5 +48,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(Integer id) {
         orderDAO.delete(id);
+    }
+
+    @Override
+    public List<DailyIncome> getDailyIncome() {
+        return orderDAO.getDailyIncome();
     }
 }

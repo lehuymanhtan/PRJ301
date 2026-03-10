@@ -1,8 +1,11 @@
 package dao;
 
+import models.DailyIncome;
 import models.Order;
 import models.OrderDetail;
 import util.JpaHelper;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
@@ -43,6 +46,29 @@ public class OrderDAO {
                 OrderDetail.class
             ).setParameter("oid", orderId).getResultList()
         );
+    }
+
+    /**
+     * Returns daily income rows from the vw_DailyIncome view,
+     * ordered by date descending (most recent first).
+     */
+    @SuppressWarnings("unchecked")
+    public List<DailyIncome> getDailyIncome() {
+        return JpaHelper.query(em -> {
+            List<Object[]> rows = em.createNativeQuery(
+                "SELECT incomeDate, completedIncome, pendingIncome " +
+                "FROM vw_DailyIncome " +
+                "ORDER BY incomeDate DESC"
+            ).getResultList();
+            List<DailyIncome> result = new ArrayList<>(rows.size());
+            for (Object[] row : rows) {
+                java.time.LocalDate date = ((Date) row[0]).toLocalDate();
+                double completed = row[1] == null ? 0.0 : ((Number) row[1]).doubleValue();
+                double pending   = row[2] == null ? 0.0 : ((Number) row[2]).doubleValue();
+                result.add(new DailyIncome(date, completed, pending));
+            }
+            return result;
+        });
     }
 
     // ── Mutations ─────────────────────────────────────────────────────────

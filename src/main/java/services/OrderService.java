@@ -1,5 +1,6 @@
 package services;
 
+import models.DailyIncome;
 import models.Order;
 import models.OrderDetail;
 import java.util.List;
@@ -22,4 +23,7 @@ public interface OrderService {
     void updateOrder(Order order);
 
     void deleteOrder(Integer id);
+
+    /** Returns aggregated income per day, ordered by date descending. */
+    List<DailyIncome> getDailyIncome();
 }

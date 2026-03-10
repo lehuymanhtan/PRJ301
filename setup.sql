@@ -94,7 +94,8 @@ CREATE TABLE Orders
     totalPrice FLOAT         NOT NULL DEFAULT 0,
     status     NVARCHAR(20)  NOT NULL DEFAULT 'Pending'
         CHECK (status IN (N'Pending', N'Processing', N'Shipped', N'Delivered',
-                          N'Completed', N'Cancelled', N'Deleted'))
+                          N'Completed', N'Cancelled', N'Deleted')),
+    createdAt  DATE          NOT NULL DEFAULT CAST(GETDATE() AS DATE)
 );
 GO
 
@@ -113,11 +114,11 @@ GO
 -- ====== Sample Data: Orders ======
 -- user1 (userId=2): 2 orders
 -- user2 (userId=3): 1 order
-INSERT INTO Orders (userId, totalPrice, status) VALUES
-    (2, 2047000,  N'Completed'),   -- order 1: user1
-    (2, 565000,   N'Shipped'),     -- order 2: user1
-    (3, 6187000,  N'Pending'),     -- order 3: user2
-    (3, 215000,   N'Cancelled');   -- order 4: user2
+INSERT INTO Orders (userId, totalPrice, status, createdAt) VALUES
+    (2, 2047000,  N'Completed', '2026-03-01'),   -- order 1: user1
+    (2, 565000,   N'Shipped',   '2026-03-05'),   -- order 2: user1
+    (3, 6187000,  N'Pending',   '2026-03-08'),   -- order 3: user2
+    (3, 215000,   N'Cancelled', '2026-03-08');   -- order 4: user2
 GO
 
 -- ====== Sample Data: OrderDetails ======
@@ -189,3 +190,25 @@ GO
 UPDATE Users SET isVerified = 1;
 GO
 */
+
+-- ====== Migration: Add createdAt column to existing Orders table ======
+-- Skip this block if you are creating the database fresh from the CREATE TABLE above.
+/*
+ALTER TABLE Orders ADD
+    createdAt DATE NOT NULL DEFAULT CAST(GETDATE() AS DATE);
+GO
+*/
+
+-- ====== View: Daily Income Summary ======
+-- Shows completed income and pending income (un-complete orders) per day.
+CREATE OR ALTER VIEW vw_DailyIncome AS
+SELECT
+    createdAt                                                                  AS incomeDate,
+    SUM(CASE WHEN status = N'Completed'
+             THEN totalPrice ELSE 0 END)                                       AS completedIncome,
+    SUM(CASE WHEN status IN (N'Pending', N'Processing', N'Shipped', N'Delivered')
+             THEN totalPrice ELSE 0 END)                                       AS pendingIncome
+FROM Orders
+WHERE status NOT IN (N'Cancelled', N'Deleted')
+GROUP BY createdAt;
+GO
