@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="models.User" %>
+<%@ page import="models.DailyIncome" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,6 +36,22 @@
             text-decoration: none; color: #333; min-width: 200px;
         }
         .links ul li a:hover { background: #e8e8e8; }
+        .income-section { margin-top: 32px; }
+        .income-section h2 { margin-bottom: 12px; }
+        .income-table {
+            width: 100%; border-collapse: collapse; background: white;
+            border: 1px solid #ddd; border-radius: 6px; overflow: hidden;
+        }
+        .income-table th, .income-table td {
+            padding: 10px 16px; text-align: right; border-bottom: 1px solid #eee;
+        }
+        .income-table th { background: #f0f0f0; text-align: right; font-weight: bold; }
+        .income-table th:first-child, .income-table td:first-child { text-align: left; }
+        .income-table tr:last-child td { border-bottom: none; }
+        .income-table .completed { color: #4caf50; }
+        .income-table .pending   { color: #ff9800; }
+        .income-table .total     { color: #2196f3; font-weight: bold; }
+        .no-data { color: #999; font-style: italic; padding: 12px 0; }
     </style>
 </head>
 <body>
@@ -42,6 +62,9 @@
     int totalSuppliers = (Integer) request.getAttribute("totalSuppliers");
     int totalOrders    = (Integer) request.getAttribute("totalOrders");
     int totalRefunds   = (Integer) request.getAttribute("totalRefunds");
+    @SuppressWarnings("unchecked")
+    List<DailyIncome> dailyIncome = (List<DailyIncome>) request.getAttribute("dailyIncome");
+    NumberFormat nf = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
 %>
 
 <h1>Admin Dashboard</h1>
@@ -90,6 +113,44 @@
         <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654; Manage Orders</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654; Manage Refunds</a></li>
     </ul>
+</div>
+
+<div class="income-section">
+    <h2>Daily Income</h2>
+    <%
+        if (dailyIncome == null || dailyIncome.isEmpty()) {
+    %>
+        <p class="no-data">No income data available yet.</p>
+    <%
+        } else {
+    %>
+    <table class="income-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Completed Income (&#8363;)</th>
+                <th>Pending Income (&#8363;)</th>
+                <th>Total Income (&#8363;)</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%
+            for (DailyIncome row : dailyIncome) {
+        %>
+            <tr>
+                <td><%= row.getIncomeDate() %></td>
+                <td class="completed"><%= nf.format(row.getCompletedIncome()) %></td>
+                <td class="pending"><%= nf.format(row.getPendingIncome()) %></td>
+                <td class="total"><%= nf.format(row.getTotalIncome()) %></td>
+            </tr>
+        <%
+            }
+        %>
+        </tbody>
+    </table>
+    <%
+        }
+    %>
 </div>
 </body>
 </html>
