@@ -77,7 +77,18 @@ public class AdminOrderServlet extends HttpServlet {
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
         Order order = orderService.getOrderById(id);
         List<OrderDetail> details = orderService.getOrderDetails(id);
         RefundRequest refund = refundService.findByOrderId(id);
@@ -89,7 +100,18 @@ public class AdminOrderServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
         Order order = orderService.getOrderById(id);
         request.setAttribute("order", order);
         request.getRequestDispatcher("/admin/orders/form.jsp").forward(request, response);
@@ -97,7 +119,18 @@ public class AdminOrderServlet extends HttpServlet {
 
     private void updateStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id   = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
         String status = request.getParameter("status");
         Order order = orderService.getOrderById(id);
         if (order != null) {
@@ -109,8 +142,15 @@ public class AdminOrderServlet extends HttpServlet {
 
     private void deleteOrder(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        orderService.deleteOrder(id);
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
+        try {
+            int id = Integer.parseInt(idParam);
+            orderService.deleteOrder(id);
+        } catch (NumberFormatException ignored) {}
         response.sendRedirect(request.getContextPath() + "/admin/orders");
     }
 }

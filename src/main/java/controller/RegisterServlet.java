@@ -55,8 +55,13 @@ public class RegisterServlet extends HttpServlet {
             User user = userService.register(username, password, name, gender, dateOfBirth, phone, email);
 
             // Build the verification link using the token
-            String baseUrl = request.getScheme() + "://" + request.getServerName()
-                    + ":" + request.getServerPort() + request.getContextPath();
+            String scheme = request.getScheme();
+            String baseUrl = scheme + "://" + request.getServerName();
+            int port = request.getServerPort();
+            if (!(("http".equals(scheme) && port == 80) || ("https".equals(scheme) && port == 443))) {
+                baseUrl += ":" + port;
+            }
+            baseUrl += request.getContextPath();
             String verifyLink = baseUrl + "/verify?token=" + user.getVerificationToken();
 
             // Send verification email (async thread to avoid blocking the request)
