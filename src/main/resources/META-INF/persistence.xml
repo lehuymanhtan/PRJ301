@@ -13,7 +13,7 @@
             <property name="jakarta.persistence.jdbc.driver"   value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="jakarta.persistence.jdbc.url"      value="jdbc:sqlserver://localhost:1433;databaseName=PRJ301_ASSIGNMENT;Encrypt=True;TrustServerCertificate=True"/>
             <property name="jakarta.persistence.jdbc.user"     value="sa"/>
-            <property name="jakarta.persistence.jdbc.password" value="Alonept2"/>
+            <property name="jakarta.persistence.jdbc.password" value="aoeofZ@123"/>
             <property name="hibernate.dialect"                 value="org.hibernate.dialect.SQLServerDialect"/>
             <property name="hibernate.show_sql"                value="true"/>
             <property name="hibernate.hbm2ddl.auto"            value="update"/>

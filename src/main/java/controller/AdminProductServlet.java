@@ -88,7 +88,18 @@ public class AdminProductServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/products");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/admin/products");
+            return;
+        }
         Product product = productService.findById(id);
         if (product == null) {
             response.sendRedirect(request.getContextPath() + "/admin/products?error=notfound");
@@ -133,8 +144,15 @@ public class AdminProductServlet extends HttpServlet {
 
     private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        productService.delete(id);
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/products");
+            return;
+        }
+        try {
+            int id = Integer.parseInt(idParam);
+            productService.delete(id);
+        } catch (NumberFormatException ignored) {}
         response.sendRedirect(request.getContextPath() + "/admin/products?success=deleted");
     }
 
