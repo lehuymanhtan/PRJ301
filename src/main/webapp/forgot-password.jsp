@@ -109,7 +109,6 @@
             <div class="header-actions">
                 <a class="back-link" href="${pageContext.request.contextPath}/login">←
                     ${i18n.get('forgot.backToLogin')}</a>
-                <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
             </div>
             <h1>🔑 ${i18n.get('forgot.title')}</h1>
             <p class="info">${i18n.get('forgot.info')}</p>

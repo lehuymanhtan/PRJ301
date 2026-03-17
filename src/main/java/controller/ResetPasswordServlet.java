@@ -1,12 +1,16 @@
 package controller;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import models.User;
 import services.EmailService;
 import services.UserService;
-import java.io.IOException;
 
 /**
  * Handles password reset with token. GET: Show reset password form (validates
@@ -84,8 +88,8 @@ public class ResetPasswordServlet extends HttpServlet {
             boolean success = userService.resetPassword(token, newPassword);
 
             if (success) {
-                // Send confirmation email in user's preferred language
-                String language = user.getPreferredLanguage() != null ? user.getPreferredLanguage() : "en";
+                // Language switching is disabled, always send Vietnamese template
+                String language = "vi";
                 EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), language);
 
                 // Redirect to login with success message

@@ -153,7 +153,6 @@
             <div class="header-actions">
                 <a class="back-link" href="${pageContext.request.contextPath}/login">←
                     ${i18n.get('reset.backToLogin')}</a>
-                <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
             </div>
             <h1>🔒 ${i18n.get('reset.title')}</h1>
 
@@ -213,7 +212,6 @@
                 const password = e.target.value;
                 const strengthBar = document.getElementById('strength-bar');
                 const strengthText = document.getElementById('strength-text');
-                const currentLang = '<%= request.getAttribute("currentLang") != null ? request.getAttribute("currentLang") : "en" %>';
 
                 let strength = 0;
                 if (password.length >= 8) strength++;

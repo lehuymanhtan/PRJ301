@@ -1,12 +1,15 @@
 package controller;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import models.User;
 import services.EmailService;
 import services.UserService;
-import java.io.IOException;
 
 /**
  * Handles password reset request (forgot password). GET: Show the forgot
@@ -46,8 +49,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             }
             String resetLink = baseUrl + contextPath + "/reset-password?token=" + user.getResetToken();
 
-            // Send reset email in user's preferred language
-            String language = user.getPreferredLanguage() != null ? user.getPreferredLanguage() : "en";
+            // Language switching is disabled, always send Vietnamese template
+            String language = "vi";
             boolean sent = EmailService.sendPasswordResetEmail(
                     user.getEmail(),
                     user.getName(),
