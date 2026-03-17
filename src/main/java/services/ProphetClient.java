@@ -28,6 +28,9 @@ public class ProphetClient {
 
     public ProphetClient() {
         this.httpClient = HttpClient.newBuilder()
+                // Uvicorn on plain HTTP expects HTTP/1.1; forcing avoids intermittent
+                // malformed-request issues when clients attempt HTTP/2 negotiation.
+                .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(java.time.Duration.ofSeconds(10))
                 .build();
     }
@@ -158,10 +161,13 @@ public class ProphetClient {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/predict"))
                 .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
+        logger.info("[Prophet] Sending predict request to " + BASE_URL + "/predict with months=" + months);
         var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        logger.info("[Prophet] Predict response status: " + response.statusCode());
 
         if (response.statusCode() != 202) {
             throw new IOException("Failed to submit predict job: " + response.statusCode() + " - " + response.body());

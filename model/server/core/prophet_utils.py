@@ -126,7 +126,7 @@ def save_plots(m, forecast: pd.DataFrame, output_dir: Path,
     # 1. Full forecast line
     fig = m.plot(forecast, figsize=(15, 6))
     ax  = fig.axes[0]
-    ax.set_title("Dự báo Doanh thu 3 Tháng tới – Prophet", fontsize=14)
+    ax.set_title("Doanh thu theo thời gian và dự báo 3 tháng tới – Prophet", fontsize=14)
     ax.set_xlabel("Ngày")
     ax.set_ylabel("Doanh thu (tỷ VNĐ)")
     ax.yaxis.set_major_formatter(_FMT)
