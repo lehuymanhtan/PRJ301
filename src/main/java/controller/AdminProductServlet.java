@@ -1,26 +1,27 @@
 package controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import models.Product;
-import models.Supplier;
-import services.ProductService;
-import services.SupplierService;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import models.Product;
+import models.Supplier;
+import services.ProductService;
+import services.SupplierService;
+
 /**
  * Admin product management at /admin/products.
  *
- * GET  action=create  → show create form
- * GET  action=edit    → show edit form (requires id)
- * GET  action=delete  → delete product (requires id), redirect to list
- * GET  (default)      → list all products
- * POST action=create  → insert new product, redirect to list
- * POST action=edit    → update product, redirect to list
+ * GET action=create → show create form GET action=edit → show edit form
+ * (requires id) GET action=delete → delete product (requires id), redirect to
+ * list GET (default) → list all products POST action=create → insert new
+ * product, redirect to list POST action=edit → update product, redirect to list
  */
 @WebServlet(urlPatterns = {"/admin/products"})
 public class AdminProductServlet extends HttpServlet {
@@ -33,7 +34,9 @@ public class AdminProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) {
+            action = "";
+        }
 
         switch (action) {
             case "create":
@@ -56,7 +59,9 @@ public class AdminProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) {
+            action = "";
+        }
 
         switch (action) {
             case "create":
@@ -72,7 +77,6 @@ public class AdminProductServlet extends HttpServlet {
     }
 
     // ── Private helpers ─────────────────────────────────────────────────────
-
     private void listProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Product> products = productService.findAll();
@@ -158,7 +162,7 @@ public class AdminProductServlet extends HttpServlet {
         String supplierIdStr = request.getParameter("supplierId");
         if (supplierIdStr != null && !supplierIdStr.isEmpty()) {
             Supplier supplier = new Supplier();
-            supplier.setId(Integer.parseInt(supplierIdStr));
+            supplier.setId(Integer.valueOf(supplierIdStr));
             p.setSupplier(supplier);
         } else {
             p.setSupplier(null);

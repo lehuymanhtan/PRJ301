@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.Cart, models.CartItem, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('checkout.title')}</title>
+            <title>Checkout</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -107,24 +107,24 @@
             <% User currentUser=(User) session.getAttribute("user"); Cart cart=(Cart) request.getAttribute("cart");
                 double grandTotal=(cart !=null) ? cart.getTotalCost() : 0; %>
 
-                <h1>${i18n.get('checkout.title')}</h1>
+                <h1>Checkout</h1>
                 <nav>
-                        ${i18n.get('nav.welcome')}, <strong>
+                        Welcome, <strong>
                             <%= currentUser !=null ? currentUser.getUsername() : "" %>
                         </strong> |
-                        <a href="${pageContext.request.contextPath}/cart">${i18n.get('checkout.backToCart')}</a> |
-                        <a href="${pageContext.request.contextPath}/products">${i18n.get('product.title')}</a> |
-                        <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                        <a href="${pageContext.request.contextPath}/cart">Back to Cart</a> |
+                        <a href="${pageContext.request.contextPath}/products">Product List</a> |
+                        <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </nav>
 
-                <h2>${i18n.get('checkout.summary')}</h2>
+                <h2>Order Summary</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>${i18n.get('checkout.product')}</th>
-                            <th>${i18n.get('cart.price')}</th>
-                            <th>${i18n.get('checkout.qty')}</th>
-                            <th>${i18n.get('cart.subtotal')}</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,20 +134,20 @@
                                     <%= item.getProduct().getName() %>
                                 </td>
                                 <td>
-                                    <%= String.format("%,.0f", item.getProduct().getPrice()) %> ₫
+                                    <%= String.format("%,.0f", item.getProduct().getPrice()) %> &#8363;
                                 </td>
                                 <td>
                                     <%= item.getQuantity() %>
                                 </td>
                                 <td>
-                                    <%= String.format("%,.0f", item.getSubtotal()) %> ₫
+                                    <%= String.format("%,.0f", item.getSubtotal()) %> &#8363;
                                 </td>
                             </tr>
                             <% } } %>
                                 <tr class="total-row">
-                                    <td colspan="3" style="text-align:right;">${i18n.get('cart.total')}:</td>
+                                    <td colspan="3" style="text-align:right;">Total:</td>
                                     <td>
-                                        <%= String.format("%,.0f", grandTotal) %> ₫
+                                        <%= String.format("%,.0f", grandTotal) %> &#8363;
                                     </td>
                                 </tr>
                     </tbody>
@@ -155,7 +155,7 @@
 
                 <div class="summary">
                     <form action="${pageContext.request.contextPath}/checkout" method="post">
-                        <h3 style="margin-top:0;">${i18n.get('checkout.paymentMethod')}</h3>
+                        <h3 style="margin-top:0;">Payment Method</h3>
                         <div class="payment-option">
                             <label>
                                 <input type="radio" name="paymentMethod" value="COD" checked>
@@ -166,19 +166,21 @@
                             <label>
                                 <input type="radio" name="paymentMethod" value="VNPAY">
                                 <span class="vnpay-badge">VNPAY</span>
-                                ${i18n.get('checkout.paymentOnline')}
+                                Online Payment (ATM / QR / Visa)
                             </label>
                         </div>
                         <hr>
-                        <p><strong>${i18n.get('checkout.shipping')}:</strong> ${i18n.get('checkout.free')}</p>
-                        <p><strong>Total: <%= String.format("%,.0f", grandTotal) %> ₫</strong></p>
+                        <p><strong>Shipping:</strong> Free</p>
+                        <p><strong>Total: <%= String.format("%,.0f", grandTotal) %> &#8363;</strong></p>
                         <br>
-                        <button type="submit" class="btn btn-confirm">${i18n.get('checkout.placeOrder')}</button>
+                        <button type="submit" class="btn btn-confirm">Place Order</button>
                         <a href="${pageContext.request.contextPath}/cart" class="btn btn-back"
-                            style="margin-left:8px;">${i18n.get('checkout.backToCart')}</a>
+                            style="margin-left:8px;">Back to Cart</a>
                     </form>
                 </div>
 
         </body>
 
         </html>
+
+

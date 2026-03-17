@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Cart, models.CartItem, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('cart.title')}</title>
+            <title>Shopping Cart</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -114,15 +114,15 @@
                 String cartMessage=(String) request.getAttribute("cartMessage"); String stockMessage=(String)
                 request.getAttribute("stockMessage"); %>
 
-                <h1>${i18n.get('cart.title')}</h1>
+                <h1>Shopping Cart</h1>
                 <nav>
-                        ${i18n.get('nav.welcome')}, <strong>
+                        Welcome, <strong>
                             <%= currentUser !=null ? currentUser.getUsername() : "" %>
                         </strong> |
-                        <a href="${pageContext.request.contextPath}/products">${i18n.get('nav.continueShopping')}</a> |
-                        <a href="${pageContext.request.contextPath}/orders">${i18n.get('nav.myOrders')}</a> |
-                        <a href="${pageContext.request.contextPath}/users">${i18n.get('nav.myProfile')}</a> |
-                        <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                        <a href="${pageContext.request.contextPath}/products">Continue Shopping</a> |
+                        <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+                        <a href="${pageContext.request.contextPath}/users">My Profile</a> |
+                        <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </nav>
 
                 <% if (cartMessage !=null) { %>
@@ -137,18 +137,18 @@
                             <% } %>
 
                                 <% if (cart==null || cart.isEmpty()) { %>
-                                    <p class="empty-msg">${i18n.get('cart.empty')}</p>
+                                    <p class="empty-msg">Your cart is empty</p>
                                     <a href="${pageContext.request.contextPath}/products"
-                                        class="btn btn-shop">${i18n.get('cart.browseProducts')}</a>
+                                        class="btn btn-shop">Browse Products</a>
                                     <% } else { %>
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th>${i18n.get('cart.product')}</th>
-                                                    <th>${i18n.get('cart.price')}</th>
-                                                    <th>${i18n.get('cart.quantity')}</th>
-                                                    <th>${i18n.get('cart.subtotal')}</th>
-                                                    <th>${i18n.get('cart.action')}</th>
+                                                    <th>Product</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Subtotal</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -160,7 +160,7 @@
                                                         </td>
                                                         <td>
                                                             <%= String.format("%,.0f", item.getProduct().getPrice()) %>
-                                                                ₫
+                                                                &#8363;
                                                         </td>
                                                         <td>
                                                             <form class="qty-form"
@@ -173,11 +173,11 @@
                                                                     value="<%= item.getQuantity() %>" min="1"
                                                                     max="<%= item.getProduct().getStock() %>">
                                                                 <button type="submit"
-                                                                    class="btn btn-save">${i18n.get('action.update')}</button>
+                                                                    class="btn btn-save">Update</button>
                                                             </form>
                                                         </td>
                                                         <td>
-                                                            <%= String.format("%,.0f", item.getSubtotal()) %> ₫
+                                                            <%= String.format("%,.0f", item.getSubtotal()) %> &#8363;
                                                         </td>
                                                         <td>
                                                             <form action="${pageContext.request.contextPath}/cart"
@@ -186,16 +186,16 @@
                                                                     value="<%= item.getProduct().getId() %>">
                                                                 <input type="hidden" name="action" value="remove">
                                                                 <button type="submit"
-                                                                    class="btn btn-remove">${i18n.get('action.remove')}</button>
+                                                                    class="btn btn-remove">Remove</button>
                                                             </form>
                                                         </td>
                                                     </tr>
                                                     <% } %>
                                                         <tr class="total-row">
                                                             <td colspan="3" style="text-align:right;">
-                                                                ${i18n.get('cart.total')}:</td>
+                                                                Total:</td>
                                                             <td>
-                                                                <%= String.format("%,.0f", grandTotal) %> ₫
+                                                                <%= String.format("%,.0f", grandTotal) %> &#8363;
                                                             </td>
                                                             <td></td>
                                                         </tr>
@@ -204,11 +204,11 @@
 
                                         <div style="margin-top: 15px;">
                                             <a href="${pageContext.request.contextPath}/products" class="btn btn-shop">
-                                                ${i18n.get('nav.continueShopping')}
+                                                Continue Shopping
                                             </a>
                                             <a href="${pageContext.request.contextPath}/checkout"
                                                 class="btn btn-checkout" style="margin-left: 10px;">
-                                                ${i18n.get('cart.proceedToCheckout')}
+                                                Proceed to Checkout
                                             </a>
                                         </div>
                                         <% } %>
@@ -216,3 +216,5 @@
         </body>
 
         </html>
+
+

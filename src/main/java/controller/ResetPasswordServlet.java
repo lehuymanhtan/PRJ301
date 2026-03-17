@@ -88,8 +88,8 @@ public class ResetPasswordServlet extends HttpServlet {
             boolean success = userService.resetPassword(token, newPassword);
 
             if (success) {
-                // Language switching is disabled, always send Vietnamese template
-                String language = "vi";
+                // Language switching is disabled, always send English template
+                String language = "en";
                 EmailService.sendPasswordChangedEmail(user.getEmail(), user.getName(), language);
 
                 // Redirect to login with success message
@@ -109,7 +109,7 @@ public class ResetPasswordServlet extends HttpServlet {
         } catch (ServletException | IOException e) {
             // Rethrow servlet exceptions
             throw e;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             request.setAttribute("error", "An error occurred. Please try again.");
             request.setAttribute("token", token);
             request.getRequestDispatcher("/reset-password.jsp").forward(request, response);

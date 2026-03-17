@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.User" %>
         <%@ page import="models.DailyIncome" %>
             <%@ page import="java.util.List" %>
@@ -9,7 +9,7 @@
 
                         <head>
                             <meta charset="UTF-8">
-                            <title>${i18n.get('admin.dashboard')}</title>
+                            <title>Dashboard</title>
                             <style>
                                 body {
                                     font-family: Arial, sans-serif;
@@ -179,38 +179,37 @@
                                 request.getAttribute("totalOrders"); int totalRefunds=(Integer)
                                 request.getAttribute("totalRefunds"); @SuppressWarnings("unchecked") List<DailyIncome>
                                 dailyIncome = (List<DailyIncome>) request.getAttribute("dailyIncome");
-                                    NumberFormat nf = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+                                    NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                                     %>
 
-                                    <h1>${i18n.get('admin.dashboard')}</h1>
-                                    <p class="subtitle">${i18n.get('admin.welcomeBack')}, <strong>
+                                    <h1>Dashboard</h1>
+                                    <p class="subtitle">Welcome back, <strong>
                                             <%= currentUser.getUsername() %>
                                         </strong></p>
 
                                     <nav>
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/dashboard"><strong>${i18n.get('nav.dashboard')}</strong></a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/users">${i18n.get('nav.users')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/products">${i18n.get('nav.products')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/suppliers">${i18n.get('nav.suppliers')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/orders">${i18n.get('nav.orders')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/admin/refunds">${i18n.get('nav.refunds')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/">${i18n.get('nav.goToShop')}</a>
-                                            |
-                                            <a
-                                                href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/dashboard"><strong>Dashboard</strong></a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/users">Users</a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/products">Products</a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
+                                        |
+                                        <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+                                        |
+                                        <a
+                                            href="${pageContext.request.contextPath}/logout">Logout</a>
                                     </nav>
 
                                     <div class="cards">
@@ -218,62 +217,62 @@
                                             <div class="count">
                                                 <%= totalUsers %>
                                             </div>
-                                            <div class="label">${i18n.get('nav.users')}</div>
+                                            <div class="label">Users</div>
                                         </div>
                                         <div class="card green">
                                             <div class="count">
                                                 <%= totalProducts %>
                                             </div>
-                                            <div class="label">${i18n.get('nav.products')}</div>
+                                            <div class="label">Products</div>
                                         </div>
                                         <div class="card orange">
                                             <div class="count">
                                                 <%= totalSuppliers %>
                                             </div>
-                                            <div class="label">${i18n.get('nav.suppliers')}</div>
+                                            <div class="label">Suppliers</div>
                                         </div>
                                         <div class="card purple">
                                             <div class="count">
                                                 <%= totalOrders %>
                                             </div>
-                                            <div class="label">${i18n.get('nav.orders')}</div>
+                                            <div class="label">Orders</div>
                                         </div>
                                         <div class="card" style="border-color:#ddd;">
                                             <div class="count" style="color:#e53935;">
                                                 <%= totalRefunds %>
                                             </div>
-                                            <div class="label">${i18n.get('nav.refunds')}</div>
+                                            <div class="label">Refunds</div>
                                         </div>
                                     </div>
 
                                     <div class="links">
-                                        <h2>${i18n.get('admin.quickLinks')}</h2>
+                                        <h2>Quick Links</h2>
                                         <ul>
                                             <li><a href="${pageContext.request.contextPath}/admin/users">&#9654;
-                                                    ${i18n.get('admin.manageUsers')}</a></li>
+                                                    Manage Users</a></li>
                                             <li><a href="${pageContext.request.contextPath}/admin/products">&#9654;
-                                                    ${i18n.get('admin.manageProducts')}</a></li>
+                                                    Manage Products</a></li>
                                             <li><a href="${pageContext.request.contextPath}/admin/suppliers">&#9654;
-                                                    ${i18n.get('admin.manageSuppliers')}</a></li>
+                                                    Manage Suppliers</a></li>
                                             <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654;
-                                                    ${i18n.get('admin.manageOrders')}</a></li>
+                                                    Manage Orders</a></li>
                                             <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654;
-                                                    ${i18n.get('admin.manageRefunds')}</a></li>
+                                                    Manage Refunds</a></li>
                                         </ul>
                                     </div>
 
                                     <div class="income-section">
-                                        <h2>${i18n.get('admin.dailyIncome')}</h2>
+                                        <h2>Daily Income</h2>
                                         <% if (dailyIncome==null || dailyIncome.isEmpty()) { %>
-                                            <p class="no-data">${i18n.get('admin.noIncomeData')}</p>
+                                            <p class="no-data">No income data available yet.</p>
                                             <% } else { %>
                                                 <table class="income-table">
                                                     <thead>
                                                         <tr>
-                                                            <th>${i18n.get('admin.date')}</th>
-                                                            <th>${i18n.get('admin.completedIncome')}</th>
-                                                            <th>${i18n.get('admin.pendingIncome')}</th>
-                                                            <th>${i18n.get('admin.totalIncome')}</th>
+                                                            <th>Date</th>
+                                                            <th>Completed Income</th>
+                                                            <th>Pending Income</th>
+                                                            <th>Total Income</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

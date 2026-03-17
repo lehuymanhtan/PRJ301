@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Order, models.OrderDetail, models.RefundRequest, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('order.title')}</title>
+            <title>My Orders</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -138,25 +138,25 @@
                     RefundRequest refund = (RefundRequest) request.getAttribute("refund");
                     %>
 
-                    <h1>${i18n.get('order.title')} #<%= order.getId() %>
+                    <h1>My Orders #<%= order.getId() %>
                     </h1>
                     <nav>
-                            ${i18n.get('nav.welcome')}, <strong>
+                            Welcome, <strong>
                                 <%= currentUser !=null ? currentUser.getUsername() : "" %>
                             </strong> |
-                            <a href="${pageContext.request.contextPath}/orders">${i18n.get('nav.myOrders')}</a> |
-                            <a href="${pageContext.request.contextPath}/products">${i18n.get('product.title')}</a> |
-                            <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                            <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+                            <a href="${pageContext.request.contextPath}/products">Product List</a> |
+                            <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     </nav>
 
                     <div class="info-box">
-                        <p><strong>${i18n.get('order.id')}:</strong> #<%= order.getId() %>
+                        <p><strong>Order ID:</strong> #<%= order.getId() %>
                         </p>
-                        <p><strong>${i18n.get('order.status')}:</strong>
+                        <p><strong>Status:</strong>
                             <%= order.getStatus() %>
                         </p>
-                        <p><strong>${i18n.get('order.total')}:</strong>
-                            <%= String.format("%,.0f", order.getTotalPrice()) %> ₫
+                        <p><strong>Total:</strong>
+                            <%= String.format("%,.0f", order.getTotalPrice()) %> &#8363;
                         </p>
                     </div>
 
@@ -164,10 +164,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>${i18n.get('cart.product')}</th>
-                                <th>${i18n.get('cart.price')}</th>
-                                <th>${i18n.get('cart.quantity')}</th>
-                                <th>${i18n.get('cart.subtotal')}</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -178,20 +178,20 @@
                                         <%= d.getProductName() %>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.0f", d.getPrice()) %> ₫
+                                        <%= String.format("%,.0f", d.getPrice()) %> &#8363;
                                     </td>
                                     <td>
                                         <%= d.getQuantity() %>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.0f", d.getSubtotal()) %> ₫
+                                        <%= String.format("%,.0f", d.getSubtotal()) %> &#8363;
                                     </td>
                                 </tr>
                                 <% } %>
                                     <tr class="total-row">
-                                        <td colspan="3" style="text-align:right;">${i18n.get('cart.total')}:</td>
+                                        <td colspan="3" style="text-align:right;">Total:</td>
                                         <td>
-                                            <%= String.format("%,.0f", total) %> ₫
+                                            <%= String.format("%,.0f", total) %> &#8363;
                                         </td>
                                     </tr>
                                     <% } else { %>
@@ -224,8 +224,10 @@
                                     <% } %>
                                         <% } %>
                                             <a href="${pageContext.request.contextPath}/orders"
-                                                class="btn btn-back">&#8592; ${i18n.get('nav.backToOrders')}</a>
+                                                class="btn btn-back">&#8592; Back to Orders</a>
 
         </body>
 
         </html>
+
+

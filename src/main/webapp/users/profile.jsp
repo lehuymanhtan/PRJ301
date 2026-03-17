@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('profile.title')}</title>
+            <title>My Profile</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -77,49 +77,50 @@
             <% User profileUser=(User) request.getAttribute("profileUser"); String
                 success=request.getParameter("success"); %>
 
-                <h1>${i18n.get('profile.title')}</h1>
+                <h1>My Profile</h1>
                 <nav>
-                        <a href="${pageContext.request.contextPath}/users">${i18n.get('nav.myProfile')}</a> |
-                        <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                        <a href="${pageContext.request.contextPath}/users">My Profile</a> |
+                        <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </nav>
 
                 <% if ("updated".equals(success)) { %>
-                    <p class="msg-success">${i18n.get('profile.updated')}</p>
+                    <p class="msg-success">Profile updated successfully.</p>
                     <% } %>
 
                         <div class="profile-box">
-                            <p><span class="label">${i18n.get('profile.userId')}:</span>
+                            <p><span class="label">User ID:</span>
                                 <%= profileUser.getUserId() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.username')}:</span>
+                            <p><span class="label">Username:</span>
                                 <%= profileUser.getUsername() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.role')}:</span>
+                            <p><span class="label">Role:</span>
                                 <%= profileUser.getRole() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.fullName')}:</span>
+                            <p><span class="label">Full Name:</span>
                                 <%= profileUser.getName() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.gender')}:</span>
+                            <p><span class="label">Gender:</span>
                                 <%= profileUser.getGender() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.dob')}:</span>
+                            <p><span class="label">Date of Birth:</span>
                                 <%= profileUser.getDateOfBirth() %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.phone')}:</span>
+                            <p><span class="label">Phone:</span>
                                 <%= profileUser.getPhone() !=null ? profileUser.getPhone() : "-" %>
                             </p>
-                            <p><span class="label">${i18n.get('profile.email')}:</span>
+                            <p><span class="label">Email:</span>
                                 <%= profileUser.getEmail() %>
                             </p>
                         </div>
 
                         <div class="actions">
                             <a href="${pageContext.request.contextPath}/users?action=edit"
-                                class="btn-edit">${i18n.get('profile.edit')}</a>
+                                class="btn-edit">Edit Profile</a>
                             <a href="${pageContext.request.contextPath}/users?action=delete" class="btn-del"
-                                onclick="return confirm('${i18n.get('profile.deleteConfirm')}')">${i18n.get('profile.deleteAccount')}</a>
+                                onclick="return confirm('Delete your account? This cannot be undone.')">Delete Account</a>
                         </div>
         </body>
 
         </html>
+

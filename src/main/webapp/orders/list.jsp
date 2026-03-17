@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Order, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('order.title')}</title>
+            <title>My Orders</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -119,15 +119,15 @@
                     if (msg != null) session.removeAttribute("cartMessage");
                     %>
 
-                    <h1>${i18n.get('order.title')}</h1>
+                    <h1>My Orders</h1>
                     <nav>
-                            ${i18n.get('nav.welcome')}, <strong>
+                            Welcome, <strong>
                                 <%= currentUser !=null ? currentUser.getUsername() : "" %>
                             </strong> |
-                            <a href="${pageContext.request.contextPath}/products">${i18n.get('product.title')}</a> |
-                            <a href="${pageContext.request.contextPath}/cart">${i18n.get('cart.title')}</a> |
-                            <a href="${pageContext.request.contextPath}/users">${i18n.get('nav.myProfile')}</a> |
-                            <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                            <a href="${pageContext.request.contextPath}/products">Product List</a> |
+                            <a href="${pageContext.request.contextPath}/cart">Shopping Cart</a> |
+                            <a href="${pageContext.request.contextPath}/users">My Profile</a> |
+                            <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     </nav>
 
                     <% if (msg !=null) { %>
@@ -137,17 +137,17 @@
                         <% } %>
 
                             <% if (orders==null || orders.isEmpty()) { %>
-                                <p class="empty-msg">${i18n.get('order.noOrdersYet')}</p>
+                                <p class="empty-msg">You have no orders yet.</p>
                                 <a href="${pageContext.request.contextPath}/products"
-                                    class="btn btn-shop">${i18n.get('order.browseProducts')}</a>
+                                    class="btn btn-shop">Browse Products</a>
                                 <% } else { %>
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>${i18n.get('order.id')}</th>
-                                                <th>${i18n.get('order.total')}</th>
-                                                <th>${i18n.get('order.status')}</th>
-                                                <th>${i18n.get('order.actions')}</th>
+                                                <th>Order ID</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -157,14 +157,14 @@
                                                     <td>#<%= o.getId() %>
                                                     </td>
                                                     <td>
-                                                        <%= String.format("%,.0f", o.getTotalPrice()) %> ₫
+                                                        <%= String.format("%,.0f", o.getTotalPrice()) %> &#8363;
                                                     </td>
                                                     <td><span class="badge <%= badge %>">
                                                             <%= o.getStatus() %>
                                                         </span></td>
                                                     <td>
                                                         <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= o.getId() %>"
-                                                            class="btn btn-view">${i18n.get('order.viewDetails')}</a>
+                                                            class="btn btn-view">View Details</a>
                                                     </td>
                                                 </tr>
                                                 <% } %>
@@ -175,3 +175,5 @@
         </body>
 
         </html>
+
+

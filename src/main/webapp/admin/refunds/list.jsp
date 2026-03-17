@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.RefundRequest" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('admin.refundManagement')}</title>
+            <title>Refund Management</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -117,32 +117,32 @@
             <% List<RefundRequest> refunds = (List<RefundRequest>) request.getAttribute("refunds");
                     %>
 
-                    <h1>${i18n.get('admin.refundManagement')}</h1>
+                    <h1>Refund Management</h1>
                     <nav>
                             <a
-                                href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
+                                href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
                             |
-                            <a href="${pageContext.request.contextPath}/admin/users">${i18n.get('nav.users')}</a> |
-                            <a href="${pageContext.request.contextPath}/admin/products">${i18n.get('nav.products')}</a>
+                            <a href="${pageContext.request.contextPath}/admin/users">Users</a> |
+                            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
                             |
                             <a
-                                href="${pageContext.request.contextPath}/admin/suppliers">${i18n.get('nav.suppliers')}</a>
+                                href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
                             |
-                            <a href="${pageContext.request.contextPath}/admin/orders">${i18n.get('nav.orders')}</a> |
-                            <strong>${i18n.get('nav.refunds')}</strong> |
-                            <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
+                            <strong>Refunds</strong> |
+                            <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     </nav>
 
                     <table>
                         <thead>
                             <tr>
-                                <th>${i18n.get('refund.id')}</th>
-                                <th>${i18n.get('refund.orderId')}</th>
-                                <th>${i18n.get('table.id')}</th>
-                                <th>${i18n.get('refund.reasonLabel')}</th>
-                                <th>${i18n.get('refund.status')}</th>
-                                <th>${i18n.get('refund.submitted')}</th>
-                                <th>${i18n.get('table.actions')}</th>
+                                <th>Refund ID</th>
+                                <th>Order ID</th>
+                                <th>ID</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,7 +166,7 @@
                                     </td>
                                     <td>
                                         <a href="${pageContext.request.contextPath}/admin/refunds?action=detail&id=<%= r.getId() %>"
-                                            class="btn btn-view">${i18n.get('action.view')}</a>
+                                            class="btn btn-view">View</a>
                                     </td>
                                 </tr>
                                 <% } } else { %>
@@ -183,3 +183,4 @@
         </body>
 
         </html>
+

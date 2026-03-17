@@ -1,13 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.Order, models.RefundRequest" %>
-        <%@ page import="util.I18nUtil" %>
-            <% I18nUtil i18n=(I18nUtil) request.getAttribute("i18n"); if (i18n==null) i18n=new I18nUtil(request); %>
                 <!DOCTYPE html>
                 <html>
 
                 <head>
                     <meta charset="UTF-8">
-                    <title>${i18n.get('admin.refundManagement')} - Admin</title>
+                    <title>Refund Management - Admin</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -170,54 +168,54 @@
                     <% RefundRequest refund=(RefundRequest) request.getAttribute("refund"); Order order=(Order)
                         request.getAttribute("order"); String status=refund.getStatus(); %>
 
-                        <h1>${i18n.get('admin.refundDetail')} #<%= refund.getId() %>
+                        <h1>Refund Request #<%= refund.getId() %>
                         </h1>
                         <nav>
                                 <a href="${pageContext.request.contextPath}/admin/refunds">&#8592;
-                                    ${i18n.get('admin.backToRefunds')}</a> |
+                                    Back to Refunds</a> |
                                 <a
-                                    href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
+                                    href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
                                 |
-                                <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                                <a href="${pageContext.request.contextPath}/logout">Logout</a>
                         </nav>
 
                         <div class="info-box">
-                            <p><strong>${i18n.get('refund.id')}:</strong> #<%= refund.getId() %>
+                            <p><strong>Refund ID:</strong> #<%= refund.getId() %>
                             </p>
-                            <p><strong>${i18n.get('refund.orderId')}:</strong> #<%= refund.getOrderId() %>
+                            <p><strong>Order ID:</strong> #<%= refund.getOrderId() %>
                                     &nbsp;
                                     <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=<%= refund.getOrderId() %>"
                                         class="btn btn-order"
-                                        style="padding:2px 8px; font-size:12px;">${i18n.get('admin.viewOrder')}</a>
+                                        style="padding:2px 8px; font-size:12px;">View Order</a>
                             </p>
-                            <p><strong>${i18n.get('order.userId')}:</strong>
+                            <p><strong>User ID:</strong>
                                 <%= refund.getUserId() %>
                             </p>
                             <% if (order !=null) { %>
-                                <p><strong>${i18n.get('refund.orderTotal')}:</strong>
-                                    <%= String.format("%,.0f", order.getTotalPrice()) %> ₫
+                                <p><strong>Order Total:</strong>
+                                    <%= String.format("%,.0f", order.getTotalPrice()) %> &#8363;
                                 </p>
                                 <% } %>
-                                    <p><strong>${i18n.get('refund.reasonLabel')}:</strong>
+                                    <p><strong>Reason:</strong>
                                         <%= refund.getReason() %>
                                     </p>
                                     <% if (refund.getDescription() !=null && !refund.getDescription().isEmpty()) { %>
-                                        <p><strong>${i18n.get('refund.description')}:</strong>
+                                        <p><strong>Description:</strong>
                                             <%= refund.getDescription() %>
                                         </p>
                                         <% } %>
-                                            <p><strong>${i18n.get('refund.submitted')}:</strong>
+                                            <p><strong>Submitted:</strong>
                                                 <%= refund.getCreatedAt() !=null ? refund.getCreatedAt().toLocalDate()
                                                     : "" %>
                                             </p>
-                                            <p><strong>${i18n.get('refund.status')}:</strong>
+                                            <p><strong>Status:</strong>
                                                 <span class="status-badge badge-<%= status %>">
                                                     <%= status %>
                                                 </span>
                                             </p>
                                             <% if (refund.getReturnAddress() !=null &&
                                                 !refund.getReturnAddress().isEmpty()) { %>
-                                                <p><strong>${i18n.get('refund.returnAddress')}:</strong>
+                                                <p><strong>Return Address:</strong>
                                                     <%= refund.getReturnAddress() %>
                                                 </p>
                                                 <% } %>
@@ -227,51 +225,52 @@
                             <% if (!"Done".equals(status) && !"Rejected".equals(status) && !"Cancelled".equals(status))
                                 { %>
                                 <div class="update-form">
-                                    <h2>${i18n.get('admin.updateRefundStatus')}</h2>
+                                    <h2>Update Refund Status</h2>
                                     <form action="${pageContext.request.contextPath}/admin/refunds" method="post">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="id" value="<%= refund.getId() %>">
 
                                         <div class="form-group">
-                                            <label for="statusSelect">${i18n.get('admin.newStatus')}</label>
+                                            <label for="statusSelect">New Status</label>
                                             <select name="status" id="statusSelect" onchange="toggleReturnAddress()"
                                                 required>
                                                 <option value="Pending" <%="Pending" .equals(status) ? "selected" : ""
-                                                    %>><%= i18n.get("refund.statusPending") %>
+                                                    %>>Pending
                                                 </option>
                                                 <option value="WaitForReturn" <%="WaitForReturn" .equals(status)
-                                                    ? "selected" : "" %>><%= i18n.get("refund.statusWaitForReturn") %>
+                                                    ? "selected" : "" %>>Wait for Return
                                                 </option>
                                                 <option value="Verifying" <%="Verifying" .equals(status) ? "selected"
-                                                    : "" %>><%= i18n.get("refund.statusVerifying") %>
+                                                    : "" %>>Verifying
                                                 </option>
-                                                <option value="Done" <%="Done" .equals(status) ? "selected" : "" %>><%=
-                                                        i18n.get("refund.statusDone") %>
+                                                <option value="Done" <%="Done" .equals(status) ? "selected" : "" %>>Done
                                                 </option>
                                                 <option value="Rejected" <%="Rejected" .equals(status) ? "selected" : ""
-                                                    %>><%= i18n.get("refund.statusRejected") %>
+                                                    %>>Rejected
                                                 </option>
                                             </select>
                                         </div>
 
                                         <div class="form-group" id="returnAddressGroup">
-                                            <label for="returnAddress">${i18n.get('admin.returnAddress')}
-                                                <span style="color:#666; font-weight:normal;">(<%=
-                                                        i18n.get("admin.returnAddressNote") %>)</span>
+                                            <label for="returnAddress">Return Address
+                                                <span style="color:#666; font-weight:normal;">(shown to user for shipping the goods back)</span>
                                             </label>
                                             <textarea name="returnAddress" id="returnAddress"
                                                 placeholder="e.g. 123 Nguyen Hue, District 1, Ho Chi Minh City"><%= refund.getReturnAddress() != null ? refund.getReturnAddress() : "" %></textarea>
                                         </div>
 
                                         <button type="submit"
-                                            class="btn btn-save">${i18n.get('admin.saveChanges')}</button>
+                                            class="btn btn-save">Save Changes</button>
                                     </form>
                                 </div>
                                 <% } %>
 
                                     <a href="${pageContext.request.contextPath}/admin/refunds"
-                                        class="btn btn-back">&#8592; ${i18n.get('admin.backToRefunds')}</a>
+                                        class="btn btn-back">&#8592; Back to Refunds</a>
 
                 </body>
 
                 </html>
+
+
+

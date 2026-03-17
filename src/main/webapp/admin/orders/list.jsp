@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Order" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('admin.orderManagement')}</title>
+            <title>Order Management</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -135,29 +135,29 @@
             <% List<Order> orders = (List<Order>) request.getAttribute("orders");
                     %>
 
-                    <h1>${i18n.get('admin.orderManagement')}</h1>
+                    <h1>Order Management</h1>
                     <nav>
                             <a
-                                href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
+                                href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
                             |
-                            <a href="${pageContext.request.contextPath}/admin/users">${i18n.get('nav.users')}</a> |
-                            <a href="${pageContext.request.contextPath}/admin/products">${i18n.get('nav.products')}</a>
+                            <a href="${pageContext.request.contextPath}/admin/users">Users</a> |
+                            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
                             |
                             <a
-                                href="${pageContext.request.contextPath}/admin/suppliers">${i18n.get('nav.suppliers')}</a>
+                                href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
                             |
-                            <strong>${i18n.get('nav.orders')}</strong> |
-                            <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                            <strong>Orders</strong> |
+                            <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     </nav>
 
                     <table>
                         <thead>
                             <tr>
-                                <th>${i18n.get('table.orderId')}</th>
-                                <th>${i18n.get('table.id')}</th>
-                                <th>${i18n.get('table.total')}</th>
-                                <th>${i18n.get('table.status')}</th>
-                                <th>${i18n.get('table.actions')}</th>
+                                <th>Order ID</th>
+                                <th>ID</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -170,23 +170,23 @@
                                         <%= o.getUserId() %>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.0f", o.getTotalPrice()) %> ₫
+                                        <%= String.format("%,.0f", o.getTotalPrice()) %> &#8363;
                                     </td>
                                     <td><span class="badge <%= badge %>">
                                             <%= o.getStatus() %>
                                         </span></td>
                                     <td>
                                         <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=<%= o.getId() %>"
-                                            class="btn btn-view">${i18n.get('action.view')}</a>
+                                            class="btn btn-view">View</a>
                                         <a href="${pageContext.request.contextPath}/admin/orders?action=edit&id=<%= o.getId() %>"
-                                            class="btn btn-edit">${i18n.get('action.edit')}</a>
+                                            class="btn btn-edit">Edit</a>
                                         <form action="${pageContext.request.contextPath}/admin/orders" method="post"
                                             style="display:inline;"
-                                            onsubmit="return confirm('${i18n.get('msg.confirmDelete')}');">
+                                            onsubmit="return confirm('Are you sure you want to delete?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<%= o.getId() %>">
                                             <button type="submit"
-                                                class="btn btn-delete">${i18n.get('action.delete')}</button>
+                                                class="btn btn-delete">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -206,3 +206,5 @@
         </body>
 
         </html>
+
+

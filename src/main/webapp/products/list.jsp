@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Product, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('product.title')}</title>
+            <title>Product List</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -108,17 +108,17 @@
                     String cartMessage = (String) request.getAttribute("cartMessage");
                     %>
 
-                    <h1>${i18n.get('product.title')}</h1>
+                    <h1>Product List</h1>
                     <nav>
-                            ${i18n.get('nav.welcome')}, <% if (currentUser !=null) {%><strong>
+                            Welcome, <% if (currentUser !=null) {%><strong>
                                     <%= currentUser.getName() %>
                                 </strong> |
-                                <a href="${pageContext.request.contextPath}/users">${i18n.get('nav.myProfile')}</a> |
-                                <a href="${pageContext.request.contextPath}/cart">${i18n.get('nav.viewCart')}</a> |
-                                <a href="${pageContext.request.contextPath}/orders">${i18n.get('nav.myOrders')}</a> |
-                                <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
-                                <% } else { %><strong>${i18n.get('nav.guest')}</strong> |
-                                    <a href="${pageContext.request.contextPath}/login">${i18n.get('nav.login')}</a>
+                                <a href="${pageContext.request.contextPath}/users">My Profile</a> |
+                                <a href="${pageContext.request.contextPath}/cart">View Cart</a> |
+                                <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+                                <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                                <% } else { %><strong>Guest</strong> |
+                                    <a href="${pageContext.request.contextPath}/login">Login</a>
                                     <% } %>
                     </nav>
 
@@ -130,14 +130,14 @@
 
                             <div class="product-grid">
                                 <% if (products==null || products.isEmpty()) { %>
-                                    <p>${i18n.get('product.noProducts')}</p>
+                                    <p>No products available.</p>
                                     <% } else { for (Product p : products) { %>
                                         <div class="product-card">
                                             <h3>
                                                 <%= p.getName() %>
                                             </h3>
                                             <div class="price">
-                                                <%= String.format("%,.0f", p.getPrice()) %> ₫
+                                                <%= String.format("%,.0f", p.getPrice()) %> &#8363;
                                             </div>
                                             <% if (p.getDescription() !=null && !p.getDescription().isEmpty()) { %>
                                                 <div class="desc">
@@ -145,10 +145,10 @@
                                                 </div>
                                                 <% } %>
                                                     <% if (p.getStock() <=0) { %>
-                                                        <span class="stock-out">${i18n.get('product.outOfStock')}</span>
+                                                        <span class="stock-out">Out of Stock</span>
                                                         <% } else { %>
                                                             <div style="font-size:12px; color:#555; margin-bottom:8px;">
-                                                                ${i18n.get('product.stock')}: <%= p.getStock() %>
+                                                                Stock: <%= p.getStock() %>
                                                             </div>
                                                             <form class="add-form"
                                                                 action="${pageContext.request.contextPath}/cart"
@@ -159,7 +159,7 @@
                                                                 <input type="number" name="quantity" value="1" min="1"
                                                                     max="<%= p.getStock() %>">
                                                                 <button type="submit"
-                                                                    class="btn btn-add">${i18n.get('product.addToCart')}</button>
+                                                                    class="btn btn-add">Add to Cart</button>
                                                             </form>
                                                             <% } %>
                                         </div>
@@ -169,3 +169,5 @@
         </body>
 
         </html>
+
+

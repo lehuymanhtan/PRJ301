@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('profile.edit')}</title>
+            <title>Edit Profile</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -60,7 +60,7 @@
         <body>
             <% User profileUser=(User) request.getAttribute("profileUser"); %>
 
-                <h1>${i18n.get('profile.edit')}</h1>
+                <h1>Edit Profile</h1>
 
                     <% if (request.getAttribute("error") !=null) { %>
                         <p class="msg-error">
@@ -72,64 +72,65 @@
                                 <input type="hidden" name="action" value="edit">
 
                                 <div class="form-group">
-                                    <label for="username">${i18n.get('profile.username')} *</label>
+                                    <label for="username">Username *</label>
                                     <input type="text" id="username" name="username" required
                                         value="<%= profileUser != null ? profileUser.getUsername() : "" %>">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password">${i18n.get('profile.password')} *</label>
+                                    <label for="password">Password *</label>
                                     <input type="password" id="password" name="password" required
                                         value="<%= profileUser != null ? profileUser.getPassword() : "" %>">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="name">${i18n.get('profile.fullName')} *</label>
+                                    <label for="name">Full Name *</label>
                                     <input type="text" id="name" name="name" required
                                         value="<%= profileUser != null && profileUser.getName() != null ? profileUser.getName() : "" %>">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="gender">${i18n.get('profile.gender')} *</label>
+                                    <label for="gender">Gender *</label>
                                     <select id="gender" name="gender" required>
-                                        <option value="">${i18n.get('profile.selectGender')}</option>
+                                        <option value="">-- Select --</option>
                                         <option value="male" <%=profileUser !=null && "male"
                                             .equals(profileUser.getGender()) ? "selected" : "" %>
-                                            >${i18n.get('profile.male')}</option>
+                                            >Male</option>
                                         <option value="female" <%=profileUser !=null && "female"
                                             .equals(profileUser.getGender()) ? "selected" : "" %>
-                                            >${i18n.get('profile.female')}</option>
+                                            >Female</option>
                                         <option value="other" <%=profileUser !=null && "other"
                                             .equals(profileUser.getGender()) ? "selected" : "" %>
-                                            >${i18n.get('profile.other')}</option>
+                                            >Other</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="dateOfBirth">${i18n.get('profile.dob')} *</label>
+                                    <label for="dateOfBirth">Date of Birth *</label>
                                     <input type="date" id="dateOfBirth" name="dateOfBirth" required
                                         value="<%= profileUser != null && profileUser.getDateOfBirth() != null ? profileUser.getDateOfBirth().toString() : "" %>">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="phone">${i18n.get('profile.phone')}</label>
+                                    <label for="phone">Phone</label>
                                     <input type="text" id="phone" name="phone"
                                         value="<%= profileUser != null && profileUser.getPhone() != null ? profileUser.getPhone() : "" %>">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="email">${i18n.get('profile.email')} *</label>
+                                    <label for="email">Email *</label>
                                     <input type="email" id="email" name="email" required
                                         value="<%= profileUser != null ? profileUser.getEmail() : "" %>">
                                 </div>
 
-                                <p class="note">${i18n.get('profile.noteRole')}</p>
+                                <p class="note">Note: role cannot be changed here.</p>
 
                                 <div class="actions">
-                                    <button type="submit">${i18n.get('profile.save')}</button>
-                                    <a href="${pageContext.request.contextPath}/users">${i18n.get('profile.cancel')}</a>
+                                    <button type="submit">Save Changes</button>
+                                    <a href="${pageContext.request.contextPath}/users">Cancel</a>
                                 </div>
                             </form>
         </body>
 
         </html>
+

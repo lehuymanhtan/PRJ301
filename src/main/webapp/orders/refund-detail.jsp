@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.Order, models.RefundRequest, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('refund.title')}</title>
+            <title>Refund Request</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -133,42 +133,42 @@
                 request.getAttribute("refund"); Order order=(Order) request.getAttribute("order"); String
                 status=refund.getStatus(); %>
 
-                <h1>${i18n.get('refund.title')} #<%= refund.getId() %>
+                <h1>Refund Request #<%= refund.getId() %>
                 </h1>
                 <nav>
-                        ${i18n.get('nav.welcome')}, <strong>
-                            <%= currentUser !=null ? currentUser.getUsername() : "" %>
-                        </strong> |
-                        <a
-                            href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">${i18n.get('nav.backToOrder')}</a>
-                        |
-                        <a href="${pageContext.request.contextPath}/orders">${i18n.get('nav.myOrders')}</a> |
-                        <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                    Welcome, <strong>
+                        <%= currentUser !=null ? currentUser.getUsername() : "" %>
+                    </strong> |
+                    <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">Back
+                        to Order</a>
+                    |
+                    <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </nav>
 
                 <div class="info-box">
-                    <p><strong>${i18n.get('refund.id')}:</strong> #<%= refund.getId() %>
+                    <p><strong>Refund ID:</strong> #<%= refund.getId() %>
                     </p>
-                    <p><strong>${i18n.get('refund.orderId')}:</strong> #<%= refund.getOrderId() %>
+                    <p><strong>Order ID:</strong> #<%= refund.getOrderId() %>
                     </p>
                     <% if (order !=null) { %>
-                        <p><strong>${i18n.get('refund.orderTotal')}:</strong>
-                            <%= String.format("%,.0f", order.getTotalPrice()) %> ₫
+                        <p><strong>Order Total:</strong>
+                            <%= String.format("%,.0f", order.getTotalPrice()) %> &#8363;
                         </p>
                         <% } %>
-                            <p><strong>${i18n.get('refund.reasonLabel')}:</strong>
+                            <p><strong>Reason:</strong>
                                 <%= refund.getReason() %>
                             </p>
                             <% if (refund.getDescription() !=null && !refund.getDescription().isEmpty()) { %>
-                                <p><strong>${i18n.get('refund.description')}:</strong>
+                                <p><strong>Description:</strong>
                                     <%= refund.getDescription() %>
                                 </p>
                                 <% } %>
-                                    <p><strong>${i18n.get('refund.submitted')}:</strong>
+                                    <p><strong>Submitted:</strong>
                                         <%= refund.getCreatedAt() !=null ?
                                             refund.getCreatedAt().toLocalDate().toString() : "" %>
                                     </p>
-                                    <p><strong>${i18n.get('refund.status')}:</strong>
+                                    <p><strong>Status:</strong>
                                         <span class="status-badge badge-<%= status %>">
                                             <%= status %>
                                         </span>
@@ -178,19 +178,20 @@
                 <%-- Return instructions shown when admin has approved and is waiting for the return shipment --%>
                     <% if ("WaitForReturn".equals(status)) { %>
                         <div class="return-info">
-                            <h3>&#9993; ${i18n.get('refund.returnProduct')}</h3>
+                            <h3>&#9993; Please Return the Product</h3>
                             <% if (refund.getReturnAddress() !=null && !refund.getReturnAddress().isEmpty()) { %>
-                                <p><strong>${i18n.get('refund.returnAddress')}:</strong></p>
+                                <p><strong>Return Address:</strong></p>
                                 <p>
                                     <%= refund.getReturnAddress() %>
                                 </p>
                                 <% } %>
                                     <div class="instruction-box">
-                                        <strong>${i18n.get('refund.instructions')}:</strong>
+                                        <strong>Instructions:</strong>
                                         <ul style="margin: 6px 0; padding-left: 20px;">
-                                            <li>${i18n.get('refund.packSecurely')}</li>
-                                            <li>${i18n.get('refund.writeIds')}</li>
-                                            <li>${i18n.get('refund.keepReceipt')}</li>
+                                            <li>Pack the item(s) securely before shipping.</li>
+                                            <li>Please write Refund ID and Order ID on the outside of the return
+                                                package.</li>
+                                            <li>Keep your shipping receipt until the refund is completed.</li>
                                         </ul>
                                     </div>
                         </div>
@@ -203,14 +204,14 @@
                                         <input type="hidden" name="action" value="cancel">
                                         <input type="hidden" name="id" value="<%= refund.getId() %>">
                                         <button type="submit" class="btn btn-cancel"
-                                            onclick="return confirm('${i18n.get('refund.confirmCancel')}'">
-                                            ${i18n.get('refund.cancelRequest')}
+                                            onclick="return confirm('Are you sure you want to cancel this refund request?')">
+                                            Cancel Refund Request
                                         </button>
                                     </form>
                                     &nbsp;
                                     <% } %>
                                         <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>"
-                                            class="btn btn-back">&#8592; ${i18n.get('nav.backToOrder')}</a>
+                                            class="btn btn-back">&#8592; Back to Order</a>
 
         </body>
 

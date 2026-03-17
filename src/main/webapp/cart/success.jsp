@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>${i18n.get('order.title')}</title>
+        <title>My Orders</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -75,78 +75,82 @@
     </head>
 
     <body>
-        <% // ── Detect which flow landed here ────────────────────────────────────── // VNPay return: request
-            attributes set by VNPayReturnServlet (forward) Boolean vnpaySuccess=(Boolean)
+        <% // â”€â”€ Detect which flow landed here
+            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // VNPay return: request attributes set by VNPayReturnServlet (forward) Boolean vnpaySuccess=(Boolean)
             request.getAttribute("vnpaySuccess"); boolean isVnpay=(vnpaySuccess !=null); // COD flow: session attributes
             set by CheckoutServlet (redirect) Integer codOrderId=(Integer) session.getAttribute("lastOrderId"); String
             codPayment=(String) session.getAttribute("lastPaymentMethod"); if (!isVnpay) {
-            session.removeAttribute("lastOrderId"); session.removeAttribute("lastPaymentMethod"); } if (isVnpay) { // ──
-            VNPay result branch ──────────────────────────────────────────── String orderId=(String)
-            request.getAttribute("vnpayOrderId"); String transNo=(String) request.getAttribute("vnpayTransactionNo");
-            String bankCode=(String) request.getAttribute("vnpayBankCode"); String amountRaw=(String)
-            request.getAttribute("vnpayAmount"); String responseCode=(String) request.getAttribute("vnpayResponseCode");
-            boolean validSig=Boolean.TRUE.equals(request.getAttribute("vnpayValidSig")); long displayAmount=0; try { if
+            session.removeAttribute("lastOrderId"); session.removeAttribute("lastPaymentMethod"); } if (isVnpay) { //
+            â”€â”€ VNPay result branch
+            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            String orderId=(String) request.getAttribute("vnpayOrderId"); String transNo=(String)
+            request.getAttribute("vnpayTransactionNo"); String bankCode=(String) request.getAttribute("vnpayBankCode");
+            String amountRaw=(String) request.getAttribute("vnpayAmount"); String responseCode=(String)
+            request.getAttribute("vnpayResponseCode"); boolean
+            validSig=Boolean.TRUE.equals(request.getAttribute("vnpayValidSig")); long displayAmount=0; try { if
             (amountRaw !=null) displayAmount=Long.parseLong(amountRaw) / 100L; } catch (Exception ignored) {} if
             (vnpaySuccess) { %>
             <div class="box">
                 <div class="tick">&#10004;</div>
-                <h1 class="ok">${i18n.get('success.paymentSuccess')}</h1>
-                <p>${i18n.get('success.paidVia')} <strong>#<%= orderId %></strong> <span
-                        class="vnpay-badge">VNPAY</span>.</p>
-                <p class="detail-row">${i18n.get('success.transNo')}: <strong>
-                        <%= transNo !=null ? transNo : "–" %>
+                <h1 class="ok">Payment Successful!</h1>
+                <p>Your order has been paid via <strong>#<%= orderId %></strong> <span class="vnpay-badge">VNPAY</span>.
+                </p>
+                <p class="detail-row">Transaction No: <strong>
+                        <%= transNo !=null ? transNo : "-" %>
                     </strong></p>
-                <p class="detail-row">${i18n.get('success.bank')}: <strong>
-                        <%= bankCode !=null ? bankCode : "–" %>
+                <p class="detail-row">Bank: <strong>
+                        <%= bankCode !=null ? bankCode : "-" %>
                     </strong></p>
-                <p class="detail-row">${i18n.get('success.amountPaid')}: <strong>
+                <p class="detail-row">Amount paid: <strong>
                         <%= String.format("%,d", displayAmount) %> VND
                     </strong></p>
                 <br>
-                <p>${i18n.get('success.processShortly')}</p>
-                <a href="${pageContext.request.contextPath}/orders" class="btn">${i18n.get('nav.myOrders')}</a>
-                <a href="${pageContext.request.contextPath}/products"
-                    class="btn">${i18n.get('nav.continueShopping')}</a>
+                <p>We will process your order shortly. Thank you for shopping with us!</p>
+                <a href="${pageContext.request.contextPath}/orders" class="btn">My Orders</a>
+                <a href="${pageContext.request.contextPath}/products" class="btn">Continue Shopping</a>
             </div>
             <% } else { %>
                 <div class="box">
                     <div class="cross">&#10008;</div>
-                    <h1 class="err">${i18n.get('success.paymentFailed')}</h1>
-                    <p>${i18n.get('success.paymentFailed2')} <span class="vnpay-badge">VNPAY</span>.</p>
+                    <h1 class="err">Payment Failed</h1>
+                    <p>Your payment could not be completed. <span class="vnpay-badge">VNPAY</span>.</p>
                     <% if (responseCode !=null && !responseCode.isEmpty()) { %>
-                        <p class="detail-row">${i18n.get('success.errorCode')}: <strong>
+                        <p class="detail-row">Error code: <strong>
                                 <%= responseCode %>
                             </strong></p>
                         <% } %>
                             <% if (!validSig) { %>
-                                <p class="detail-row" style="color:#c62828;">${i18n.get('success.invalidSig')}</p>
+                                <p class="detail-row" style="color:#c62828;">Warning: invalid signature detected.</p>
                                 <% } %>
                                     <br>
-                                    <p>${i18n.get('success.noMoneyDeducted')}</p>
-                                    <a href="${pageContext.request.contextPath}/cart"
-                                        class="btn btn-red">${i18n.get('checkout.backToCart')}</a>
-                                    <a href="${pageContext.request.contextPath}/products"
-                                        class="btn">${i18n.get('nav.continueShopping')}</a>
+                                    <p>Your order has been cancelled. No money was deducted.</p>
+                                    <a href="${pageContext.request.contextPath}/cart" class="btn btn-red">Back to
+                                        Cart</a>
+                                    <a href="${pageContext.request.contextPath}/products" class="btn">Continue
+                                        Shopping</a>
                 </div>
-                <% } } else { // ── COD result branch ────────────────────────────────────────────── %>
+                <% } } else { // â”€â”€ COD result branch
+                    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    %>
                     <div class="box">
                         <div class="tick">&#10004;</div>
-                        <h1 class="ok">${i18n.get('success.orderPlaced')}</h1>
+                        <h1 class="ok">Order Placed Successfully!</h1>
                         <% if (codOrderId !=null) { %>
-                            <p>${i18n.get('success.paidVia')} <strong>#<%= codOrderId %></strong>.</p>
+                            <p>Your order has been paid via <strong>#<%= codOrderId %></strong>.</p>
                             <% } else { %>
-                                <p>${i18n.get('success.orderReceived')}</p>
+                                <p>Your order has been received.</p>
                                 <% } %>
                                     <% if (codPayment !=null) { %>
-                                        <p>${i18n.get('checkout.paymentMethod')}: <strong>
+                                        <p>Payment Method: <strong>
                                                 <%= codPayment %>
                                             </strong></p>
                                         <% } %>
-                                            <p>${i18n.get('success.processShortly')}</p>
-                                            <a href="${pageContext.request.contextPath}/orders"
-                                                class="btn">${i18n.get('nav.myOrders')}</a>
-                                            <a href="${pageContext.request.contextPath}/products"
-                                                class="btn">${i18n.get('nav.continueShopping')}</a>
+                                            <p>We will process your order shortly. Thank you for shopping with us!</p>
+                                            <a href="${pageContext.request.contextPath}/orders" class="btn">My
+                                                Orders</a>
+                                            <a href="${pageContext.request.contextPath}/products" class="btn">Continue
+                                                Shopping</a>
                     </div>
                     <% } %>
 

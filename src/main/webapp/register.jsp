@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>${i18n.get('register.title')}</title>
+        <title>Register</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -100,15 +100,15 @@
             .back-link {
                 font-size: 13px;
             }
-</style>
+        </style>
     </head>
 
     <body>
         <div class="box">
             <div class="header-actions">
-                <a class="back-link" href="${pageContext.request.contextPath}/">${i18n.get('register.backToStore')}</a>
+                <a class="back-link" href="${pageContext.request.contextPath}/">Back to store</a>
             </div>
-            <h1>${i18n.get('register.title')}</h1>
+            <h1>Register</h1>
 
             <% if (request.getAttribute("error") !=null) { %>
                 <p class="msg-error">
@@ -119,66 +119,63 @@
                     <form method="post" action="${pageContext.request.contextPath}/register">
 
                         <div class="form-group">
-                            <label for="username">${i18n.get('register.username')} <span class="req">*</span></label>
+                            <label for="username">Username <span class="req">*</span></label>
                             <input type="text" id="username" name="username" required autofocus
                                 value="${param.username}">
                         </div>
 
                         <div class="form-group">
-                            <label for="password">${i18n.get('register.password')} <span class="req">*</span></label>
+                            <label for="password">Password <span class="req">*</span></label>
                             <input type="password" id="password" name="password" required>
-                            <p class="hint">${i18n.get('validation.minLength').replace('{0}', '3')}</p>
+                            <p class="hint">Must be at least 3 characters</p>
                         </div>
 
                         <div class="form-group">
-                            <label for="confirmPassword">${i18n.get('reset.confirmPassword')} <span
-                                    class="req">*</span></label>
+                            <label for="confirmPassword">Confirm Password <span class="req">*</span></label>
                             <input type="password" id="confirmPassword" name="confirmPassword" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="name">${i18n.get('register.name')} <span class="req">*</span></label>
+                            <label for="name">Full Name <span class="req">*</span></label>
                             <input type="text" id="name" name="name" required value="${param.name}">
                         </div>
 
                         <div class="form-group">
-                            <label for="gender">${i18n.get('register.gender')} <span class="req">*</span></label>
+                            <label for="gender">Gender <span class="req">*</span></label>
                             <select id="gender" name="gender" required>
-                                <option value="" disabled selected>-- ${i18n.get('action.select')} --</option>
+                                <option value="" disabled selected>-- Select --</option>
                                 <option value="male" ${param.gender=='male' ? 'selected' : '' }>
-                                    ${i18n.get('register.gender.male')}</option>
+                                    Male</option>
                                 <option value="female" ${param.gender=='female' ? 'selected' : '' }>
-                                    ${i18n.get('register.gender.female')}</option>
+                                    Female</option>
                                 <option value="other" ${param.gender=='other' ? 'selected' : '' }>
-                                    ${i18n.get('register.gender.other')}</option>
+                                    Other</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="dateOfBirth">${i18n.get('register.dob')} <span class="req">*</span></label>
+                            <label for="dateOfBirth">Date of Birth <span class="req">*</span></label>
                             <input type="date" id="dateOfBirth" name="dateOfBirth" required
                                 value="${param.dateOfBirth}">
                         </div>
 
                         <div class="form-group">
-                            <label for="email">${i18n.get('register.email')} <span class="req">*</span></label>
+                            <label for="email">Email <span class="req">*</span></label>
                             <input type="email" id="email" name="email" required value="${param.email}">
                         </div>
 
                         <div class="form-group">
-                            <label for="phone">${i18n.get('register.phone')}</label>
+                            <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" name="phone" value="${param.phone}">
                         </div>
 
-                        <button type="submit">${i18n.get('register.submit')}</button>
+                        <button type="submit">Register</button>
                     </form>
 
                     <div class="links">
-                        ${i18n.get('register.haveAccount')} <a
-                            href="${pageContext.request.contextPath}/login">${i18n.get('register.loginLink')}</a>
+                        Already have an account? <a href="${pageContext.request.contextPath}/login">Login</a>
                     </div>
         </div>
     </body>
 
     </html>
-

@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="java.util.List, models.Product, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('admin.productManagement')}</title>
+            <title>Product Management</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -86,37 +86,33 @@
                     String errParam = request.getParameter("error");
                     %>
 
-                    <h1>${i18n.get('admin.productManagement')}</h1>
+                    <h1>Product Management</h1>
                     <nav>
-                            ${i18n.get('nav.welcome')}, <strong>
-                                <%= currentUser !=null ? currentUser.getUsername() : "" %>
-                            </strong> |
-                            <a
-                                href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
-                            |
-                            <a
-                                href="${pageContext.request.contextPath}/admin/users">${i18n.get('admin.userManagement')}</a>
-                            |
-                            <a
-                                href="${pageContext.request.contextPath}/admin/products">${i18n.get('admin.productManagement')}</a>
-                            |
-                            <a
-                                href="${pageContext.request.contextPath}/admin/suppliers">${i18n.get('admin.supplierManagement')}</a>
-                            |
-                            <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                        Welcome, <strong>
+                            <%= currentUser !=null ? currentUser.getUsername() : "" %>
+                        </strong> |
+                        <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+                        |
+                        <a href="${pageContext.request.contextPath}/admin/users">User Management</a>
+                        |
+                        <a href="${pageContext.request.contextPath}/admin/products">Product Management</a>
+                        |
+                        <a href="${pageContext.request.contextPath}/admin/suppliers">Supplier Management</a>
+                        |
+                        <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     </nav>
 
                     <% if ("created".equals(success)) { %>
-                        <p class="msg-success">${i18n.get('admin.productCreated')}</p>
+                        <p class="msg-success">Product created successfully.</p>
                         <% } %>
                             <% if ("updated".equals(success)) { %>
-                                <p class="msg-success">${i18n.get('admin.productUpdated')}</p>
+                                <p class="msg-success">Product updated successfully.</p>
                                 <% } %>
                                     <% if ("deleted".equals(success)) { %>
-                                        <p class="msg-success">${i18n.get('admin.productDeleted')}</p>
+                                        <p class="msg-success">Product deleted successfully.</p>
                                         <% } %>
                                             <% if ("notfound".equals(errParam)) { %>
-                                                <p class="msg-error">${i18n.get('admin.productNotFound')}</p>
+                                                <p class="msg-error">Product not found.</p>
                                                 <% } %>
                                                     <% if (errParam !=null && !"notfound".equals(errParam)) { %>
                                                         <p class="msg-error">Error: <%= errParam %>
@@ -125,27 +121,27 @@
 
                                                             <div style="margin-bottom:15px;">
                                                                 <a href="${pageContext.request.contextPath}/admin/products?action=create"
-                                                                    class="btn btn-add">${i18n.get('admin.addProduct')}</a>
+                                                                    class="btn btn-add">+ Add Product</a>
                                                             </div>
 
                                                             <table>
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>${i18n.get('table.id')}</th>
-                                                                        <th>${i18n.get('table.name')}</th>
-                                                                        <th>${i18n.get('table.price')}</th>
-                                                                        <th>${i18n.get('table.stock')}</th>
-                                                                        <th>${i18n.get('table.category')}</th>
-                                                                        <th>${i18n.get('table.importDate')}</th>
-                                                                        <th>${i18n.get('table.supplier')}</th>
-                                                                        <th>${i18n.get('table.actions')}</th>
+                                                                        <th>ID</th>
+                                                                        <th>Name</th>
+                                                                        <th>Price</th>
+                                                                        <th>Stock</th>
+                                                                        <th>Category</th>
+                                                                        <th>Import Date</th>
+                                                                        <th>Supplier</th>
+                                                                        <th>Actions</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <% if (products==null || products.isEmpty()) { %>
                                                                         <tr>
                                                                             <td colspan="8">
-                                                                                ${i18n.get('admin.noProductsFound')}
+                                                                                No products found.
                                                                             </td>
                                                                         </tr>
                                                                         <% } else { for (Product p : products) { %>
@@ -158,7 +154,7 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     <%= String.format("%,.0f",
-                                                                                        p.getPrice()) %> ₫
+                                                                                        p.getPrice()) %> &#8363;
                                                                                 </td>
                                                                                 <td>
                                                                                     <%= p.getStock() %>
@@ -178,10 +174,10 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=<%= p.getId() %>"
-                                                                                        class="btn btn-edit">${i18n.get('action.edit')}</a>
+                                                                                        class="btn btn-edit">Edit</a>
                                                                                     <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=<%= p.getId() %>"
                                                                                         class="btn btn-del"
-                                                                                        onclick="return confirm('${i18n.get('msg.confirmDelete')}'">${i18n.get('action.delete')}</a>
+                                                                                        onclick="return confirm('Are you sure you want to delete?')">Delete</a>
                                                                                 </td>
                                                                             </tr>
                                                                             <% } } %>

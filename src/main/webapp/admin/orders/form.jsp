@@ -1,13 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.Order" %>
-        <%@ page import="util.I18nUtil" %>
-            <% I18nUtil i18n=(I18nUtil) request.getAttribute("i18n"); if (i18n==null) i18n=new I18nUtil(request); %>
                 <!DOCTYPE html>
                 <html>
 
                 <head>
                     <meta charset="UTF-8">
-                    <title>${i18n.get('admin.editOrderStatus')} - Admin</title>
+                    <title>Edit Order Status - Admin</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -86,14 +84,14 @@
                 <body>
                     <% Order order=(Order) request.getAttribute("order"); %>
 
-                        <h1>${i18n.get('admin.editOrderStatus')}</h1>
+                        <h1>Edit Order Status</h1>
                         <nav>
                                 <a href="${pageContext.request.contextPath}/admin/orders">&#8592;
-                                    ${i18n.get('admin.backToOrders')}</a> |
+                                    Back to Orders</a> |
                                 <a
-                                    href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
+                                    href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
                                 |
-                                <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                                <a href="${pageContext.request.contextPath}/logout">Logout</a>
                         </nav>
 
                         <div class="form-box">
@@ -101,46 +99,48 @@
                                 <input type="hidden" name="action" value="update">
                                 <input type="hidden" name="id" value="<%= order.getId() %>">
 
-                                <label>${i18n.get('order.orderId')}</label>
+                                <label>Order ID</label>
                                 <input type="text" value="#<%= order.getId() %>" disabled>
 
-                                <label>${i18n.get('order.userId')}</label>
+                                <label>User ID</label>
                                 <input type="text" value="<%= order.getUserId() %>" disabled>
 
-                                <label>${i18n.get('order.total')}</label>
+                                <label>Total</label>
                                 <input type="text" value="$<%= order.getTotalPrice() %>" disabled>
 
-                                <label for="status">${i18n.get('order.status')}</label>
+                                <label for="status">Status</label>
                                 <select id="status" name="status">
                                     <option value="Pending" <%="Pending" .equals(order.getStatus()) ? "selected" : "" %>
-                                        ><%= i18n.get("order.pending") %>
+                                        >Pending
                                     </option>
                                     <option value="Processing" <%="Processing" .equals(order.getStatus()) ? "selected"
-                                        : "" %>><%= i18n.get("order.processing") %>
+                                        : "" %>>Processing
                                     </option>
                                     <option value="Shipped" <%="Shipped" .equals(order.getStatus()) ? "selected" : "" %>
-                                        ><%= i18n.get("order.shipped") %>
+                                        >Shipped
                                     </option>
                                     <option value="Delivered" <%="Delivered" .equals(order.getStatus()) ? "selected"
-                                        : "" %>><%= i18n.get("order.delivered") %>
+                                        : "" %>>Delivered
                                     </option>
                                     <option value="Completed" <%="Completed" .equals(order.getStatus()) ? "selected"
-                                        : "" %>><%= i18n.get("order.completed") %>
+                                        : "" %>>Completed
                                     </option>
                                     <option value="Cancelled" <%="Cancelled" .equals(order.getStatus()) ? "selected"
-                                        : "" %>><%= i18n.get("order.cancelled") %>
+                                        : "" %>>Cancelled
                                     </option>
                                     <option value="Refunded" <%="Refunded" .equals(order.getStatus()) ? "selected" : ""
-                                        %>><%= i18n.get("order.refunded") %>
+                                        %>>Refunded
                                     </option>
                                 </select>
 
-                                <button type="submit" class="btn btn-save">${i18n.get('admin.updateStatus')}</button>
+                                <button type="submit" class="btn btn-save">Update Status</button>
                                 <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-cancel"
-                                    style="margin-left:8px;">${i18n.get('action.cancel')}</a>
+                                    style="margin-left:8px;">Cancel</a>
                             </form>
                         </div>
 
                 </body>
 
                 </html>
+
+

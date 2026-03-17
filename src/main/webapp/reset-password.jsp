@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>${i18n.get('reset.title')}</title>
+        <title>Reset Password</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -138,16 +138,16 @@
                 align-items: center;
                 margin-bottom: 10px;
             }
-</style>
+        </style>
     </head>
 
     <body>
         <div class="box">
             <div class="header-actions">
-                <a class="back-link" href="${pageContext.request.contextPath}/login">←
-                    ${i18n.get('reset.backToLogin')}</a>
+                <a class="back-link" href="${pageContext.request.contextPath}/login">&larr;
+                    Back to Login</a>
             </div>
-            <h1>🔒 ${i18n.get('reset.title')}</h1>
+            <h1>Reset Password</h1>
 
             <% if (request.getAttribute("error") !=null) { %>
                 <p class="msg-error">
@@ -155,20 +155,20 @@
                 </p>
                 <% if (request.getAttribute("token")==null) { %>
                     <div class="links">
-                        <a href="${pageContext.request.contextPath}/forgot-password">${i18n.get('reset.requestNew')}</a>
+                        <a href="${pageContext.request.contextPath}/forgot-password">Request a new reset link</a>
                     </div>
                     <% } %>
                         <% } else if (request.getAttribute("token") !=null) { %>
-                            <p class="info">${i18n.get('reset.info')}</p>
+                            <p class="info">Enter your new password below.</p>
 
                             <form method="post" action="${pageContext.request.contextPath}/reset-password">
                                 <input type="hidden" name="token" value="<%= request.getAttribute(" token") %>">
 
                                 <div class="form-group">
-                                    <label for="newPassword">${i18n.get('reset.newPassword')}</label>
+                                    <label for="newPassword">New Password</label>
                                     <input type="password" id="newPassword" name="newPassword" required autofocus>
                                     <button type="button" class="password-toggle"
-                                        onclick="togglePassword('newPassword', this)">👁️</button>
+                                        onclick="togglePassword('newPassword', this)">Show</button>
                                     <div class="strength-meter">
                                         <div id="strength-bar" class="strength-bar"></div>
                                     </div>
@@ -176,13 +176,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="confirmPassword">${i18n.get('reset.confirmPassword')}</label>
+                                    <label for="confirmPassword">Confirm Password</label>
                                     <input type="password" id="confirmPassword" name="confirmPassword" required>
                                     <button type="button" class="password-toggle"
-                                        onclick="togglePassword('confirmPassword', this)">👁️</button>
+                                        onclick="togglePassword('confirmPassword', this)">Show</button>
                                 </div>
 
-                                <button type="submit">${i18n.get('reset.submit')}</button>
+                                <button type="submit">Reset Password</button>
                             </form>
                             <% } %>
 
@@ -193,10 +193,10 @@
                 const input = document.getElementById(inputId);
                 if (input.type === 'password') {
                     input.type = 'text';
-                    button.textContent = '🙈';
+                    button.textContent = 'Hide';
                 } else {
                     input.type = 'password';
-                    button.textContent = '👁️';
+                    button.textContent = 'Show';
                 }
             }
 
@@ -220,17 +220,17 @@
                 } else if (strength <= 2) {
                     strengthBar.style.width = '33%';
                     strengthBar.classList.add('weak');
-                    strengthText.textContent = '${i18n.get("reset.strength.weak")}';
+                    strengthText.textContent = 'Weak password';
                     strengthText.style.color = '#e74c3c';
                 } else if (strength <= 3) {
                     strengthBar.style.width = '66%';
                     strengthBar.classList.add('medium');
-                    strengthText.textContent = '${i18n.get("reset.strength.medium")}';
+                    strengthText.textContent = 'Medium password';
                     strengthText.style.color = '#f39c12';
                 } else {
                     strengthBar.style.width = '100%';
                     strengthBar.classList.add('strong');
-                    strengthText.textContent = '${i18n.get("reset.strength.strong")}';
+                    strengthText.textContent = 'Strong password';
                     strengthText.style.color = '#27ae60';
                 }
             });

@@ -49,8 +49,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             }
             String resetLink = baseUrl + contextPath + "/reset-password?token=" + user.getResetToken();
 
-            // Language switching is disabled, always send Vietnamese template
-            String language = "vi";
+            // Language switching is disabled, always send English template
+            String language = "en";
             boolean sent = EmailService.sendPasswordResetEmail(
                     user.getEmail(),
                     user.getName(),

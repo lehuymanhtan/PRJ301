@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>${i18n.get('forgot.title')}</title>
+        <title>Forgot Password</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -94,17 +94,17 @@
                 align-items: center;
                 margin-bottom: 10px;
             }
-</style>
+        </style>
     </head>
 
     <body>
         <div class="box">
             <div class="header-actions">
-                <a class="back-link" href="${pageContext.request.contextPath}/login">←
-                    ${i18n.get('forgot.backToLogin')}</a>
+                <a class="back-link" href="${pageContext.request.contextPath}/login">&larr;
+                    Back to Login</a>
             </div>
-            <h1>🔑 ${i18n.get('forgot.title')}</h1>
-            <p class="info">${i18n.get('forgot.info')}</p>
+            <h1>Forgot Password</h1>
+            <p class="info">Enter your email address and we'll send you a link to reset your password.</p>
 
             <% if (request.getAttribute("error") !=null) { %>
                 <p class="msg-error">
@@ -119,18 +119,16 @@
 
                             <form method="post" action="${pageContext.request.contextPath}/forgot-password">
                                 <div class="form-group">
-                                    <label for="email">${i18n.get('forgot.email')}</label>
+                                    <label for="email">Email Address</label>
                                     <input type="email" id="email" name="email" required autofocus>
                                 </div>
-                                <button type="submit">${i18n.get('forgot.submit')}</button>
+                                <button type="submit">Send Reset Link</button>
                             </form>
 
                             <div class="links">
-                                ${i18n.get('forgot.rememberPassword')} <a
-                                    href="${pageContext.request.contextPath}/login">${i18n.get('forgot.loginLink')}</a>
+                                Remember your password? <a href="${pageContext.request.contextPath}/login">Login</a>
                             </div>
         </div>
     </body>
 
     </html>
-

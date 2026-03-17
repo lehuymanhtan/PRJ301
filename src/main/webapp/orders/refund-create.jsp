@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ page import="models.Order, models.User" %>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>${i18n.get('refund.title')}</title>
+            <title>Refund Request</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -98,26 +98,26 @@
             <% User currentUser=(User) session.getAttribute("user"); Order order=(Order) request.getAttribute("order");
                 %>
 
-                <h1>${i18n.get('refund.requestFor')} #<%= order.getId() %>
+                <h1>Request Refund for Order #<%= order.getId() %>
                 </h1>
                 <nav>
-                        ${i18n.get('nav.welcome')}, <strong>
-                            <%= currentUser !=null ? currentUser.getUsername() : "" %>
-                        </strong> |
-                        <a
-                            href="${pageContext.request.contextPath}/orders?action=detail&id=<%= order.getId() %>">${i18n.get('nav.backToOrder')}</a>
-                        |
-                        <a href="${pageContext.request.contextPath}/orders">${i18n.get('nav.myOrders')}</a> |
-                        <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
+                    Welcome, <strong>
+                        <%= currentUser !=null ? currentUser.getUsername() : "" %>
+                    </strong> |
+                    <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= order.getId() %>">Back to
+                        Order</a>
+                    |
+                    <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </nav>
 
                 <div class="info-box">
-                    <p><strong>${i18n.get('refund.orderId')}:</strong> #<%= order.getId() %>
+                    <p><strong>Order ID:</strong> #<%= order.getId() %>
                     </p>
-                    <p><strong>${i18n.get('refund.orderTotal')}:</strong>
-                        <%= String.format("%,.0f", order.getTotalPrice()) %> ₫
+                    <p><strong>Order Total:</strong>
+                        <%= String.format("%,.0f", order.getTotalPrice()) %> &#8363;
                     </p>
-                    <p><strong>${i18n.get('refund.status')}:</strong>
+                    <p><strong>Status:</strong>
                         <%= order.getStatus() %>
                     </p>
                 </div>
@@ -127,30 +127,30 @@
                     <input type="hidden" name="orderId" value="<%= order.getId() %>">
 
                     <div class="form-group">
-                        <label for="reason">${i18n.get('refund.reason')} <span style="color:red">*</span></label>
+                        <label for="reason">Reason for Refund <span style="color:red">*</span></label>
                         <select name="reason" id="reason" required>
-                            <option value="" disabled selected>${i18n.get('refund.selectReason')}</option>
-                            <option value="Product damaged">${i18n.get('refund.damaged')}</option>
-                            <option value="Wrong item received">${i18n.get('refund.wrongItem')}</option>
-                            <option value="Product not as described">${i18n.get('refund.notAsDescribed')}</option>
-                            <option value="Product not received">${i18n.get('refund.notReceived')}</option>
-                            <option value="Change of mind">${i18n.get('refund.changeOfMind')}</option>
-                            <option value="Other">${i18n.get('refund.other')}</option>
+                            <option value="" disabled selected>-- Select a reason --</option>
+                            <option value="Product damaged">Product damaged</option>
+                            <option value="Wrong item received">Wrong item received</option>
+                            <option value="Product not as described">Product not as described</option>
+                            <option value="Product not received">Product not received</option>
+                            <option value="Change of mind">Change of mind</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="description">${i18n.get('refund.details')}</label>
+                        <label for="description">Additional Details</label>
                         <textarea name="description" id="description"
-                            placeholder="${i18n.get('refund.detailsPlaceholder')}"></textarea>
-                        <p class="note">${i18n.get('refund.detailsNote')}</p>
+                            placeholder="Please describe the issue in detail (optional)..."></textarea>
+                        <p class="note">Providing more details helps us process your refund faster.</p>
                     </div>
 
                     <button type="submit" class="btn btn-submit"
-                        onclick="return confirm('${i18n.get('refund.confirmSubmit')}'">${i18n.get('refund.submit')}</button>
+                        onclick="return confirm('Submit this refund request?')">Submit Refund Request</button>
                     &nbsp;
                     <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= order.getId() %>"
-                        class="btn btn-back">${i18n.get('refund.cancel')}</a>
+                        class="btn btn-back">Cancel</a>
                 </form>
 
         </body>

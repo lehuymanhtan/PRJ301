@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>${i18n.get('login.title')}</title>
+        <title>Login</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -95,9 +95,9 @@
     <body>
         <div class="box">
             <div class="header-actions">
-                <a class="back-link" href="${pageContext.request.contextPath}/">${i18n.get('login.backToStore')}</a>
+                <a class="back-link" href="${pageContext.request.contextPath}/">Back to store</a>
             </div>
-            <h1>${i18n.get('login.title')}</h1>
+            <h1>Login</h1>
 
             <% if (request.getAttribute("error") !=null) { %>
                 <p class="msg-error">
@@ -110,29 +110,30 @@
                         </p>
                         <% } %>
                             <% String loginMsg=request.getParameter("msg"); if ("account_deleted".equals(loginMsg)) { %>
-                                <p class="msg-success">${i18n.get('login.accountDeleted')}</p>
+                                <p class="msg-success">Your account has been deleted.</p>
                                 <% } %>
 
                                     <form method="post" action="${pageContext.request.contextPath}/login">
                                         <div class="form-group">
-                                            <label for="username">${i18n.get('login.username')}</label>
+                                            <label for="username">Username</label>
                                             <input type="text" id="username" name="username" required autofocus>
                                         </div>
                                         <div class="form-group">
-                                            <label for="password">${i18n.get('login.password')}</label>
+                                            <label for="password">Password</label>
                                             <input type="password" id="password" name="password" required>
                                         </div>
-                                        <button type="submit">${i18n.get('login.submit')}</button>
+                                        <button type="submit">Login</button>
                                     </form>
 
                                     <div class="links">
-                                        ${i18n.get('login.noAccount')} <a
-                                            href="${pageContext.request.contextPath}/register">${i18n.get('login.registerLink')}</a><br>
+                                        No account? <a
+                                            href="${pageContext.request.contextPath}/register">Register</a><br>
                                         <a
-                                            href="${pageContext.request.contextPath}/forgot-password">${i18n.get('login.forgotPassword')}</a>
+                                            href="${pageContext.request.contextPath}/forgot-password">Forgot Password?</a>
                                     </div>
         </div>
     </body>
 
     </html>
+
 

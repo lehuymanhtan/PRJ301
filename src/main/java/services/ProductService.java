@@ -1,9 +1,9 @@
 package services;
 
+import java.util.List;
+
 import dao.ProductDAO;
 import models.Product;
-import models.Supplier;
-import java.util.List;
 
 public class ProductService {
 
