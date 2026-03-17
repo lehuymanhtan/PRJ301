@@ -120,8 +120,13 @@ public class VerifyEmailServlet extends HttpServlet {
         try {
             User user = userService.refreshVerification(email.trim());
 
-            String baseUrl = request.getScheme() + "://" + request.getServerName()
-                    + ":" + request.getServerPort() + request.getContextPath();
+            String scheme = request.getScheme();
+            String baseUrl = scheme + "://" + request.getServerName();
+            int port = request.getServerPort();
+            if (!(("http".equals(scheme) && port == 80) || ("https".equals(scheme) && port == 443))) {
+                baseUrl += ":" + port;
+            }
+            baseUrl += request.getContextPath();
             String verifyLink = baseUrl + "/verify?token=" + user.getVerificationToken();
 
             final String finalEmail = user.getEmail();
