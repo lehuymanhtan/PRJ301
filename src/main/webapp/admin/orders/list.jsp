@@ -92,7 +92,26 @@
     </tbody>
 </table>
 
-<p class="footer">Total orders: <%= (orders != null) ? orders.size() : 0 %></p>
+<%
+    Long totalPages = (Long) request.getAttribute("totalPages");
+    Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+    Long totalCount = (Long) request.getAttribute("totalCount");
+    if (totalPages != null && totalPages > 1) {
+%>
+<div style="margin-top: 20px; text-align: center;">
+    <% if (pageNumber > 1) { %>
+        <a href="${pageContext.request.contextPath}/admin/orders?page=1" class="btn">First</a>
+        <a href="${pageContext.request.contextPath}/admin/orders?page=<%= pageNumber - 1 %>" class="btn">Previous</a>
+    <% } %>
+    <span style="margin: 0 10px;">Page <%= pageNumber %> of <%= totalPages %></span>
+    <% if (pageNumber < totalPages) { %>
+        <a href="${pageContext.request.contextPath}/admin/orders?page=<%= pageNumber + 1 %>" class="btn">Next</a>
+        <a href="${pageContext.request.contextPath}/admin/orders?page=<%= totalPages %>" class="btn">Last</a>
+    <% } %>
+</div>
+<% } %>
+
+<p class="footer">Total orders: <%= (totalCount != null) ? totalCount : 0 %></p>
 
 </body>
 </html>

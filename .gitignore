@@ -1,2 +1,7 @@
 /target/
 .env
+PROPHET_INTEGRATION.md
+.venv/
+__pycache__/
+model/outputs/
+model/API.md

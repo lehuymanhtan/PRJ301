@@ -13,6 +13,23 @@ public class ProductDAO {
         );
     }
 
+    public long countAll() {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(p) FROM Product p", Long.class)
+              .getSingleResult()
+        );
+    }
+
+    public List<Product> findPage(int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier ORDER BY p.id", Product.class)
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
     public Product findById(Integer id) {
         return JpaHelper.query(em -> {
             Product p = em.find(Product.class, id);

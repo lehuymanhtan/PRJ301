@@ -13,6 +13,14 @@ public class ProductService {
         return productDAO.findAll();
     }
 
+    public long countAll() {
+        return productDAO.countAll();
+    }
+
+    public List<Product> findPage(int pageNumber, int pageSize) {
+        return productDAO.findPage(pageNumber, pageSize);
+    }
+
     public Product findById(Integer id) {
         return productDAO.findById(id);
     }

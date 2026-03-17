@@ -72,6 +72,8 @@
     <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
     <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
     <a href="${pageContext.request.contextPath}/admin/income">Income Report</a> |
+    <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
+    <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a> |
     <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
@@ -116,6 +118,7 @@
         <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654; Manage Orders</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654; Manage Refunds</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/income">&#9654; Income Report</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/loyalty">&#9654; Loyalty Management</a></li>
     </ul>
 </div>
 

@@ -8,8 +8,10 @@ import models.CartItem;
 import models.Order;
 import models.OrderDetail;
 import models.User;
+import services.LoyaltyService;
 import services.OrderService;
 import services.OrderServiceImpl;
+import services.UserService;
 import util.VNPayUtil;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +28,9 @@ import services.EmailService;
 @WebServlet(urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
 
-    private final OrderService orderService = new OrderServiceImpl();
+    private final OrderService   orderService   = new OrderServiceImpl();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
+    private final UserService    userService    = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -76,6 +80,15 @@ public class CheckoutServlet extends HttpServlet {
         // Calculate total
         double total = cart.getTotalCost();
 
+        // Apply loyalty points discount if requested
+        int usedPoints = 0;
+        String usePointsParam = request.getParameter("usePoints");
+        if ("on".equals(usePointsParam) && user.getPoints() > 0) {
+            double discount = Math.min(user.getPoints(), total);
+            total = total - discount;
+            usedPoints = (int) discount;
+        }
+
         // Create order (status = "Pending" until payment is confirmed)
         Order order = new Order(user.getUserId(), total, "Pending");
         Integer orderId = orderService.createOrder(order);
@@ -102,6 +115,7 @@ public class CheckoutServlet extends HttpServlet {
         // Store order id in session for result pages
         session.setAttribute("lastOrderId", orderId);
         session.setAttribute("lastPaymentMethod", paymentMethod);
+        session.setAttribute("usedPoints", usedPoints);
 
         // ── VNPay online payment ──────────────────────────────────────────
         if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
@@ -134,6 +148,16 @@ public class CheckoutServlet extends HttpServlet {
         order.setId(orderId);
         order.setStatus("Processing");
         orderService.updateOrder(order);
+
+        // Record loyalty points usage and earning
+        if (usedPoints > 0) {
+            loyaltyService.usePoints(user.getUserId(), orderId, usedPoints);
+        }
+        loyaltyService.addPoints(user.getUserId(), orderId, total);
+
+        // Refresh session user with updated points/tier
+        User refreshed = userService.findById(user.getUserId());
+        if (refreshed != null) session.setAttribute("user", refreshed);
 
         // Clear cart
         session.removeAttribute("cart");

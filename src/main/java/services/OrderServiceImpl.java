@@ -11,10 +11,21 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderDAO orderDAO = new OrderDAO();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
 
     @Override
     public List<Order> getAllOrders() {
         return orderDAO.findAll();
+    }
+
+    @Override
+    public long countAllOrders() {
+        return orderDAO.countAll();
+    }
+
+    @Override
+    public List<Order> getOrdersPage(int pageNumber, int pageSize) {
+        return orderDAO.findPage(pageNumber, pageSize);
     }
 
     @Override
@@ -44,6 +55,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrder(Order order) {
+        // Refund loyalty points when order is cancelled or refunded
+        Order existing = orderDAO.findById(order.getId());
+        if (existing != null && existing.getUserId() != null) {
+            boolean wasNotRefundable = !("Cancelled".equals(existing.getStatus()) || "Refunded".equals(existing.getStatus()));
+            boolean isNowRefundable  = "Cancelled".equals(order.getStatus()) || "Refunded".equals(order.getStatus());
+            if (wasNotRefundable && isNowRefundable) {
+                loyaltyService.refundPoints(existing.getUserId(), order.getId());
+            }
+        }
         orderDAO.update(order);
     }
 
