@@ -309,9 +309,28 @@ ALTER TABLE Users ADD
 GO
 */
 -- Tier thresholds
--- Regular 
--- → Bronze (10,000) 
--- → Silver (20,000) 
--- → Gold (50,000) 
--- → Platinum (100,000) 
+-- Regular
+-- → Bronze (10,000)
+-- → Silver (20,000)
+-- → Gold (50,000)
+-- → Platinum (100,000)
 -- → Diamond (200,000)
+
+-- ====== Prophet Forecast Table ======
+-- Stores metadata for 3-month sales forecasts
+CREATE TABLE ProphetForecasts
+(
+    id                   INT IDENTITY(1,1) PRIMARY KEY,
+    jobId                NVARCHAR(100)  NOT NULL UNIQUE,
+    outputFolder         NVARCHAR(500)  NULL,
+    forecastPlotPath     NVARCHAR(500)  NULL,
+    monthlyBarPath       NVARCHAR(500)  NULL,
+    componentsPlotPath   NVARCHAR(500)  NULL,
+    monthlyCSVPath       NVARCHAR(500)  NULL,
+    predictedAt          DATETIME2      NOT NULL,
+    status               NVARCHAR(20)   NOT NULL DEFAULT 'completed' CHECK (status IN ('completed', 'error')),
+    errorMessage         NVARCHAR(1000) NULL,
+    createdAt            DATETIME2      NOT NULL DEFAULT GETDATE()
+);
+GO
+

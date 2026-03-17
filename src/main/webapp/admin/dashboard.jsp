@@ -73,6 +73,7 @@
     <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
     <a href="${pageContext.request.contextPath}/admin/income">Income Report</a> |
     <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
+    <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a> |
     <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>

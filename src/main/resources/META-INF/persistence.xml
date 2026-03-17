@@ -10,6 +10,7 @@
         <class>models.RefundRequest</class>
         <class>models.LoyaltyConfig</class>
         <class>models.PointHistory</class>
+        <class>models.ProphetForecast</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"   value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>

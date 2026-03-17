@@ -1,0 +1,6 @@
+{
+  "last_trained_date": "2026-03-17",
+  "model_filename": "trained_models/2026-03-17/prophet_model.json",
+  "training_rows": 440,
+  "trained_at": "2026-03-17T23:53:05.190756"
+}
