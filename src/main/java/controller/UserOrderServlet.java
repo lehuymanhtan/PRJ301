@@ -54,18 +54,7 @@ public class UserOrderServlet extends HttpServlet {
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/orders");
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/orders");
-            return;
-        }
+        Integer id = Integer.parseInt(request.getParameter("id"));
         Order order = orderService.getOrderById(id);
 
         // Ensure the order belongs to this user

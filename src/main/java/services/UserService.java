@@ -37,12 +37,12 @@ public class UserService {
     }
 
     /**
-     * Register a new user with role "user". Returns the persisted User with
-     * verificationCode and verificationToken set.
+     * Register a new user with role "user".
+     * Returns the persisted User with verificationCode and verificationToken set.
      */
     public User register(String username, String password,
-            String name, String gender, LocalDate dateOfBirth,
-            String phone, String email) {
+                         String name, String gender, LocalDate dateOfBirth,
+                         String phone, String email) {
         validateUsername(username);
         if (password == null || password.length() < 3) {
             throw new IllegalArgumentException("Password must be at least 3 characters");
@@ -66,62 +66,41 @@ public class UserService {
             throw new IllegalArgumentException("Email already registered");
         }
         User user = new User(username.trim(), password, "user",
-                name.trim(), gender, dateOfBirth,
-                (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null,
-                email.trim());
+                             name.trim(), gender, dateOfBirth,
+                             (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null,
+                             email.trim());
         user.setVerified(false);
         applyNewVerification(user);
         userDAO.insertUser(user);
         return user;
     }
 
-    /**
-     * Generate a new 6-digit code + UUID token valid for 24 hours and save to
-     * DB.
-     */
+    /** Generate a new 6-digit code + UUID token valid for 24 hours and save to DB. */
     public User refreshVerification(String email) {
         User user = findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("Email not found");
-        }
-        if (user.isVerified()) {
-            throw new IllegalArgumentException("Account is already verified");
-        }
+        if (user == null) throw new IllegalArgumentException("Email not found");
+        if (user.isVerified()) throw new IllegalArgumentException("Account is already verified");
         applyNewVerification(user);
         userDAO.updateUser(user);
         return user;
     }
 
-    /**
-     * Verify account using the 6-digit code sent to the user's email.
-     */
+    /** Verify account using the 6-digit code sent to the user's email. */
     public boolean verifyByCode(String email, String code) {
         User user = findByEmail(email);
-        if (user == null || user.isVerified()) {
-            return false;
-        }
-        if (code == null || !code.equals(user.getVerificationCode())) {
-            return false;
-        }
-        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) {
-            return false;
-        }
+        if (user == null || user.isVerified()) return false;
+        if (code == null || !code.equals(user.getVerificationCode())) return false;
+        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) return false;
         clearVerification(user);
         userDAO.updateUser(user);
         return true;
     }
 
-    /**
-     * Verify account using the one-click token link from the email.
-     */
+    /** Verify account using the one-click token link from the email. */
     public boolean verifyByToken(String token) {
         User user = userDAO.findByVerificationToken(token);
-        if (user == null || user.isVerified()) {
-            return false;
-        }
-        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) {
-            return false;
-        }
+        if (user == null || user.isVerified()) return false;
+        if (user.getVerificationExpiry() == null || LocalDateTime.now().isAfter(user.getVerificationExpiry())) return false;
         clearVerification(user);
         userDAO.updateUser(user);
         return true;
@@ -142,86 +121,12 @@ public class UserService {
         user.setVerificationExpiry(null);
     }
 
-    // ----------------------------------------------------------------
-    // Password Reset Methods
-    // ----------------------------------------------------------------
-    /**
-     * Initiate password reset: generate reset token and set expiry (30
-     * minutes). Returns the user with the reset token set.
-     */
-    public User initiatePasswordReset(String email) {
-        User user = findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("Email not found");
-        }
-        if (!user.isVerified()) {
-            throw new IllegalArgumentException("Account is not verified. Please verify your email first.");
-        }
-
-        String token = UUID.randomUUID().toString().replace("-", "");
-        user.setResetToken(token);
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
-        userDAO.updateUser(user);
-        return user;
-    }
-
-    /**
-     * Verify if a reset token is valid and not expired.
-     */
-    public User validateResetToken(String token) {
-        User user = userDAO.findByResetToken(token);
-        if (user == null) {
-            return null;
-        }
-        if (user.getResetTokenExpiry() == null || LocalDateTime.now().isAfter(user.getResetTokenExpiry())) {
-            return null; // Token expired
-        }
-        return user;
-    }
-
-    /**
-     * Reset password using a valid token.
-     */
-    public boolean resetPassword(String token, String newPassword) {
-        User user = validateResetToken(token);
-        if (user == null) {
-            return false;
-        }
-        if (newPassword == null || newPassword.length() < 3) {
-            throw new IllegalArgumentException("Password must be at least 3 characters");
-        }
-
-        user.setPassword(newPassword);
-        user.setResetToken(null);
-        user.setResetTokenExpiry(null);
-        userDAO.updateUser(user);
-        return true;
-    }
-
-    /**
-     * Update user's preferred language.
-     */
-    public void updateLanguagePreference(Integer userId, String language) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
-        if (!"vi".equals(language) && !"en".equals(language)) {
-            throw new IllegalArgumentException("Language must be 'vi' or 'en'");
-        }
-
-        User user = userDAO.findById(userId);
-        if (user != null) {
-            user.setPreferredLanguage(language);
-            userDAO.updateUser(user);
-        }
-    }
-
     /**
      * Admin: create a user with any role.
      */
     public void createUser(String username, String password, String role,
-            String name, String gender, LocalDate dateOfBirth,
-            String phone, String email) {
+                           String name, String gender, LocalDate dateOfBirth,
+                           String phone, String email) {
         validateUserInput(username, password, role);
         validateProfileInput(name, gender, dateOfBirth, email);
         if (findByUsername(username) != null) {
@@ -240,17 +145,13 @@ public class UserService {
      * Admin: update any user.
      */
     public void updateUser(Integer userId, String username, String password, String role,
-            String name, String gender, LocalDate dateOfBirth,
-            String phone, String email) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
+                           String name, String gender, LocalDate dateOfBirth,
+                           String phone, String email) {
+        if (userId == null) throw new IllegalArgumentException("User ID is required");
         validateUserInput(username, password, role);
         validateProfileInput(name, gender, dateOfBirth, email);
         User existing = findById(userId);
-        if (existing == null) {
-            throw new IllegalArgumentException("User not found");
-        }
+        if (existing == null) throw new IllegalArgumentException("User not found");
         User byUsername = findByUsername(username.trim());
         if (byUsername != null && !byUsername.getUserId().equals(userId)) {
             throw new IllegalArgumentException("Username already exists");
@@ -274,20 +175,16 @@ public class UserService {
      * User: update own profile (role unchanged).
      */
     public void updateOwnProfile(Integer userId, String username, String password,
-            String name, String gender, LocalDate dateOfBirth,
-            String phone, String email) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
+                                  String name, String gender, LocalDate dateOfBirth,
+                                  String phone, String email) {
+        if (userId == null) throw new IllegalArgumentException("User ID is required");
         validateUsername(username);
         if (password == null || password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password is required");
         }
         validateProfileInput(name, gender, dateOfBirth, email);
         User existing = findById(userId);
-        if (existing == null) {
-            throw new IllegalArgumentException("User not found");
-        }
+        if (existing == null) throw new IllegalArgumentException("User not found");
         User byUsername = findByUsername(username.trim());
         if (byUsername != null && !byUsername.getUserId().equals(userId)) {
             throw new IllegalArgumentException("Username already exists");
@@ -310,9 +207,7 @@ public class UserService {
      * User deletes their own account (self-deletion allowed).
      */
     public void deleteOwnAccount(Integer userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
+        if (userId == null) throw new IllegalArgumentException("User ID is required");
         userDAO.deleteUser(userId);
     }
 
@@ -320,9 +215,7 @@ public class UserService {
      * Delete user, preventing self-deletion.
      */
     public void deleteUser(Integer userId, Integer currentUserId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
+        if (userId == null) throw new IllegalArgumentException("User ID is required");
         if (currentUserId != null && currentUserId.equals(userId)) {
             throw new IllegalArgumentException("You cannot delete yourself");
         }

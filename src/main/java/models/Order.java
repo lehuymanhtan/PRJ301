@@ -8,8 +8,6 @@ import java.time.LocalDate;
 @Table(name = "Orders")
 public class Order implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,25 +23,6 @@ public class Order implements Serializable {
 
     @Column(name = "createdAt", nullable = false)
     private LocalDate createdAt;
-
-    // ── Shipping address snapshot ─────────────────────────────────────────────
-    @Column(name = "shippingFullName", length = 100)
-    private String shippingFullName;
-
-    @Column(name = "shippingPhone", length = 15)
-    private String shippingPhone;
-
-    @Column(name = "shippingProvince", length = 100)
-    private String shippingProvince;
-
-    @Column(name = "shippingDistrict", length = 100)
-    private String shippingDistrict;
-
-    @Column(name = "shippingWard", length = 100)
-    private String shippingWard;
-
-    @Column(name = "shippingAddress", length = 255)
-    private String shippingAddress;
 
     public Order() {}
 
@@ -68,29 +47,6 @@ public class Order implements Serializable {
 
     public LocalDate getCreatedAt()                   { return createdAt; }
     public void setCreatedAt(LocalDate createdAt)     { this.createdAt = createdAt; }
-
-    public String getShippingFullName()                         { return shippingFullName; }
-    public void setShippingFullName(String shippingFullName)    { this.shippingFullName = shippingFullName; }
-
-    public String getShippingPhone()                        { return shippingPhone; }
-    public void setShippingPhone(String shippingPhone)      { this.shippingPhone = shippingPhone; }
-
-    public String getShippingProvince()                         { return shippingProvince; }
-    public void setShippingProvince(String shippingProvince)    { this.shippingProvince = shippingProvince; }
-
-    public String getShippingDistrict()                         { return shippingDistrict; }
-    public void setShippingDistrict(String shippingDistrict)    { this.shippingDistrict = shippingDistrict; }
-
-    public String getShippingWard()                     { return shippingWard; }
-    public void setShippingWard(String shippingWard)    { this.shippingWard = shippingWard; }
-
-    public String getShippingAddress()                      { return shippingAddress; }
-    public void setShippingAddress(String shippingAddress)  { this.shippingAddress = shippingAddress; }
-
-    /** Returns true if this order has a shipping address snapshot. */
-    public boolean hasShippingAddress() {
-        return shippingFullName != null && !shippingFullName.isEmpty();
-    }
 
     @Override
     public String toString() {

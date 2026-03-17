@@ -82,18 +82,7 @@ public class AdminSupplierServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/admin/suppliers");
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/admin/suppliers");
-            return;
-        }
+        int id = Integer.parseInt(request.getParameter("id"));
         Supplier supplier = supplierService.findById(id);
         if (supplier == null) {
             response.sendRedirect(request.getContextPath() + "/admin/suppliers?error=notfound");
@@ -138,15 +127,8 @@ public class AdminSupplierServlet extends HttpServlet {
 
     private void deleteSupplier(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/admin/suppliers");
-            return;
-        }
-        try {
-            int id = Integer.parseInt(idParam);
-            supplierService.delete(id);
-        } catch (NumberFormatException ignored) {}
+        int id = Integer.parseInt(request.getParameter("id"));
+        supplierService.delete(id);
         response.sendRedirect(request.getContextPath() + "/admin/suppliers?success=deleted");
     }
 

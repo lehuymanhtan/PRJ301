@@ -20,7 +20,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void updateCartItem(Cart cart, int productId, int quantity) {
         for (CartItem item : cart) {
-            if (item.getProduct().getId().equals(productId)) {
+            if (item.getProduct().getId() == productId) {
                 item.setQuantity(quantity);
                 break;
             }
@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
     public void removeCartItem(Cart cart, int productId) {
         CartItem toRemove = null;
         for (CartItem item : cart) {
-            if (item.getProduct().getId().equals(productId)) {
+            if (item.getProduct().getId() == productId) {
                 toRemove = item;
                 break;
             }

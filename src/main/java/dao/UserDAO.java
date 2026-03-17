@@ -11,11 +11,11 @@ public class UserDAO {
         return JpaHelper.query(em -> {
             try {
                 return em.createQuery(
-                        "SELECT u FROM User u WHERE u.username = :username AND u.password = :password",
-                        User.class)
-                        .setParameter("username", username)
-                        .setParameter("password", password)
-                        .getSingleResult();
+                    "SELECT u FROM User u WHERE u.username = :username AND u.password = :password",
+                    User.class)
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .getSingleResult();
             } catch (NoResultException e) {
                 return null;
             }
@@ -23,19 +23,19 @@ public class UserDAO {
     }
 
     public List<User> getAllUsers() {
-        return JpaHelper.query(em
-                -> em.createQuery("SELECT u FROM User u ORDER BY u.userId", User.class)
-                        .getResultList()
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT u FROM User u ORDER BY u.userId", User.class)
+              .getResultList()
         );
     }
 
     public List<User> searchUserByName(String keyword) {
-        return JpaHelper.query(em
-                -> em.createQuery(
-                        "SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(:keyword) ORDER BY u.userId",
-                        User.class)
-                        .setParameter("keyword", "%" + keyword + "%")
-                        .getResultList()
+        return JpaHelper.query(em ->
+            em.createQuery(
+                "SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(:keyword) ORDER BY u.userId",
+                User.class)
+              .setParameter("keyword", "%" + keyword + "%")
+              .getResultList()
         );
     }
 
@@ -47,9 +47,9 @@ public class UserDAO {
         return JpaHelper.query(em -> {
             try {
                 return em.createQuery(
-                        "SELECT u FROM User u WHERE u.username = :username", User.class)
-                        .setParameter("username", username)
-                        .getSingleResult();
+                    "SELECT u FROM User u WHERE u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
             } catch (NoResultException e) {
                 return null;
             }
@@ -60,9 +60,9 @@ public class UserDAO {
         return JpaHelper.query(em -> {
             try {
                 return em.createQuery(
-                        "SELECT u FROM User u WHERE u.email = :email", User.class)
-                        .setParameter("email", email)
-                        .getSingleResult();
+                    "SELECT u FROM User u WHERE u.email = :email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
             } catch (jakarta.persistence.NoResultException e) {
                 return null;
             }
@@ -73,22 +73,9 @@ public class UserDAO {
         return JpaHelper.query(em -> {
             try {
                 return em.createQuery(
-                        "SELECT u FROM User u WHERE u.verificationToken = :token", User.class)
-                        .setParameter("token", token)
-                        .getSingleResult();
-            } catch (jakarta.persistence.NoResultException e) {
-                return null;
-            }
-        });
-    }
-
-    public User findByResetToken(String token) {
-        return JpaHelper.query(em -> {
-            try {
-                return em.createQuery(
-                        "SELECT u FROM User u WHERE u.resetToken = :token", User.class)
-                        .setParameter("token", token)
-                        .getSingleResult();
+                    "SELECT u FROM User u WHERE u.verificationToken = :token", User.class)
+                    .setParameter("token", token)
+                    .getSingleResult();
             } catch (jakarta.persistence.NoResultException e) {
                 return null;
             }
@@ -108,13 +95,11 @@ public class UserDAO {
             // Nullify userId on the user's orders to preserve order history
             // (userId is now nullable so this satisfies the FK constraint).
             em.createQuery("UPDATE Order o SET o.userId = NULL WHERE o.userId = :uid")
-                    .setParameter("uid", userId)
-                    .executeUpdate();
+              .setParameter("uid", userId)
+              .executeUpdate();
 
             User user = em.find(User.class, userId);
-            if (user != null) {
-                em.remove(user);
-            }
+            if (user != null) em.remove(user);
         });
     }
 }

@@ -89,18 +89,7 @@ public class AdminUserServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/admin/users");
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/admin/users");
-            return;
-        }
+        int id = Integer.parseInt(request.getParameter("id"));
         User user = userService.findById(id);
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/admin/users?error=notfound");

@@ -63,18 +63,7 @@ public class AdminRefundServlet extends HttpServlet {
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/admin/refunds");
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/admin/refunds");
-            return;
-        }
+        Integer id = Integer.parseInt(request.getParameter("id"));
         RefundRequest refund = refundService.findById(id);
         if (refund == null) {
             response.sendRedirect(request.getContextPath() + "/admin/refunds");
@@ -88,18 +77,7 @@ public class AdminRefundServlet extends HttpServlet {
 
     private void updateRefund(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/admin/refunds");
-            return;
-        }
-        int id;
-        try {
-            id = Integer.parseInt(idParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/admin/refunds");
-            return;
-        }
+        Integer id     = Integer.parseInt(request.getParameter("id"));
         String  status = request.getParameter("status");
         String  returnAddress = request.getParameter("returnAddress");
 

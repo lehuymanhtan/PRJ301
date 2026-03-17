@@ -82,26 +82,11 @@ public class CartServlet extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) action = "";
 
-        String productIdParam = request.getParameter("productId");
-        if (productIdParam == null || productIdParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
-        }
-        int productId;
-        try {
-            productId = Integer.parseInt(productIdParam);
-        } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
-        }
+        int productId = Integer.parseInt(request.getParameter("productId"));
 
         switch (action) {
             case "add":
-                String quantityParam = request.getParameter("quantity");
-                int quantity = 1;
-                try {
-                    if (quantityParam != null) quantity = Integer.parseInt(quantityParam);
-                } catch (NumberFormatException ignored) {}
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
                 Product product = productService.findById(productId);
                 if (product != null) {
                     int currentInCart = 0;
@@ -127,11 +112,7 @@ public class CartServlet extends HttpServlet {
                 }
                 break;
             case "update":
-                int qty = 1;
-                try {
-                    String qtyParam = request.getParameter("quantity");
-                    if (qtyParam != null) qty = Integer.parseInt(qtyParam);
-                } catch (NumberFormatException ignored) {}
+                int qty = Integer.parseInt(request.getParameter("quantity"));
                 Product pCheck = productService.findById(productId);
                 if (pCheck != null && qty > pCheck.getStock()) {
                     qty = pCheck.getStock();

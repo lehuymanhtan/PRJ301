@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Check(constraints = "gender IN ('male', 'female', 'other')")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
@@ -42,9 +40,6 @@ public class User implements Serializable {
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(name = "preferredLanguage", nullable = false, length = 5)
-    private String preferredLanguage = "vi"; // Default to Vietnamese
-
     @Column(name = "isVerified", nullable = false)
     private boolean isVerified = false;
 
@@ -57,14 +52,7 @@ public class User implements Serializable {
     @Column(name = "verificationExpiry")
     private LocalDateTime verificationExpiry;
 
-    @Column(name = "resetToken", length = 100)
-    private String resetToken;
-
-    @Column(name = "resetTokenExpiry")
-    private LocalDateTime resetTokenExpiry;
-
-    public User() {
-    }
+    public User() {}
 
     public User(String username, String password, String role) {
         this.username = username;
@@ -73,8 +61,8 @@ public class User implements Serializable {
     }
 
     public User(String username, String password, String role,
-            String name, String gender, LocalDate dateOfBirth,
-            String phone, String email) {
+                String name, String gender, LocalDate dateOfBirth,
+                String phone, String email) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -85,133 +73,44 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 
-    public String getRole() {
-        return role;
-    }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public boolean isVerified() { return isVerified; }
+    public void setVerified(boolean verified) { isVerified = verified; }
 
-    public String getGender() {
-        return gender;
-    }
+    public String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPreferredLanguage() {
-        return preferredLanguage;
-    }
-
-    public void setPreferredLanguage(String preferredLanguage) {
-        this.preferredLanguage = preferredLanguage;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public String getVerificationCode() {
-        return verificationCode;
-    }
-
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
-    }
-
-    public String getVerificationToken() {
-        return verificationToken;
-    }
-
-    public void setVerificationToken(String verificationToken) {
-        this.verificationToken = verificationToken;
-    }
-
-    public LocalDateTime getVerificationExpiry() {
-        return verificationExpiry;
-    }
-
-    public void setVerificationExpiry(LocalDateTime verificationExpiry) {
-        this.verificationExpiry = verificationExpiry;
-    }
-
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
-
-    public LocalDateTime getResetTokenExpiry() {
-        return resetTokenExpiry;
-    }
-
-    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
-        this.resetTokenExpiry = resetTokenExpiry;
-    }
+    public LocalDateTime getVerificationExpiry() { return verificationExpiry; }
+    public void setVerificationExpiry(LocalDateTime verificationExpiry) { this.verificationExpiry = verificationExpiry; }
 
     @Override
     public String toString() {
