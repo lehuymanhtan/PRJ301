@@ -4,8 +4,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import models.Order;
+import models.User;
+import services.LoyaltyService;
 import services.OrderService;
 import services.OrderServiceImpl;
+import services.UserService;
 import util.VNPayUtil;
 import java.io.IOException;
 
@@ -23,7 +26,9 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/vnpay-return"})
 public class VNPayReturnServlet extends HttpServlet {
 
-    private final OrderService orderService = new OrderServiceImpl();
+    private final OrderService   orderService   = new OrderServiceImpl();
+    private final LoyaltyService loyaltyService = new LoyaltyService();
+    private final UserService    userService    = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,6 +55,25 @@ public class VNPayReturnServlet extends HttpServlet {
                 if (order != null && "Pending".equals(order.getStatus())) {
                     order.setStatus(success ? "Processing" : "Cancelled");
                     orderService.updateOrder(order);
+
+                    // ── 3a. Apply loyalty points for successful payment ──────
+                    if (success && order.getUserId() != null) {
+                        HttpSession session = request.getSession(false);
+                        int usedPoints = (session != null && session.getAttribute("usedPoints") != null)
+                                ? (Integer) session.getAttribute("usedPoints") : 0;
+
+                        if (usedPoints > 0) {
+                            loyaltyService.usePoints(order.getUserId(), orderId, usedPoints);
+                        }
+                        loyaltyService.addPoints(order.getUserId(), orderId, order.getTotalPrice());
+
+                        // Refresh session user with updated points/tier
+                        User refreshed = userService.findById(order.getUserId());
+                        if (refreshed != null && session != null) {
+                            session.setAttribute("user", refreshed);
+                        }
+                        if (session != null) session.removeAttribute("usedPoints");
+                    }
                 }
             } catch (NumberFormatException ignored) {}
         }

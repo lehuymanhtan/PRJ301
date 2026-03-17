@@ -52,6 +52,18 @@ public class User implements Serializable {
     @Column(name = "verificationExpiry")
     private LocalDateTime verificationExpiry;
 
+    @Column(name = "points", nullable = false)
+    private int points = 0;
+
+    @Column(name = "membershipTier", nullable = false, length = 20)
+    private String membershipTier = "Regular";
+
+    @Column(name = "lastPurchaseDate")
+    private LocalDateTime lastPurchaseDate;
+
+    @Column(name = "pointResetDate")
+    private LocalDateTime pointResetDate;
+
     public User() {}
 
     public User(String username, String password, String role) {
@@ -111,6 +123,18 @@ public class User implements Serializable {
 
     public LocalDateTime getVerificationExpiry() { return verificationExpiry; }
     public void setVerificationExpiry(LocalDateTime verificationExpiry) { this.verificationExpiry = verificationExpiry; }
+
+    public int getPoints() { return points; }
+    public void setPoints(int points) { this.points = points; }
+
+    public String getMembershipTier() { return membershipTier; }
+    public void setMembershipTier(String membershipTier) { this.membershipTier = membershipTier; }
+
+    public LocalDateTime getLastPurchaseDate() { return lastPurchaseDate; }
+    public void setLastPurchaseDate(LocalDateTime lastPurchaseDate) { this.lastPurchaseDate = lastPurchaseDate; }
+
+    public LocalDateTime getPointResetDate() { return pointResetDate; }
+    public void setPointResetDate(LocalDateTime pointResetDate) { this.pointResetDate = pointResetDate; }
 
     @Override
     public String toString() {

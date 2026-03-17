@@ -15,13 +15,18 @@
         .search-form { margin-bottom: 15px; }
         .search-form input[type="text"] { padding: 5px; width: 250px; }
         table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
         th { background: #f0f0f0; }
         a.btn { display: inline-block; padding: 4px 10px; margin-right: 5px;
                 text-decoration: none; border: 1px solid #999; border-radius: 3px; }
         a.btn-add   { background: #4caf50; color: white; border-color: #4caf50; }
         a.btn-edit  { background: #2196f3; color: white; border-color: #2196f3; }
         a.btn-del   { background: #f44336; color: white; border-color: #f44336; }
+        a.btn-pts   { background: #558b2f; color: white; border-color: #558b2f; }
+        .inline-form { display: inline; }
+        .inline-form input[type="number"] { width: 60px; padding: 2px 4px; }
+        .inline-form select { padding: 2px 4px; }
+        .inline-form button { padding: 3px 8px; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -40,6 +45,7 @@
     <a href="${pageContext.request.contextPath}/admin/users">User Management</a> |
     <a href="${pageContext.request.contextPath}/admin/products">Product Management</a> |
     <a href="${pageContext.request.contextPath}/admin/suppliers">Supplier Management</a> |
+    <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
 
@@ -69,12 +75,14 @@
             <th>Username</th>
             <th>Password</th>
             <th>Role</th>
+            <th>Points</th>
+            <th>Tier</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <% if (users == null || users.isEmpty()) { %>
-            <tr><td colspan="5">No users found.</td></tr>
+            <tr><td colspan="7">No users found.</td></tr>
         <% } else {
             for (User u : users) { %>
             <tr>
@@ -82,13 +90,37 @@
                 <td><%= u.getUsername() %></td>
                 <td><%= u.getPassword() %></td>
                 <td><%= u.getRole() %></td>
+                <td><%= String.format("%,d", u.getPoints()) %></td>
+                <td><%= u.getMembershipTier() %></td>
                 <td>
                     <a href="${pageContext.request.contextPath}/admin/users?action=edit&id=<%= u.getUserId() %>" class="btn btn-edit">Edit</a>
+                    <a href="${pageContext.request.contextPath}/admin/point-history?userId=<%= u.getUserId() %>" class="btn btn-pts">Points</a>
                     <% if (!u.getUserId().equals(currentUser.getUserId())) { %>
                         <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=<%= u.getUserId() %>"
                            class="btn btn-del"
                            onclick="return confirm('Delete user <%= u.getUsername() %>?')">Delete</a>
                     <% } %>
+                    <br><br>
+                    <form class="inline-form" method="post" action="${pageContext.request.contextPath}/admin/loyalty">
+                        <input type="hidden" name="action" value="adjustPoints">
+                        <input type="hidden" name="userId" value="<%= u.getUserId() %>">
+                        <input type="number" name="points" placeholder="+/-" style="width:60px;">
+                        <button type="submit">Adjust Pts</button>
+                    </form>
+                    <form class="inline-form" method="post" action="${pageContext.request.contextPath}/admin/loyalty"
+                          style="margin-top:4px;">
+                        <input type="hidden" name="action" value="changeTier">
+                        <input type="hidden" name="userId" value="<%= u.getUserId() %>">
+                        <select name="tier">
+                            <option value="Regular" <%= "Regular".equals(u.getMembershipTier()) ? "selected" : "" %>>Regular</option>
+                            <option value="Bronze"  <%= "Bronze".equals(u.getMembershipTier())  ? "selected" : "" %>>Bronze</option>
+                            <option value="Silver"  <%= "Silver".equals(u.getMembershipTier())  ? "selected" : "" %>>Silver</option>
+                            <option value="Gold"    <%= "Gold".equals(u.getMembershipTier())    ? "selected" : "" %>>Gold</option>
+                            <option value="Platinum"<%= "Platinum".equals(u.getMembershipTier())? "selected" : "" %>>Platinum</option>
+                            <option value="Diamond" <%= "Diamond".equals(u.getMembershipTier()) ? "selected" : "" %>>Diamond</option>
+                        </select>
+                        <button type="submit">Set Tier</button>
+                    </form>
                 </td>
             </tr>
         <% } } %>

@@ -27,7 +27,11 @@ CREATE TABLE Users
     isVerified          BIT           NOT NULL DEFAULT 0,
     verificationCode    NVARCHAR(10)  NULL,
     verificationToken   NVARCHAR(100) NULL,
-    verificationExpiry  DATETIME2     NULL
+    verificationExpiry  DATETIME2     NULL,
+    points              INT           NOT NULL DEFAULT 0,
+    membershipTier      NVARCHAR(20)  NOT NULL DEFAULT 'Regular',
+    lastPurchaseDate    DATETIME2     NULL,
+    pointResetDate      DATETIME2     NULL
 );
 GO
 
@@ -258,3 +262,56 @@ CREATE TABLE RefundRequests
 );
 GO
 */
+
+-- ====== Loyalty Feature Tables ======
+-- If creating the database fresh, add these columns to the Users table above
+-- and add these tables alongside the others.
+-- If migrating an existing database, run the ALTER TABLE and CREATE TABLE
+-- statements below (the ones inside the /* */ block).
+
+-- ---- For fresh database: add to your CREATE TABLE Users block ----
+-- points           INT           NOT NULL DEFAULT 0,
+-- membershipTier   NVARCHAR(20)  NOT NULL DEFAULT 'Regular',
+-- lastPurchaseDate DATETIME2     NULL,
+-- pointResetDate   DATETIME2     NULL,
+
+-- ---- Fresh database tables ----
+CREATE TABLE PointHistory
+(
+    id           INT IDENTITY(1,1) PRIMARY KEY,
+    userId       INT            NOT NULL REFERENCES Users(userId),
+    orderId      INT            NULL REFERENCES Orders(id),
+    amount       DECIMAL(12,2)  NULL,
+    pointsEarned INT            NULL,
+    type         NVARCHAR(20)   NOT NULL DEFAULT 'EARN',
+    createdAt    DATETIME2      NOT NULL DEFAULT GETDATE()
+);
+GO
+
+CREATE TABLE LoyaltyConfig
+(
+    id        INT PRIMARY KEY,
+    pointRate INT NOT NULL DEFAULT 1
+);
+GO
+
+INSERT INTO LoyaltyConfig (id, pointRate) VALUES (1, 1);
+GO
+
+-- ====== Migration: Add Loyalty columns to existing Users table ======
+-- Skip this block if you are creating the database fresh.
+/*
+ALTER TABLE Users ADD
+    points           INT           NOT NULL DEFAULT 0,
+    membershipTier   NVARCHAR(20)  NOT NULL DEFAULT 'Regular',
+    lastPurchaseDate DATETIME2     NULL,
+    pointResetDate   DATETIME2     NULL;
+GO
+*/
+-- Tier thresholds
+-- Regular 
+-- → Bronze (10,000) 
+-- → Silver (20,000) 
+-- → Gold (50,000) 
+-- → Platinum (100,000) 
+-- → Diamond (200,000)

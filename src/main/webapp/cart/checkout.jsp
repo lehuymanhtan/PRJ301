@@ -21,6 +21,9 @@
                cursor: pointer; font-size: 14px; }
         .vnpay-badge { background: #005baa; color: #fff; font-weight: bold;
                font-size: 12px; padding: 2px 7px; border-radius: 3px; letter-spacing: .5px; }
+        .loyalty-box { border: 1px solid #c8e6c9; background: #f1f8e9; border-radius: 4px;
+               padding: 10px; margin-bottom: 12px; }
+        .loyalty-box label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .btn { display: inline-block; padding: 8px 16px; text-decoration: none;
                border: 1px solid #999; border-radius: 3px; cursor: pointer; font-size: 14px; }
         .btn-confirm { background: #2e7d32; color: white; border-color: #2e7d32; }
@@ -32,6 +35,8 @@
     User currentUser = (User) session.getAttribute("user");
     Cart cart        = (Cart) request.getAttribute("cart");
     double grandTotal = (cart != null) ? cart.getTotalCost() : 0;
+    int userPoints = (currentUser != null) ? currentUser.getPoints() : 0;
+    double maxDiscount = Math.min(userPoints, grandTotal);
 %>
 
 <h1>Checkout</h1>
@@ -87,14 +92,34 @@
             </label>
         </div>
         <hr>
+        <% if (userPoints > 0) { %>
+        <div class="loyalty-box">
+            <label>
+                <input type="checkbox" name="usePoints" id="usePoints" onchange="updateTotal(this)">
+                Use my <strong><%= userPoints %></strong> points
+                &mdash; save <%= String.format("%,.0f", maxDiscount) %> ₫
+            </label>
+        </div>
+        <% } %>
         <p><strong>Shipping:</strong> Free</p>
-        <p><strong>Total: <%= String.format("%,.0f", grandTotal) %> ₫</strong></p>
+        <p id="totalDisplay"><strong>Total: <%= String.format("%,.0f", grandTotal) %> ₫</strong></p>
         <br>
         <button type="submit" class="btn btn-confirm">Place Order</button>
         <a href="${pageContext.request.contextPath}/cart" class="btn btn-back"
            style="margin-left:8px;">Back to Cart</a>
     </form>
 </div>
+
+<script>
+var grandTotal  = <%= grandTotal %>;
+var maxDiscount = <%= maxDiscount %>;
+
+function updateTotal(cb) {
+    var finalTotal = cb.checked ? (grandTotal - maxDiscount) : grandTotal;
+    document.getElementById('totalDisplay').innerHTML =
+        '<strong>Total: ' + finalTotal.toLocaleString('vi-VN') + ' &#8363;</strong>';
+}
+</script>
 
 </body>
 </html>
