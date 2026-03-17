@@ -2,8 +2,10 @@ package services;
 
 import dao.OrderDAO;
 import models.DailyIncome;
+import models.MonthlyIncome;
 import models.Order;
 import models.OrderDetail;
+import models.YearlyIncome;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
@@ -53,5 +55,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<DailyIncome> getDailyIncome() {
         return orderDAO.getDailyIncome();
+    }
+
+    @Override
+    public List<DailyIncome> getDailyIncomeRange(int days) {
+        return orderDAO.getDailyIncomeRange(days);
+    }
+
+    @Override
+    public List<MonthlyIncome> getMonthlyIncome(int months) {
+        return orderDAO.getMonthlyIncome(months);
+    }
+
+    @Override
+    public List<YearlyIncome> getYearlyIncome(int years) {
+        return orderDAO.getYearlyIncome(years);
     }
 }

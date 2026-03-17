@@ -2,13 +2,12 @@
 <%@ page import="models.User" %>
 <%@ page import="models.DailyIncome" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.text.NumberFormat" %>
-<%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
         h1 { margin-bottom: 6px; }
@@ -36,22 +35,18 @@
             text-decoration: none; color: #333; min-width: 200px;
         }
         .links ul li a:hover { background: #e8e8e8; }
-        .income-section { margin-top: 32px; }
-        .income-section h2 { margin-bottom: 12px; }
-        .income-table {
-            width: 100%; border-collapse: collapse; background: white;
-            border: 1px solid #ddd; border-radius: 6px; overflow: hidden;
+        .chart-section {
+            margin-top: 32px; background: white; border: 1px solid #ddd;
+            border-radius: 6px; padding: 24px;
         }
-        .income-table th, .income-table td {
-            padding: 10px 16px; text-align: right; border-bottom: 1px solid #eee;
+        .chart-section h2 { margin: 0 0 16px; }
+        .chart-section .chart-footer {
+            margin-top: 10px; text-align: right;
         }
-        .income-table th { background: #f0f0f0; text-align: right; font-weight: bold; }
-        .income-table th:first-child, .income-table td:first-child { text-align: left; }
-        .income-table tr:last-child td { border-bottom: none; }
-        .income-table .completed { color: #4caf50; }
-        .income-table .pending   { color: #ff9800; }
-        .income-table .total     { color: #2196f3; font-weight: bold; }
-        .no-data { color: #999; font-style: italic; padding: 12px 0; }
+        .chart-section .chart-footer a {
+            font-size: 13px; color: #2196f3; text-decoration: none;
+        }
+        .chart-section .chart-footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -63,8 +58,7 @@
     int totalOrders    = (Integer) request.getAttribute("totalOrders");
     int totalRefunds   = (Integer) request.getAttribute("totalRefunds");
     @SuppressWarnings("unchecked")
-    List<DailyIncome> dailyIncome = (List<DailyIncome>) request.getAttribute("dailyIncome");
-    NumberFormat nf = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+    List<DailyIncome> chartData = (List<DailyIncome>) request.getAttribute("dashboardChartData");
 %>
 
 <h1>Admin Dashboard</h1>
@@ -77,6 +71,7 @@
     <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
     <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
     <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
+    <a href="${pageContext.request.contextPath}/admin/income">Income Report</a> |
     <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>
@@ -104,7 +99,15 @@
     </div>
 </div>
 
-<div class="links">
+<div class="chart-section">
+    <h2>Income Last 7 Days</h2>
+    <canvas id="dashboardChart" height="90"></canvas>
+    <div class="chart-footer">
+        <a href="${pageContext.request.contextPath}/admin/income">View full income report &rarr;</a>
+    </div>
+</div>
+
+<div class="links" style="margin-top:32px;">
     <h2>Quick Links</h2>
     <ul>
         <li><a href="${pageContext.request.contextPath}/admin/users">&#9654; Manage Users</a></li>
@@ -112,45 +115,107 @@
         <li><a href="${pageContext.request.contextPath}/admin/suppliers">&#9654; Manage Suppliers</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654; Manage Orders</a></li>
         <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654; Manage Refunds</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/income">&#9654; Income Report</a></li>
     </ul>
 </div>
 
-<div class="income-section">
-    <h2>Daily Income</h2>
-    <%
-        if (dailyIncome == null || dailyIncome.isEmpty()) {
-    %>
-        <p class="no-data">No income data available yet.</p>
-    <%
-        } else {
-    %>
-    <table class="income-table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Completed Income (&#8363;)</th>
-                <th>Pending Income (&#8363;)</th>
-                <th>Total Income (&#8363;)</th>
-            </tr>
-        </thead>
-        <tbody>
-        <%
-            for (DailyIncome row : dailyIncome) {
-        %>
-            <tr>
-                <td><%= row.getIncomeDate() %></td>
-                <td class="completed"><%= nf.format(row.getCompletedIncome()) %></td>
-                <td class="pending"><%= nf.format(row.getPendingIncome()) %></td>
-                <td class="total"><%= nf.format(row.getTotalIncome()) %></td>
-            </tr>
-        <%
+<script>
+(function () {
+    var labels    = [<%
+        if (chartData != null) {
+            for (int i = 0; i < chartData.size(); i++) {
+                if (i > 0) out.print(",");
+                out.print("\"" + chartData.get(i).getIncomeDate() + "\"");
             }
-        %>
-        </tbody>
-    </table>
-    <%
         }
-    %>
-</div>
+    %>];
+    var completed = [<%
+        if (chartData != null) {
+            for (int i = 0; i < chartData.size(); i++) {
+                if (i > 0) out.print(",");
+                out.print(chartData.get(i).getCompletedIncome());
+            }
+        }
+    %>];
+    var pending   = [<%
+        if (chartData != null) {
+            for (int i = 0; i < chartData.size(); i++) {
+                if (i > 0) out.print(",");
+                out.print(chartData.get(i).getPendingIncome());
+            }
+        }
+    %>];
+    var total     = [<%
+        if (chartData != null) {
+            for (int i = 0; i < chartData.size(); i++) {
+                if (i > 0) out.print(",");
+                out.print(chartData.get(i).getTotalIncome());
+            }
+        }
+    %>];
+
+    new Chart(document.getElementById("dashboardChart"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Completed (\u20AB)",
+                    data: completed,
+                    backgroundColor: "rgba(76,175,80,0.7)",
+                    borderColor: "#4caf50",
+                    borderWidth: 1,
+                    order: 2
+                },
+                {
+                    label: "Pending (\u20AB)",
+                    data: pending,
+                    backgroundColor: "rgba(255,152,0,0.7)",
+                    borderColor: "#ff9800",
+                    borderWidth: 1,
+                    order: 2
+                },
+                {
+                    label: "Total (\u20AB)",
+                    data: total,
+                    type: "line",
+                    borderColor: "#2196f3",
+                    backgroundColor: "rgba(33,150,243,0.08)",
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    fill: false,
+                    tension: 0.3,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+                x: { stacked: false },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(v) {
+                            return new Intl.NumberFormat("vi-VN").format(v) + " \u20AB";
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.dataset.label + ": " +
+                                new Intl.NumberFormat("vi-VN").format(ctx.parsed.y) + " \u20AB";
+                        }
+                    }
+                }
+            }
+        }
+    });
+}());
+</script>
 </body>
 </html>
