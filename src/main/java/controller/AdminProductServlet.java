@@ -27,6 +27,7 @@ public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
     private final SupplierService supplierService = new SupplierService();
+    private static final int PAGE_SIZE = 10;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -75,8 +76,29 @@ public class AdminProductServlet extends HttpServlet {
 
     private void listProducts(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Product> products = productService.findAll();
+        int pageNumber = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+                if (pageNumber < 1) pageNumber = 1;
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
+        long totalCount = productService.countAll();
+        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (pageNumber > totalPages && totalPages > 0) {
+            pageNumber = (int) totalPages;
+        }
+
+        List<Product> products = productService.findPage(pageNumber, PAGE_SIZE);
         request.setAttribute("products", products);
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/admin/products/list.jsp").forward(request, response);
     }
 

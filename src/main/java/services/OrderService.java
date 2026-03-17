@@ -11,6 +11,10 @@ public interface OrderService {
 
     List<Order> getAllOrders();
 
+    long countAllOrders();
+
+    List<Order> getOrdersPage(int pageNumber, int pageSize);
+
     List<Order> getOrdersByUserId(Integer userId);
 
     Order getOrderById(Integer id);

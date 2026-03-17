@@ -80,5 +80,23 @@
 <% } } %>
 </div>
 
+<%
+    Long totalPages = (Long) request.getAttribute("totalPages");
+    Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+    if (totalPages != null && totalPages > 1) {
+%>
+<div style="margin-top: 20px; text-align: center;">
+    <% if (pageNumber > 1) { %>
+        <a href="${pageContext.request.contextPath}/products?page=1" class="btn">First</a>
+        <a href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %>" class="btn">Previous</a>
+    <% } %>
+    <span style="margin: 0 10px;">Page <%= pageNumber %> of <%= totalPages %></span>
+    <% if (pageNumber < totalPages) { %>
+        <a href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>" class="btn">Next</a>
+        <a href="${pageContext.request.contextPath}/products?page=<%= totalPages %>" class="btn">Last</a>
+    <% } %>
+</div>
+<% } %>
+
 </body>
 </html>
