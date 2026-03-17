@@ -147,4 +147,74 @@ public class EmailService {
                 html
         );
     }
+
+    // ----------------------------------------------------------------
+    // Password reset emails
+    // ----------------------------------------------------------------
+
+    /**
+     * Sends a password reset email with a reset link (30 minute expiry).
+     *
+     * @param userEmail Recipient address
+     * @param userName  Recipient display name
+     * @param resetLink Full URL to reset password page
+     * @return {@code true} if Resend accepted the email
+     */
+    public static boolean sendPasswordResetEmail(String userEmail, String userName, String resetLink) {
+        String html
+                = "<div style='font-family:Arial,sans-serif;background:#f4f4f4;padding:20px'>"
+                + "<div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px'>"
+                + "<h2 style='color:#2c3e50;text-align:center'>&#x1f512; Password Reset Request</h2>"
+                + "<p>Hello <b>" + userName + "</b>,</p>"
+                + "<p>We received a request to reset your password. Click the button below to create a new password:</p>"
+                + "<div style='text-align:center;margin:24px 0'>"
+                + "<a href='" + resetLink + "' style='background:#e74c3c;color:white;padding:12px 28px;"
+                + "border-radius:4px;text-decoration:none;font-size:15px'>Reset Password</a>"
+                + "</div>"
+                + "<p style='font-size:12px;color:#999;margin-top:24px'>"
+                + "This link will expire in 30 minutes.<br>"
+                + "If you did not request a password reset, please ignore this email.</p>"
+                + "<hr>"
+                + "<p style='font-size:11px;color:gray;text-align:center'>"
+                + "This email was sent automatically by our store system."
+                + "</p>"
+                + "</div></div>";
+
+        return ResendUtil.sendMail(
+                buildFrom("RubyTech"),
+                userEmail,
+                "Password Reset Request",
+                html
+        );
+    }
+
+    /**
+     * Sends a confirmation email after password has been successfully reset.
+     *
+     * @param userEmail Recipient address
+     * @param userName  Recipient display name
+     * @return {@code true} if Resend accepted the email
+     */
+    public static boolean sendPasswordChangedEmail(String userEmail, String userName) {
+        String html
+                = "<div style='font-family:Arial,sans-serif;background:#f4f4f4;padding:20px'>"
+                + "<div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px'>"
+                + "<h2 style='color:#2c3e50;text-align:center'>&#x2705; Password Changed Successfully</h2>"
+                + "<p>Hello <b>" + userName + "</b>,</p>"
+                + "<p>Your password has been changed successfully. You can now log in with your new password.</p>"
+                + "<p style='font-size:12px;color:#999;margin-top:24px'>"
+                + "If you did not make this change, please contact us immediately.</p>"
+                + "<hr>"
+                + "<p style='font-size:11px;color:gray;text-align:center'>"
+                + "This email was sent automatically by our store system."
+                + "</p>"
+                + "</div></div>";
+
+        return ResendUtil.sendMail(
+                buildFrom("RubyTech"),
+                userEmail,
+                "Password Changed",
+                html
+        );
+    }
 }

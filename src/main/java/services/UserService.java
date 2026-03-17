@@ -222,6 +222,53 @@ public class UserService {
         userDAO.deleteUser(userId);
     }
 
+    // ----------------------------------------------------------------
+    // Password reset methods
+    // ----------------------------------------------------------------
+
+    /**
+     * Initiates password reset process. Generates a reset token valid for 30 minutes.
+     * @return The User object with reset token set (null if email not found)
+     */
+    public User initiatePasswordReset(String email) {
+        User user = findByEmail(email);
+        if (user == null) return null;
+
+        String token = UUID.randomUUID().toString().replace("-", "");
+        user.setResetToken(token);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        userDAO.updateUser(user);
+        return user;
+    }
+
+    /**
+     * Validates reset token and checks expiry.
+     * @return The User if token is valid, null otherwise
+     */
+    public User validateResetToken(String token) {
+        User user = userDAO.findByResetToken(token);
+        if (user == null) return null;
+        if (user.getResetTokenExpiry() == null || LocalDateTime.now().isAfter(user.getResetTokenExpiry())) {
+            return null;
+        }
+        return user;
+    }
+
+    /**
+     * Resets password and clears reset token.
+     * @return true if successful, false if token invalid/expired
+     */
+    public boolean resetPassword(String token, String newPassword) {
+        User user = validateResetToken(token);
+        if (user == null) return false;
+
+        user.setPassword(newPassword);
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userDAO.updateUser(user);
+        return true;
+    }
+
     private void validateProfileInput(String name, String gender, LocalDate dateOfBirth, String email) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Full name is required");

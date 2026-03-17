@@ -31,7 +31,9 @@ CREATE TABLE Users
     points              INT           NOT NULL DEFAULT 0,
     membershipTier      NVARCHAR(20)  NOT NULL DEFAULT 'Regular',
     lastPurchaseDate    DATETIME2     NULL,
-    pointResetDate      DATETIME2     NULL
+    pointResetDate      DATETIME2     NULL,
+    resetToken          NVARCHAR(100) NULL,
+    resetTokenExpiry    DATETIME2     NULL
 );
 GO
 
@@ -99,7 +101,13 @@ CREATE TABLE Orders
     status     NVARCHAR(20)  NOT NULL DEFAULT 'Pending'
         CHECK (status IN (N'Pending', N'Processing', N'Shipped', N'Delivered',
                           N'Completed', N'Cancelled', N'Deleted', N'Refunded'))
-    createdAt  DATE          NOT NULL DEFAULT CAST(GETDATE() AS DATE)
+    createdAt  DATE          NOT NULL DEFAULT CAST(GETDATE() AS DATE),
+    shippingFullName  NVARCHAR(100) NULL,
+    shippingPhone     NVARCHAR(15)  NULL,
+    shippingProvinceId INT          NULL     REFERENCES Provinces(id),
+    shippingDistrict  NVARCHAR(100) NULL,
+    shippingWard      NVARCHAR(100) NULL,
+    shippingAddress   NVARCHAR(255) NULL
 );
 GO
 
@@ -196,6 +204,70 @@ CREATE TABLE RefundRequests
 );
 GO
 
+-- ====== Provinces Table ======
+CREATE TABLE Provinces
+(
+    id       INT IDENTITY(1,1) PRIMARY KEY,
+    nameVi   NVARCHAR(100) NOT NULL,
+    nameEn   NVARCHAR(100) NOT NULL,
+    isActive BIT           NOT NULL DEFAULT 1
+);
+GO
+
+-- ====== UserAddresses Table ======
+CREATE TABLE UserAddresses
+(
+    id            INT IDENTITY(1,1) PRIMARY KEY,
+    userId        INT           NOT NULL REFERENCES Users(userId),
+    fullName      NVARCHAR(100) NOT NULL,
+    phone         NVARCHAR(15)  NOT NULL,
+    provinceId    INT           NOT NULL REFERENCES Provinces(id),
+    district      NVARCHAR(100) NOT NULL,
+    ward          NVARCHAR(100) NOT NULL,
+    addressDetail NVARCHAR(255) NOT NULL,
+    isDefault     BIT           NOT NULL DEFAULT 0,
+    createdAt     DATE          NOT NULL DEFAULT CAST(GETDATE() AS DATE)
+);
+GO
+
+-- ====== Sample Data: Provinces (34 provinces/cities of Vietnam) ======
+INSERT INTO Provinces (nameVi, nameEn, isActive) VALUES
+    (N'Hà Nội', 'Ha Noi', 1),
+    (N'Cao Bằng', 'Cao Bang', 1),
+    (N'Tuyên Quang', 'Tuyen Quang', 1),
+    (N'Điện Biên', 'Dien Bien', 1),
+    (N'Lai Châu', 'Lai Chau', 1),
+    (N'Sơn La', 'Son La', 1),
+    (N'Lào Cai', 'Lao Cai', 1),
+    (N'Thái Nguyên', 'Thai Nguyen', 1),
+    (N'Lạng Sơn', 'Lang Son', 1),
+    (N'Quảng Ninh', 'Quang Ninh', 1),
+    (N'Bắc Ninh', 'Bac Ninh', 1),
+    (N'Phú Thọ', 'Phu Tho', 1),
+    (N'Hải Phòng', 'Hai Phong', 1),
+    (N'Hưng Yên', 'Hung Yen', 1),
+    (N'Ninh Bình', 'Ninh Binh', 1),
+    (N'Thanh Hóa', 'Thanh Hoa', 1),
+    (N'Nghệ An', 'Nghe An', 1),
+    (N'Hà Tĩnh', 'Ha Tinh', 1),
+    (N'Quảng Trị', 'Quang Tri', 1),
+    (N'Huế', 'Hue', 1),
+    (N'Đà Nẵng', 'Da Nang', 1),
+    (N'Quảng Ngãi', 'Quang Ngai', 1),
+    (N'Gia Lai', 'Gia Lai', 1),
+    (N'Khánh Hòa', 'Khanh Hoa', 1),
+    (N'Đắk Lắk', 'Dak Lak', 1),
+    (N'Lâm Đồng', 'Lam Dong', 1),
+    (N'Đồng Nai', 'Dong Nai', 1),
+    (N'Hồ Chí Minh', 'Ho Chi Minh City', 1),
+    (N'Tây Ninh', 'Tay Ninh', 1),
+    (N'Đồng Tháp', 'Dong Thap', 1),
+    (N'Vĩnh Long', 'Vinh Long', 1),
+    (N'An Giang', 'An Giang', 1),
+    (N'Cần Thơ', 'Can Tho', 1),
+    (N'Cà Mau', 'Ca Mau', 1);
+GO
+
 -- ====== Migration: Add email verification columns to existing database ======
 -- Skip this block if you are creating the database fresh from the CREATE TABLE above.
 /*
@@ -211,13 +283,122 @@ UPDATE Users SET isVerified = 1;
 GO
 */
 
+-- ====== Migration: Add password reset columns to existing Users table ======
+-- Skip this block if you are creating the database fresh.
+/*
+ALTER TABLE Users ADD
+    resetToken       NVARCHAR(100) NULL,
+    resetTokenExpiry DATETIME2     NULL;
+GO
+*/
 
--- ====== Migration: Add createdAt column to existing Orders table ======
+-- ====== Migration: add createdAt column to existing Orders table ======
 -- Skip this block if you are creating the database fresh from the CREATE TABLE above.
 /*
 ALTER TABLE Orders ADD
     createdAt DATE NOT NULL DEFAULT CAST(GETDATE() AS DATE);
 GO
+*/
+
+-- ====== Migration: Add shipping address columns to existing Orders table ======
+-- Skip this block if you are creating the database fresh.
+/*
+ALTER TABLE Orders ADD
+    shippingFullName   NVARCHAR(100) NULL,
+    shippingPhone      NVARCHAR(15)  NULL,
+    shippingProvinceId INT           NULL REFERENCES Provinces(id),
+    shippingDistrict   NVARCHAR(100) NULL,
+    shippingWard       NVARCHAR(100) NULL,
+    shippingAddress    NVARCHAR(255) NULL;
+GO
+*/
+
+-- ====== Migration: Add Provinces and UserAddresses tables to existing database ======
+-- Skip this block if you are creating the database fresh.
+/*
+CREATE TABLE Provinces
+(
+    id       INT IDENTITY(1,1) PRIMARY KEY,
+    nameVi   NVARCHAR(100) NOT NULL,
+    nameEn   NVARCHAR(100) NOT NULL,
+    isActive BIT           NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE UserAddresses
+(
+    id            INT IDENTITY(1,1) PRIMARY KEY,
+    userId        INT           NOT NULL REFERENCES Users(userId),
+    fullName      NVARCHAR(100) NOT NULL,
+    phone         NVARCHAR(15)  NOT NULL,
+    provinceId    INT           NOT NULL REFERENCES Provinces(id),
+    district      NVARCHAR(100) NOT NULL,
+    ward          NVARCHAR(100) NOT NULL,
+    addressDetail NVARCHAR(255) NOT NULL,
+    isDefault     BIT           NOT NULL DEFAULT 0,
+    createdAt     DATE          NOT NULL DEFAULT CAST(GETDATE() AS DATE)
+);
+GO
+
+-- Insert provinces data
+INSERT INTO Provinces (nameVi, nameEn, isActive) VALUES
+    (N'Hà Nội', 'Ha Noi', 1),
+    (N'Cao Bằng', 'Cao Bang', 1),
+    (N'Tuyên Quang', 'Tuyen Quang', 1),
+    (N'Điện Biên', 'Dien Bien', 1),
+    (N'Lai Châu', 'Lai Chau', 1),
+    (N'Sơn La', 'Son La', 1),
+    (N'Lào Cai', 'Lao Cai', 1),
+    (N'Thái Nguyên', 'Thai Nguyen', 1),
+    (N'Lạng Sơn', 'Lang Son', 1),
+    (N'Quảng Ninh', 'Quang Ninh', 1),
+    (N'Bắc Ninh', 'Bac Ninh', 1),
+    (N'Phú Thọ', 'Phu Tho', 1),
+    (N'Hải Phòng', 'Hai Phong', 1),
+    (N'Hưng Yên', 'Hung Yen', 1),
+    (N'Ninh Bình', 'Ninh Binh', 1),
+    (N'Thanh Hóa', 'Thanh Hoa', 1),
+    (N'Nghệ An', 'Nghe An', 1),
+    (N'Hà Tĩnh', 'Ha Tinh', 1),
+    (N'Quảng Trị', 'Quang Tri', 1),
+    (N'Huế', 'Hue', 1),
+    (N'Đà Nẵng', 'Da Nang', 1),
+    (N'Quảng Ngãi', 'Quang Ngai', 1),
+    (N'Gia Lai', 'Gia Lai', 1),
+    (N'Khánh Hòa', 'Khanh Hoa', 1),
+    (N'Đắk Lắk', 'Dak Lak', 1),
+    (N'Lâm Đồng', 'Lam Dong', 1),
+    (N'Đồng Nai', 'Dong Nai', 1),
+    (N'Hồ Chí Minh', 'Ho Chi Minh City', 1),
+    (N'Tây Ninh', 'Tay Ninh', 1),
+    (N'Đồng Tháp', 'Dong Thap', 1),
+    (N'Vĩnh Long', 'Vinh Long', 1),
+    (N'An Giang', 'An Giang', 1),
+    (N'Cần Thơ', 'Can Tho', 1),
+    (N'Cà Mau', 'Ca Mau', 1);
+GO
+*/
+
+-- ====== Migration: Convert Orders.shippingProvince to shippingProvinceId ======
+-- If you have an existing database using the old text-based shippingProvince field:
+/*
+-- Step 1: Add the new shippingProvinceId column
+ALTER TABLE Orders ADD shippingProvinceId INT NULL REFERENCES Provinces(id);
+GO
+
+-- Step 2: Migrate existing data by matching province names
+-- Update based on Vietnamese name matching
+UPDATE o
+SET o.shippingProvinceId = p.id
+FROM Orders o
+JOIN Provinces p ON o.shippingProvince = p.nameVi
+WHERE o.shippingProvince IS NOT NULL;
+GO
+
+-- Step 3: (Optional) Drop the old shippingProvince column after verifying migration
+-- Uncomment only after confirming all data is properly migrated:
+-- ALTER TABLE Orders DROP COLUMN shippingProvince;
+-- GO
 */
 
 -- ====== View: Daily Income Summary ======

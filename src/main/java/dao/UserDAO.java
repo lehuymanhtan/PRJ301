@@ -82,6 +82,19 @@ public class UserDAO {
         });
     }
 
+    public User findByResetToken(String token) {
+        return JpaHelper.query(em -> {
+            try {
+                return em.createQuery(
+                    "SELECT u FROM User u WHERE u.resetToken = :token", User.class)
+                    .setParameter("token", token)
+                    .getSingleResult();
+            } catch (jakarta.persistence.NoResultException e) {
+                return null;
+            }
+        });
+    }
+
     public void insertUser(User user) {
         JpaHelper.execute(em -> em.persist(user));
     }

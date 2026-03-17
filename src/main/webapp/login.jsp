@@ -38,6 +38,11 @@
        if ("account_deleted".equals(loginMsg)) { %>
         <p class="msg-success">Your account has been deleted.</p>
     <% } %>
+    <% String successMessage = (String) session.getAttribute("successMessage");
+       if (successMessage != null) { %>
+        <p class="msg-success"><%= successMessage %></p>
+        <% session.removeAttribute("successMessage"); %>
+    <% } %>
 
     <form method="post" action="${pageContext.request.contextPath}/login">
         <div class="form-group">
@@ -50,6 +55,10 @@
         </div>
         <button type="submit">Login</button>
     </form>
+
+    <div class="links">
+        <a href="${pageContext.request.contextPath}/forgot-password">Forgot Password?</a>
+    </div>
 
     <div class="links">
         No account? <a href="${pageContext.request.contextPath}/register">Register</a>

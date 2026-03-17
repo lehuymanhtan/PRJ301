@@ -59,6 +59,7 @@
 <nav>
     <a href="${pageContext.request.contextPath}/users">My Profile</a> |
     <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
+    <a href="${pageContext.request.contextPath}/users/addresses">Shipping Addresses</a> |
     <a href="${pageContext.request.contextPath}/points">Point History</a> |
     <a href="${pageContext.request.contextPath}/logout">Logout</a>
 </nav>

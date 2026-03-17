@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="models.Cart, models.CartItem, models.User" %>
+<%@ page import="models.Cart, models.CartItem, models.User, models.UserAddress, java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +14,7 @@
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background: #f0f0f0; }
         .total-row td { font-weight: bold; }
-        .summary { max-width: 400px; border: 1px solid #ccc; border-radius: 4px; padding: 16px; }
+        .summary { max-width: 600px; border: 1px solid #ccc; border-radius: 4px; padding: 16px; }
         .summary p { margin: 6px 0; }
         .payment-option { margin-bottom: 10px; }
         .payment-option label { display: flex; align-items: center; gap: 8px;
@@ -24,6 +24,12 @@
         .loyalty-box { border: 1px solid #c8e6c9; background: #f1f8e9; border-radius: 4px;
                padding: 10px; margin-bottom: 12px; }
         .loyalty-box label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .address-section { border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px;
+               padding: 12px; margin-bottom: 16px; }
+        .address-option { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;
+               border-radius: 4px; background: white; }
+        .address-option.selected { border-color: #2e7d32; background: #e8f5e9; }
+        .address-option label { cursor: pointer; display: block; }
         .btn { display: inline-block; padding: 8px 16px; text-decoration: none;
                border: 1px solid #999; border-radius: 3px; cursor: pointer; font-size: 14px; }
         .btn-confirm { background: #2e7d32; color: white; border-color: #2e7d32; }
@@ -34,9 +40,22 @@
 <%
     User currentUser = (User) session.getAttribute("user");
     Cart cart        = (Cart) request.getAttribute("cart");
+    @SuppressWarnings("unchecked")
+    List<UserAddress> addresses = (List<UserAddress>) request.getAttribute("addresses");
     double grandTotal = (cart != null) ? cart.getTotalCost() : 0;
     int userPoints = (currentUser != null) ? currentUser.getPoints() : 0;
     double maxDiscount = Math.min(userPoints, grandTotal);
+
+    // Find default address
+    UserAddress defaultAddress = null;
+    if (addresses != null) {
+        for (UserAddress addr : addresses) {
+            if (addr.isDefault()) {
+                defaultAddress = addr;
+                break;
+            }
+        }
+    }
 %>
 
 <h1>Checkout</h1>
@@ -77,6 +96,25 @@
 
 <div class="summary">
     <form action="${pageContext.request.contextPath}/checkout" method="post">
+        <h3 style="margin-top:0;">Shipping Address</h3>
+        <div class="address-section">
+            <% if (addresses != null && !addresses.isEmpty()) { %>
+                <% for (UserAddress addr : addresses) { %>
+                    <div class="address-option <%= (defaultAddress != null && addr.getId().equals(defaultAddress.getId())) ? "selected" : "" %>">
+                        <label>
+                            <input type="radio" name="addressId" value="<%= addr.getId() %>"
+                                <%= (defaultAddress != null && addr.getId().equals(defaultAddress.getId())) ? "checked" : "" %>>
+                            <strong><%= addr.getFullName() %></strong> - <%= addr.getPhone() %><br>
+                            <span style="margin-left: 20px;"><%= addr.getFormattedAddress() %></span>
+                        </label>
+                    </div>
+                <% } %>
+                <a href="${pageContext.request.contextPath}/users/addresses?action=add" style="font-size: 13px;">+ Add new address</a>
+            <% } else { %>
+                <p>No addresses found. <a href="${pageContext.request.contextPath}/users/addresses">Add an address</a></p>
+            <% } %>
+        </div>
+
         <h3 style="margin-top:0;">Payment Method</h3>
         <div class="payment-option">
             <label>
