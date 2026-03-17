@@ -84,7 +84,6 @@
 
                 <body>
                     <nav>
-                        <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                             <a href="${pageContext.request.contextPath}/admin/products">&larr;
                                 ${i18n.get('admin.backToProducts')}</a> |
                             <a

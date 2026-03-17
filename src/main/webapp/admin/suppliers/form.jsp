@@ -77,7 +77,6 @@
                 <body>
                     <% User currentUser=(User) session.getAttribute("user"); %>
                         <nav>
-                            <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                                 <a href="${pageContext.request.contextPath}/admin/suppliers">&larr;
                                     ${i18n.get('admin.backToSuppliers')}</a> |
                                 <a

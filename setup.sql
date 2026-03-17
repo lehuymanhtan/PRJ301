@@ -33,8 +33,6 @@ CREATE TABLE Users
     dateOfBirth DATE NOT NULL,
     phone NVARCHAR(20) NULL,
     email NVARCHAR(100) NOT NULL UNIQUE,
-    preferredLanguage NVARCHAR(5) NOT NULL DEFAULT 'vi',
-    -- User's preferred language (vi/en)
     isVerified BIT NOT NULL DEFAULT 0,
     verificationCode NVARCHAR(10) NULL,
     verificationToken NVARCHAR(100) NULL,

@@ -1,12 +1,13 @@
 package services;
 
-import dao.UserDAO;
-import models.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import dao.UserDAO;
+import models.User;
 
 public class UserService {
 
@@ -196,24 +197,6 @@ public class UserService {
         user.setResetTokenExpiry(null);
         userDAO.updateUser(user);
         return true;
-    }
-
-    /**
-     * Update user's preferred language.
-     */
-    public void updateLanguagePreference(Integer userId, String language) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID is required");
-        }
-        if (!"vi".equals(language) && !"en".equals(language)) {
-            throw new IllegalArgumentException("Language must be 'vi' or 'en'");
-        }
-
-        User user = userDAO.findById(userId);
-        if (user != null) {
-            user.setPreferredLanguage(language);
-            userDAO.updateUser(user);
-        }
     }
 
     /**

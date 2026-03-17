@@ -98,7 +98,6 @@
 
                     <h1>${i18n.get('admin.userManagement')}</h1>
                     <nav>
-                        <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                             ${i18n.get('nav.welcome')}, <strong>
                                 <%= currentUser.getUsername() %>
                             </strong> |

@@ -94,14 +94,7 @@
                 align-items: center;
                 margin-bottom: 10px;
             }
-
-            .lang-select {
-                padding: 4px 8px;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-        </style>
+</style>
     </head>
 
     <body>
@@ -140,3 +133,4 @@
     </body>
 
     </html>
+

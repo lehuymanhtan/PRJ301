@@ -88,7 +88,6 @@
 
                         <h1>${i18n.get('admin.editOrderStatus')}</h1>
                         <nav>
-                            <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                                 <a href="${pageContext.request.contextPath}/admin/orders">&#8592;
                                     ${i18n.get('admin.backToOrders')}</a> |
                                 <a

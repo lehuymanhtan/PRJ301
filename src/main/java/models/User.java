@@ -1,10 +1,17 @@
 package models;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.Check;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.Check;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Users")
@@ -39,9 +46,6 @@ public class User implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
-
-    @Column(name = "preferredLanguage", nullable = false, length = 5)
-    private String preferredLanguage = "vi"; // Default to Vietnamese
 
     @Column(name = "isVerified", nullable = false)
     private boolean isVerified = false;
@@ -153,14 +157,6 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPreferredLanguage() {
-        return preferredLanguage;
-    }
-
-    public void setPreferredLanguage(String preferredLanguage) {
-        this.preferredLanguage = preferredLanguage;
     }
 
     public boolean isVerified() {

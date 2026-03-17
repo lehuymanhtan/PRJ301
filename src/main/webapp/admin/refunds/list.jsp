@@ -119,7 +119,6 @@
 
                     <h1>${i18n.get('admin.refundManagement')}</h1>
                     <nav>
-                        <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                             <a
                                 href="${pageContext.request.contextPath}/admin/dashboard">${i18n.get('nav.dashboard')}</a>
                             |

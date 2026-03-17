@@ -1,12 +1,15 @@
 package controller;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import models.User;
 import services.UserService;
-import util.I18nUtil;
-import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
@@ -32,9 +35,6 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Get the current language (from cookie, session, or browser) BEFORE login
-        String currentLang = I18nUtil.getCurrentLanguage(request);
-
         User user = userService.login(username, password);
 
         if (user != null) {
@@ -49,17 +49,8 @@ public class LoginServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
 
-            // Update user's language preference in database if different from saved preference
-            if (!currentLang.equals(user.getPreferredLanguage())) {
-                userService.updateLanguagePreference(user.getUserId(), currentLang);
-                user.setPreferredLanguage(currentLang); // Update in-memory object
-            }
-
             // Save user to session
             session.setAttribute("user", user);
-
-            // Ensure language is set in session and cookie
-            I18nUtil.setLanguage(request, response, user.getPreferredLanguage());
 
             if ("admin".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");

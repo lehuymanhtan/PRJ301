@@ -1,13 +1,16 @@
 package filter;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import util.I18nUtil;
-
 import java.io.IOException;
 import java.util.ResourceBundle;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import util.I18nUtil;
 
 /**
  * Filter that sets the locale and resource bundle for each request. Makes i18n
@@ -20,22 +23,13 @@ public class LocaleFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+        if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-            // Check if language switch was requested
-            String langParam = httpRequest.getParameter("lang");
-            if (langParam != null && !langParam.isEmpty()) {
-                I18nUtil.setLanguage(httpRequest, httpResponse, langParam);
-            }
 
             // Set locale and bundle as request attributes for JSP access
             ResourceBundle bundle = I18nUtil.getBundle(httpRequest);
-            String currentLang = I18nUtil.getCurrentLanguage(httpRequest);
 
             request.setAttribute("bundle", bundle);
-            request.setAttribute("currentLang", currentLang);
             request.setAttribute("i18n", new I18nHelper(httpRequest));
         }
 

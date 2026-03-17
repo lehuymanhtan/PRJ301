@@ -188,7 +188,6 @@
                                         </strong></p>
 
                                     <nav>
-                                        <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                                             <a
                                                 href="${pageContext.request.contextPath}/admin/dashboard"><strong>${i18n.get('nav.dashboard')}</strong></a>
                                             |

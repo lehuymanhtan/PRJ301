@@ -100,21 +100,13 @@
             .back-link {
                 font-size: 13px;
             }
-
-            .lang-select {
-                padding: 4px 8px;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-        </style>
+</style>
     </head>
 
     <body>
         <div class="box">
             <div class="header-actions">
                 <a class="back-link" href="${pageContext.request.contextPath}/">${i18n.get('register.backToStore')}</a>
-                <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
             </div>
             <h1>${i18n.get('register.title')}</h1>
 
@@ -189,3 +181,4 @@
     </body>
 
     </html>
+

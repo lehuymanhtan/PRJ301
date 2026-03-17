@@ -110,7 +110,6 @@
 
                     <h1>${i18n.get('product.title')}</h1>
                     <nav>
-                        <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                             ${i18n.get('nav.welcome')}, <% if (currentUser !=null) {%><strong>
                                     <%= currentUser.getName() %>
                                 </strong> |

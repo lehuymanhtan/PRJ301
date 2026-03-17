@@ -79,7 +79,6 @@
 
                 <h1>${i18n.get('profile.title')}</h1>
                 <nav>
-                    <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                         <a href="${pageContext.request.contextPath}/users">${i18n.get('nav.myProfile')}</a> |
                         <a href="${pageContext.request.contextPath}/logout">${i18n.get('nav.logout')}</a>
                 </nav>

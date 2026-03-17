@@ -36,30 +36,6 @@ END
 GO
 
 -- =====================================================
--- PART 2: User Language Preference
--- =====================================================
-
-PRINT 'Adding language preference field to Users table...'
-GO
-
--- Check if column already exists
-IF NOT EXISTS (SELECT *
-FROM sys.columns
-WHERE object_id = OBJECT_ID('Users')
-    AND name = 'preferredLanguage')
-BEGIN
-    ALTER TABLE Users ADD
-        preferredLanguage NVARCHAR(5) NOT NULL DEFAULT 'vi';
-
-    PRINT '✓ Language preference field added successfully'
-END
-ELSE
-BEGIN
-    PRINT '⚠ Language preference field already exists - skipping'
-END
-GO
-
--- =====================================================
 -- PART 2: Internationalization (i18n) Feature
 -- =====================================================
 
@@ -180,13 +156,6 @@ WHERE object_id = OBJECT_ID('Users') AND name = 'resetTokenExpiry')
 ELSE
     PRINT '✗ ERROR: Users.resetTokenExpiry missing'
 
-IF EXISTS (SELECT *
-FROM sys.columns
-WHERE object_id = OBJECT_ID('Users') AND name = 'preferredLanguage')
-    PRINT '✓ Users.preferredLanguage exists'
-ELSE
-    PRINT '✗ ERROR: Users.preferredLanguage missing'
-
 -- Check Products table
 IF EXISTS (SELECT *
 FROM sys.columns
@@ -220,15 +189,13 @@ PRINT '=== Migration Complete ==='
 PRINT ''
 PRINT 'Features added:'
 PRINT '  1. Password Recovery (Users table)'
-PRINT '  2. User Language Preference (Users table)'
-PRINT '  3. Internationalization (Products table)'
+PRINT '  2. Internationalization (Products table)'
 PRINT ''
 PRINT 'Next steps:'
 PRINT '  1. Restart your application'
 PRINT '  2. Test password recovery at /forgot-password'
-PRINT '  3. Test language switching with the dropdown'
-PRINT '  4. Login - your language choice will be saved automatically'
-PRINT '  5. Test multilingual emails (password reset, verification)'
+PRINT '  3. Test multilingual product fields if needed'
+PRINT '  4. Test multilingual emails (password reset, verification)'
 PRINT ''
 PRINT 'For more information, see:'
 PRINT '  - NEW_FEATURES_README.md'

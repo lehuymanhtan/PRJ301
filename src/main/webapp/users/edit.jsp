@@ -61,7 +61,6 @@
             <% User profileUser=(User) request.getAttribute("profileUser"); %>
 
                 <h1>${i18n.get('profile.edit')}</h1>
-                <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
 
                     <% if (request.getAttribute("error") !=null) { %>
                         <p class="msg-error">

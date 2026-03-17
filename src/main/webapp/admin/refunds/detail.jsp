@@ -173,7 +173,6 @@
                         <h1>${i18n.get('admin.refundDetail')} #<%= refund.getId() %>
                         </h1>
                         <nav>
-                            <%@ include file="/WEB-INF/includes/language-switcher.jsp" %>
                                 <a href="${pageContext.request.contextPath}/admin/refunds">&#8592;
                                     ${i18n.get('admin.backToRefunds')}</a> |
                                 <a

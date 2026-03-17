@@ -1,8 +1,16 @@
 package models;
 
-import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Products")
@@ -142,34 +150,4 @@ public class Product implements Serializable {
         this.supplier = supplier;
     }
 
-    /**
-     * Get localized name based on language code. Falls back to Vietnamese if
-     * English is not available.
-     */
-    public String getLocalizedName(String lang) {
-        if ("en".equals(lang) && nameEn != null && !nameEn.isEmpty()) {
-            return nameEn;
-        }
-        return name;
-    }
-
-    /**
-     * Get localized description based on language code.
-     */
-    public String getLocalizedDescription(String lang) {
-        if ("en".equals(lang) && descriptionEn != null && !descriptionEn.isEmpty()) {
-            return descriptionEn;
-        }
-        return description;
-    }
-
-    /**
-     * Get localized category based on language code.
-     */
-    public String getLocalizedCategory(String lang) {
-        if ("en".equals(lang) && categoryEn != null && !categoryEn.isEmpty()) {
-            return categoryEn;
-        }
-        return category;
-    }
 }
