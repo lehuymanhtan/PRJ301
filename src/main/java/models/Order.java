@@ -24,6 +24,28 @@ public class Order implements Serializable {
     @Column(name = "createdAt", nullable = false)
     private LocalDate createdAt;
 
+    @Column(name = "shippingFullName", length = 100)
+    private String shippingFullName;
+
+    @Column(name = "shippingPhone", length = 15)
+    private String shippingPhone;
+
+    @Column(name = "shippingProvinceId")
+    private Integer shippingProvinceId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shippingProvinceId", insertable = false, updatable = false)
+    private Province shippingProvince;
+
+    @Column(name = "shippingDistrict", length = 100)
+    private String shippingDistrict;
+
+    @Column(name = "shippingWard", length = 100)
+    private String shippingWard;
+
+    @Column(name = "shippingAddress", length = 255)
+    private String shippingAddress;
+
     public Order() {}
 
     public Order(Integer userId, double totalPrice, String status) {
@@ -47,6 +69,37 @@ public class Order implements Serializable {
 
     public LocalDate getCreatedAt()                   { return createdAt; }
     public void setCreatedAt(LocalDate createdAt)     { this.createdAt = createdAt; }
+
+    public String getShippingFullName() { return shippingFullName; }
+    public void setShippingFullName(String shippingFullName) { this.shippingFullName = shippingFullName; }
+
+    public String getShippingPhone() { return shippingPhone; }
+    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+
+    public Integer getShippingProvinceId() { return shippingProvinceId; }
+    public void setShippingProvinceId(Integer shippingProvinceId) { this.shippingProvinceId = shippingProvinceId; }
+
+    public Province getShippingProvince() { return shippingProvince; }
+    public void setShippingProvince(Province shippingProvince) { this.shippingProvince = shippingProvince; }
+
+    public String getShippingDistrict() { return shippingDistrict; }
+    public void setShippingDistrict(String shippingDistrict) { this.shippingDistrict = shippingDistrict; }
+
+    public String getShippingWard() { return shippingWard; }
+    public void setShippingWard(String shippingWard) { this.shippingWard = shippingWard; }
+
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    public boolean hasShippingAddress() {
+        return shippingFullName != null && !shippingFullName.isEmpty();
+    }
+
+    public String getFormattedShippingAddress() {
+        if (!hasShippingAddress()) return "";
+        String provinceName = (shippingProvince != null) ? shippingProvince.getNameVi() : "";
+        return shippingAddress + ", " + shippingWard + ", " + shippingDistrict + ", " + provinceName;
+    }
 
     @Override
     public String toString() {

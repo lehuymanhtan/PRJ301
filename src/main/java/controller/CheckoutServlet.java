@@ -8,6 +8,8 @@ import models.CartItem;
 import models.Order;
 import models.OrderDetail;
 import models.User;
+import models.UserAddress;
+import services.AddressService;
 import services.LoyaltyService;
 import services.OrderService;
 import services.OrderServiceImpl;
@@ -31,6 +33,7 @@ public class CheckoutServlet extends HttpServlet {
     private final OrderService   orderService   = new OrderServiceImpl();
     private final LoyaltyService loyaltyService = new LoyaltyService();
     private final UserService    userService    = new UserService();
+    private final AddressService addressService = new AddressService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +53,15 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        // Check if user has at least one address
+        List<UserAddress> addresses = addressService.getAddressesByUserId(user.getUserId());
+        if (addresses.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/users/addresses?fromCheckout=true");
+            return;
+        }
+
         request.setAttribute("cart", cart);
+        request.setAttribute("addresses", addresses);
         request.getRequestDispatcher("/cart/checkout.jsp").forward(request, response);
     }
 
@@ -77,6 +88,32 @@ public class CheckoutServlet extends HttpServlet {
             paymentMethod = "COD";
         }
 
+        // Get selected address (or use default)
+        String addressIdParam = request.getParameter("addressId");
+        UserAddress selectedAddress = null;
+        if (addressIdParam != null && !addressIdParam.isEmpty()) {
+            try {
+                int addressId = Integer.parseInt(addressIdParam);
+                selectedAddress = addressService.findAddressById(addressId);
+                // Validate address belongs to user
+                if (selectedAddress != null && !selectedAddress.getUserId().equals(user.getUserId())) {
+                    selectedAddress = null;
+                }
+            } catch (NumberFormatException e) {
+                // Invalid address ID
+            }
+        }
+        // Fallback to default address if none selected
+        if (selectedAddress == null) {
+            selectedAddress = addressService.findDefaultAddress(user.getUserId());
+        }
+
+        // Ensure we have a valid address
+        if (selectedAddress == null) {
+            response.sendRedirect(request.getContextPath() + "/users/addresses?fromCheckout=true");
+            return;
+        }
+
         // Calculate total
         double total = cart.getTotalCost();
 
@@ -91,6 +128,15 @@ public class CheckoutServlet extends HttpServlet {
 
         // Create order (status = "Pending" until payment is confirmed)
         Order order = new Order(user.getUserId(), total, "Pending");
+
+        // Snapshot shipping address
+        order.setShippingFullName(selectedAddress.getFullName());
+        order.setShippingPhone(selectedAddress.getPhone());
+        order.setShippingProvinceId(selectedAddress.getProvinceId());
+        order.setShippingDistrict(selectedAddress.getDistrict());
+        order.setShippingWard(selectedAddress.getWard());
+        order.setShippingAddress(selectedAddress.getAddressDetail());
+
         Integer orderId = orderService.createOrder(order);
 
         // Add order details

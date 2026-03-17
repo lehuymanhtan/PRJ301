@@ -64,6 +64,12 @@ public class User implements Serializable {
     @Column(name = "pointResetDate")
     private LocalDateTime pointResetDate;
 
+    @Column(name = "resetToken", length = 100)
+    private String resetToken;
+
+    @Column(name = "resetTokenExpiry")
+    private LocalDateTime resetTokenExpiry;
+
     public User() {}
 
     public User(String username, String password, String role) {
@@ -135,6 +141,12 @@ public class User implements Serializable {
 
     public LocalDateTime getPointResetDate() { return pointResetDate; }
     public void setPointResetDate(LocalDateTime pointResetDate) { this.pointResetDate = pointResetDate; }
+
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
+
+    public LocalDateTime getResetTokenExpiry() { return resetTokenExpiry; }
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
 
     @Override
     public String toString() {
