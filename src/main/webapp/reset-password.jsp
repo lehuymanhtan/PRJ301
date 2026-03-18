@@ -1,75 +1,144 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Reset Password</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
-        .container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 8px; }
-        h1 { text-align: center; color: #2c3e50; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="password"], input[type="email"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        .btn:hover { background: #1b5e20; }
-        .error { background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
-        .info { color: #666; font-size: 13px; margin-bottom: 20px; }
-        .links { text-align: center; margin-top: 15px; }
-        .links a { color: #3498db; text-decoration: none; }
-        .links a:hover { text-decoration: underline; }
-        .password-toggle { position: relative; }
-        .toggle-btn { position: absolute; right: 10px; top: 32px; cursor: pointer; color: #666; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
 </head>
-<body>
-<div class="container">
-    <h1>Reset Password</h1>
+<body class="bg-gradient-auth">
 
-    <% String error = (String) request.getAttribute("error"); %>
-    <% if (error != null) { %>
-        <div class="error"><%= error %></div>
-    <% } %>
+    <!-- Glass Reset Password Container -->
+    <div class="auth-container">
+        <!-- Logo -->
+        <div class="login-logo">
+            ⚡ TechStore
+        </div>
 
-    <% String token = (String) request.getAttribute("token"); %>
-    <% String email = (String) request.getAttribute("email"); %>
-
-    <% if (token != null && email != null) { %>
-        <p class="info">Enter your new password for <strong><%= email %></strong></p>
-
-        <form action="${pageContext.request.contextPath}/reset-password" method="post">
-            <input type="hidden" name="token" value="<%= token %>">
-
-            <div class="form-group password-toggle">
-                <label for="newPassword">New Password:</label>
-                <input type="password" id="newPassword" name="newPassword" required minlength="3">
-                <span class="toggle-btn" onclick="togglePassword('newPassword')">👁️</span>
+        <!-- Glass Reset Password Card -->
+        <div class="glass-card login-card">
+            <!-- Back Link -->
+            <div class="mb-lg">
+                <a href="${pageContext.request.contextPath}/login" class="btn btn--back btn--sm">
+                    ← Back to Login
+                </a>
             </div>
 
-            <div class="form-group password-toggle">
-                <label for="confirmPassword">Confirm Password:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="3">
-                <span class="toggle-btn" onclick="togglePassword('confirmPassword')">👁️</span>
-            </div>
+            <!-- Page Title -->
+            <h1 class="text-3xl font-semibold text-center text-inverse mb-md">
+                Create New Password
+            </h1>
 
-            <button type="submit" class="btn">Reset Password</button>
-        </form>
-    <% } %>
+            <!-- Messages -->
+            <% String error = (String) request.getAttribute("error"); %>
+            <% if (error != null) { %>
+                <div class="message message--glass-error">
+                    <%= error %>
+                </div>
+            <% } %>
 
-    <div class="links">
-        <a href="${pageContext.request.contextPath}/login">Back to Login</a>
+            <% String token = (String) request.getAttribute("token"); %>
+            <% String email = (String) request.getAttribute("email"); %>
+
+            <% if (token != null && email != null) { %>
+                <p class="text-center text-inverse-secondary mb-xl">
+                    Creating new password for: <strong class="text-inverse"><%= email %></strong>
+                </p>
+
+                <!-- Reset Password Form -->
+                <form method="post" action="${pageContext.request.contextPath}/reset-password">
+                    <input type="hidden" name="token" value="<%= token %>">
+
+                    <div class="form-group">
+                        <label for="newPassword" class="form-label form-label--glass">
+                            New Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper password-wrapper--glass">
+                            <input type="password"
+                                   id="newPassword"
+                                   name="newPassword"
+                                   class="form-input form-input--glass"
+                                   placeholder="Enter your new password"
+                                   required
+                                   minlength="3"
+                                   autofocus>
+                            <span class="password-toggle" onclick="togglePassword(this, 'newPassword')">Show</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label form-label--glass">
+                            Confirm Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper password-wrapper--glass">
+                            <input type="password"
+                                   id="confirmPassword"
+                                   name="confirmPassword"
+                                   class="form-input form-input--glass"
+                                   placeholder="Confirm your new password"
+                                   required
+                                   minlength="3">
+                            <span class="password-toggle" onclick="togglePassword(this, 'confirmPassword')">Show</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn--success btn--lg mt-lg">
+                        Update Password
+                    </button>
+                </form>
+
+            <% } else { %>
+                <div class="message message--glass-error">
+                    Invalid or expired reset link. Please request a new password reset.
+                </div>
+                <div class="text-center mt-lg">
+                    <a href="${pageContext.request.contextPath}/forgot-password" class="btn btn--glass-primary">
+                        Request New Reset Link
+                    </a>
+                </div>
+            <% } %>
+
+        </div>
     </div>
-</div>
 
-<script>
-function togglePassword(id) {
-    var input = document.getElementById(id);
-    if (input.type === "password") {
-        input.type = "text";
-    } else {
-        input.type = "password";
-    }
-}
-</script>
+    <!-- Glassmorphism Interactive Effects -->
+    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        function togglePassword(element, inputId) {
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                element.textContent = "Hide";
+            } else {
+                passwordInput.type = "password";
+                element.textContent = "Show";
+            }
+        }
+
+        // Password confirmation validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            if (newPasswordInput && confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('blur', function() {
+                    if (this.value && this.value !== newPasswordInput.value) {
+                        this.classList.add('form-input--error');
+                    } else {
+                        this.classList.remove('form-input--error');
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 </html>

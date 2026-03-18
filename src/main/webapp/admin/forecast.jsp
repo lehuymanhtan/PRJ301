@@ -2,190 +2,189 @@
 <%@ page import="models.User" %>
 <%@ page import="models.ProphetForecast" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sales Forecast - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Forecast - TechStore Admin</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f5f5f5;
+        .forecast-header {
+            margin-bottom: var(--space-xl);
         }
-        h1 {
-            margin-bottom: 6px;
+
+        .forecast-title {
+            color: var(--text-primary);
+            font-size: var(--text-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-2);
         }
-        .subtitle {
-            color: #666;
-            margin-bottom: 20px;
+
+        .forecast-subtitle {
+            color: var(--text-secondary);
+            font-size: var(--text-lg);
         }
-        nav {
-            margin-bottom: 24px;
-            font-size: 14px;
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-xl);
         }
-        nav a {
-            margin-right: 12px;
-            text-decoration: none;
-            color: #333;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .info-bar {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 12px 16px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .info-bar.error {
-            background: #ffebee;
-            border-left-color: #f44336;
-        }
-        .info-bar.warning {
-            background: #fff3e0;
-            border-left-color: #ff9800;
-        }
-        .prediction-details {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            padding: 12px 16px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .prediction-details strong {
-            color: #333;
-        }
+
         .chart-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: var(--space-lg);
         }
+
         .chart-box {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px;
-            background: #fafafa;
+            background: var(--surface-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: var(--transition-base);
         }
-        .chart-box h3 {
-            margin: 0 0 12px 0;
-            font-size: 14px;
-            color: #333;
+
+        .chart-box:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow-medium);
         }
-        .chart-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .full-width {
+
+        .chart-box--full {
             grid-column: 1 / -1;
         }
-        .button-group {
+
+        .chart-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            align-items: center;
+            gap: var(--space-2);
         }
-        .button-group a {
+
+        .chart-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-secondary);
+        }
+
+        .forecast-details {
+            background: var(--surface-tertiary);
+            border: 1px solid var(--border-secondary);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .forecast-details strong {
+            color: var(--text-primary);
+        }
+
+        .status-badge {
             display: inline-block;
-            padding: 10px 20px;
-            background: #2196f3;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-inverse);
+            background: var(--gradient-success);
+        }
+
+        .trigger-btn {
+            position: relative;
+            overflow: hidden;
+            background: var(--gradient-primary);
             border: none;
-            cursor: pointer;
+            color: var(--text-inverse);
+            font-weight: var(--font-weight-semibold);
+            transition: var(--transition-base);
         }
-        .button-group a:hover {
-            background: #1976d2;
+
+        .trigger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow-large);
         }
-        .loading-spinner {
+
+        .trigger-btn:active {
+            transform: translateY(0);
+        }
+
+        .trigger-btn:disabled {
+            background: var(--surface-tertiary);
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #2196f3;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-inverse-tertiary);
+            border-top: 2px solid var(--text-inverse);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+            animation: spin 0.8s linear infinite;
+            margin-right: var(--space-2);
             vertical-align: middle;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .trigger-btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .info-section {
+            background: var(--surface-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
         }
-        .trigger-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+
+        .info-section h3 {
+            color: var(--text-primary);
+            font-size: var(--text-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-top: 0;
+            margin-bottom: var(--space-md);
         }
-        .trigger-btn:active {
-            transform: translateY(0);
+
+        .info-section ul {
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
-        .trigger-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
+
+        .info-section li {
+            margin-bottom: var(--space-2);
         }
-        .alert {
-            padding: 12px 16px;
-            border-radius: 4px;
-            margin-top: 12px;
-            font-size: 14px;
-            display: none;
+
+        .timestamp {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: var(--text-sm);
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-secondary);
         }
-        .alert.success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            display: block;
-        }
-        .alert.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            display: block;
-        }
-        .alert.info {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-            display: block;
-        }
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
     boolean forecastAvailable = (Boolean) request.getAttribute("forecastAvailable");
@@ -196,114 +195,139 @@
     String componentsPlotBase64 = (String) request.getAttribute("componentsPlotBase64");
 %>
 
-<h1>3-Month Sales Forecast</h1>
-<p class="subtitle">Powered by Facebook Prophet - AI-driven revenue predictions</p>
-
-<nav>
-    <a href="${pageContext.request.contextPath}/admin/dashboard"><strong>Dashboard</strong></a> |
-    <a href="${pageContext.request.contextPath}/admin/users">Users</a> |
-    <a href="${pageContext.request.contextPath}/admin/products">Products</a> |
-    <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
-    <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
-    <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
-    <a href="${pageContext.request.contextPath}/admin/income">Income Report</a> |
-    <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
-    <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
-
-<div class="container">
-    <%
-        if (forecastAvailable && forecast != null) {
-    %>
-        <div class="info-bar">
-            ✓ Forecast data is available and current
+<!-- Admin Layout Container -->
+<div class="admin-layout">
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="forecast-header">
+            <h1 class="forecast-title">📈 Sales Forecast</h1>
+            <p class="forecast-subtitle">Powered by Facebook Prophet - AI-driven revenue predictions</p>
         </div>
 
-        <div class="prediction-details">
-            <strong>Last Prediction Time:</strong> <%= forecast.predictedAt %> <br/>
-            <strong>Job ID:</strong> <code><%= forecast.jobId %></code> <br/>
-            <strong>Status:</strong> <span style="color: #4caf50; font-weight: bold;"><%= forecast.status.toUpperCase() %></span>
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
+            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
+            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
+            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
+            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
+            <a href="${pageContext.request.contextPath}/admin/forecast" class="active">📈 Forecast</a>
+            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </nav>
+    </div>
+
+    <!-- Admin Content -->
+    <div class="admin-content">
+        <div class="forecast-grid">
+            <%
+                if (forecastAvailable && forecast != null) {
+            %>
+                <!-- Forecast Available -->
+                <div class="surface-card">
+                    <div class="message message--success mb-lg">
+                        ✅ Forecast data is available and current
+                    </div>
+
+                    <div class="forecast-details">
+                        <p><strong>Last Prediction Time:</strong> <%= forecast.predictedAt %></p>
+                        <p><strong>Job ID:</strong> <code><%= forecast.jobId %></code></p>
+                        <p><strong>Status:</strong> <span class="status-badge"><%= forecast.status.toUpperCase() %></span></p>
+                    </div>
+
+                    <div class="mb-lg">
+                        <button class="btn btn--lg trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
+                            🚀 Run New Forecast
+                        </button>
+                        <div id="forecastAlert" class="message mt-md" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Forecast Charts -->
+                <div class="surface-card">
+                    <h2 class="text-xl font-semibold text-primary mb-md">📊 Forecast Charts</h2>
+                    <p class="text-secondary mb-lg">
+                        These charts show predicted daily and monthly revenue for the next 3 months,
+                        including confidence intervals (shaded areas).
+                    </p>
+
+                    <div class="chart-grid">
+                        <div class="chart-box chart-box--full">
+                            <h3 class="chart-title">📈 Full Timeline (Historical + Forecast)</h3>
+                            <img src="data:image/png;base64,<%= forecastPlotBase64 %>" alt="Forecast Plot" class="chart-image">
+                        </div>
+
+                        <div class="chart-box">
+                            <h3 class="chart-title">📊 Monthly Revenue</h3>
+                            <img src="data:image/png;base64,<%= monthlyBarBase64 %>" alt="Monthly Bar Chart" class="chart-image">
+                        </div>
+
+                        <div class="chart-box">
+                            <h3 class="chart-title">🔍 Trend Decomposition</h3>
+                            <img src="data:image/png;base64,<%= componentsPlotBase64 %>" alt="Components Plot" class="chart-image">
+                        </div>
+                    </div>
+                </div>
+
+            <%
+                } else {
+            %>
+                <!-- No Forecast Available -->
+                <div class="surface-card">
+                    <div class="message message--warning mb-lg">
+                        ⚠️ <strong>No forecast available</strong>
+                    </div>
+
+                    <%
+                        if (errorMessage != null && !errorMessage.isEmpty()) {
+                    %>
+                        <div class="message message--error mb-lg">
+                            <strong>Error:</strong> <%= errorMessage %>
+                        </div>
+                    <%
+                        }
+                    %>
+
+                    <p class="text-secondary mb-lg">
+                        ℹ️ The forecast system runs automatically every day at <strong>2:00 AM</strong>.
+                        <br/>It analyzes historical sales data and generates a 3-month revenue prediction using Facebook Prophet.
+                        <br/>You can also manually trigger the forecast now:
+                    </p>
+
+                    <div class="mb-lg">
+                        <button class="btn btn--lg trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
+                            🚀 Run Forecast Now
+                        </button>
+                        <div id="forecastAlert" class="message mt-md" style="display: none;"></div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>How it works:</h3>
+                        <ul>
+                            <li><strong>Data Collection:</strong> Daily revenue is extracted from all completed and pending orders</li>
+                            <li><strong>Model Training:</strong> Prophet learns from historical sales patterns and trends</li>
+                            <li><strong>Prediction:</strong> Generates 3-month forecasts with confidence intervals (95%)</li>
+                            <li><strong>Visualization:</strong> Charts display trends, seasonality, and forecast ranges</li>
+                        </ul>
+                    </div>
+                </div>
+
+            <%
+                }
+            %>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <button class="trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
-                🚀 Run New Forecast
-            </button>
-            <div id="forecastAlert" class="alert"></div>
+        <div class="timestamp">
+            Forecast Engine: Facebook Prophet | Last Updated: <%= java.time.LocalDateTime.now() %>
         </div>
-
-        <h2 style="margin-top: 24px; margin-bottom: 16px;">Forecast Charts</h2>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
-            These charts show predicted daily and monthly revenue for the next 3 months,
-            including confidence intervals (shaded areas).
-        </p>
-
-        <div class="chart-grid">
-            <div class="chart-box full-width">
-                <h3>📈 Full Timeline (Historical + Forecast)</h3>
-                <img src="data:image/png;base64,<%= forecastPlotBase64 %>" alt="Forecast Plot">
-            </div>
-
-            <div class="chart-box">
-                <h3>📊 Monthly Revenue Bar Chart</h3>
-                <img src="data:image/png;base64,<%= monthlyBarBase64 %>" alt="Monthly Bar Chart">
-            </div>
-
-            <div class="chart-box">
-                <h3>🔍 Trend Decomposition</h3>
-                <img src="data:image/png;base64,<%= componentsPlotBase64 %>" alt="Components Plot">
-            </div>
-        </div>
-
-    <%
-        } else {
-    %>
-        <div class="info-bar warning">
-            <strong>⚠️ No forecast available</strong>
-        </div>
-
-        <%
-            if (errorMessage != null && !errorMessage.isEmpty()) {
-        %>
-            <div class="info-bar error">
-                <strong>Error:</strong> <%= errorMessage %>
-            </div>
-        <%
-            }
-        %>
-
-        <p style="color: #666; font-size: 14px; margin: 20px 0;">
-            ℹ️ The forecast system runs automatically every day at <strong>2:00 AM</strong>.
-            <br/>It analyzes historical sales data and generates a 3-month revenue prediction using Facebook Prophet.
-            <br/>You can also manually trigger the forecast now:
-        </p>
-
-        <div style="margin-bottom: 20px;">
-            <button class="trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
-                🚀 Run Forecast Now
-            </button>
-            <div id="forecastAlert" class="alert"></div>
-        </div>
-
-        <div style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; padding: 16px; margin-top: 20px;">
-            <h3 style="margin-top: 0;">How it works:</h3>
-            <ul style="color: #666; line-height: 1.6;">
-                <li><strong>Data Collection:</strong> Daily revenue is extracted from all completed and pending orders</li>
-                <li><strong>Model Training:</strong> Prophet learns from historical sales patterns and trends</li>
-                <li><strong>Prediction:</strong> Generates 3-month forecasts with confidence intervals (95%)</li>
-                <li><strong>Visualization:</strong> Charts display trends, seasonality, and forecast ranges</li>
-            </ul>
-        </div>
-
-    <%
-        }
-    %>
+    </div>
 </div>
 
-<div style="text-align: center; color: #999; font-size: 12px; margin-top: 40px;">
-    Forecast Engine: Facebook Prophet | Last Updated: <%= java.time.LocalDateTime.now() %>
-</div>
+<!-- Glassmorphism Interactive Effects -->
+<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 
 <script>
 // Forecast trigger function
@@ -314,8 +338,8 @@ function triggerForecast() {
     // Disable button and show loading state
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Triggering forecast...';
-    alert.innerHTML = '';
-    alert.className = 'alert info';
+    alert.style.display = 'block';
+    alert.className = 'message message--info mt-md';
     alert.innerHTML = '⏳ Forecast job is running. This may take 2-5 minutes...';
 
     // Make API call
@@ -328,8 +352,8 @@ function triggerForecast() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert.className = 'alert success';
-            alert.innerHTML = '✓ ' + data.message + ' Refreshing page...';
+            alert.className = 'message message--success mt-md';
+            alert.innerHTML = '✅ ' + data.message + ' Refreshing page...';
             btn.innerHTML = '🚀 Run Forecast Now';
             btn.disabled = false;
 
@@ -338,15 +362,15 @@ function triggerForecast() {
                 location.reload();
             }, 5000);
         } else {
-            alert.className = 'alert error';
-            alert.innerHTML = '✗ ' + data.message;
+            alert.className = 'message message--error mt-md';
+            alert.innerHTML = '❌ ' + data.message;
             btn.innerHTML = '🚀 Run Forecast Now';
             btn.disabled = false;
         }
     })
     .catch(error => {
-        alert.className = 'alert error';
-        alert.innerHTML = '✗ Error: ' + error.message;
+        alert.className = 'message message--error mt-md';
+        alert.innerHTML = '❌ Error: ' + error.message;
         btn.innerHTML = '🚀 Run Forecast Now';
         btn.disabled = false;
     });

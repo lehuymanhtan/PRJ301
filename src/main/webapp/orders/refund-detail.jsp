@@ -1,41 +1,156 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="models.Order, models.RefundRequest, models.User" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Refund Request #${refund.id}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Request #${refund.id} - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { margin-bottom: 6px; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 10px; }
-        .info-box { border: 1px solid #ccc; border-radius: 4px;
-                    padding: 14px; max-width: 560px; margin-bottom: 20px; background: #fafafa; }
-        .info-box p { margin: 6px 0; }
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px;
-                        font-size: 13px; font-weight: bold; }
-        .badge-Pending       { background: #fff3cd; color: #856404; }
-        .badge-WaitForReturn { background: #cce5ff; color: #004085; }
-        .badge-Verifying     { background: #d1ecf1; color: #0c5460; }
-        .badge-Done          { background: #d4edda; color: #155724; }
-        .badge-Rejected      { background: #f8d7da; color: #721c24; }
-        .badge-Cancelled     { background: #e2e3e5; color: #383d41; }
-        .return-info { border: 1px solid #bee5eb; background: #d1ecf1;
-                       border-radius: 4px; padding: 14px; max-width: 560px;
-                       margin-bottom: 20px; color: #0c5460; }
-        .return-info h3 { margin: 0 0 10px; }
-        .return-info p  { margin: 5px 0; }
-        .instruction-box { background: #fff8e1; border: 1px solid #ffe082;
-                           border-radius: 4px; padding: 12px; max-width: 560px;
-                           margin-top: 10px; color: #5d4037; font-size: 14px; }
-        .btn { display: inline-block; padding: 7px 16px; text-decoration: none;
-               border: 1px solid #999; border-radius: 3px; font-size: 13px; cursor: pointer; }
-        .btn-back   { background: #555;    color: white; border-color: #555; }
-        .btn-cancel { background: #c62828; color: white; border-color: #c62828; }
+        .refund-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .refund-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .refund-nav a {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            color: var(--text-inverse-secondary);
+            text-decoration: none;
+            transition: var(--transition-colors);
+            font-size: var(--text-sm);
+            background: var(--glass-secondary);
+            border: 1px solid var(--gray-200);
+        }
+
+        .refund-nav a:hover {
+            background: var(--glass-primary);
+            color: var(--text-inverse);
+            transform: translateY(-1px);
+        }
+
+        .refund-info-card {
+            max-width: 700px;
+            margin: 0 auto var(--space-xl) auto;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+        }
+
+        .info-value {
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+
+        .return-instructions-card {
+            max-width: 700px;
+            margin: 0 auto var(--space-xl) auto;
+            background: var(--info-bg);
+            border: 1px solid var(--info);
+        }
+
+        .return-instructions-card h3 {
+            color: var(--info);
+            margin-bottom: var(--space-md);
+        }
+
+        .instruction-box {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            color: var(--warning-text);
+        }
+
+        .instruction-box ul {
+            margin: var(--space-2) 0;
+            padding-left: var(--space-lg);
+        }
+
+        .instruction-box li {
+            margin-bottom: var(--space-2);
+        }
+
+        .refund-actions {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .badge-pending { background: var(--warning-bg); color: var(--warning-text); }
+        .badge-waitforreturn { background: var(--info-bg); color: var(--info-text); }
+        .badge-verifying { background: var(--info-bg); color: var(--info-text); }
+        .badge-done { background: var(--success-bg); color: var(--success-text); }
+        .badge-rejected { background: var(--error-bg); color: var(--error-text); }
+        .badge-cancelled { background: var(--gray-100); color: var(--text-tertiary); }
+
+        @media (max-width: 768px) {
+            .refund-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-2);
+            }
+
+            .info-label,
+            .info-value {
+                text-align: left;
+            }
+
+            .refund-actions {
+                flex-direction: column;
+            }
+
+            .refund-actions .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User          currentUser = (User)          session.getAttribute("user");
     RefundRequest refund      = (RefundRequest) request.getAttribute("refund");
@@ -43,66 +158,123 @@
     String        status      = refund.getStatus();
 %>
 
-<h1>Refund Request #<%= refund.getId() %></h1>
-<nav>
-    Welcome, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong> |
-    <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">Back to Order</a> |
-    <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Refund Header -->
+        <div class="refund-header">
+            <h1 class="text-3xl font-bold text-primary mb-md">
+                🔍 Refund Request #<%= refund.getId() %>
+            </h1>
+            <p class="text-secondary">
+                Track your refund request status and details
+            </p>
+        </div>
 
-<div class="info-box">
-    <p><strong>Refund ID:</strong> #<%= refund.getId() %></p>
-    <p><strong>Order ID:</strong>  #<%= refund.getOrderId() %></p>
-    <% if (order != null) { %>
-    <p><strong>Order Total:</strong> <%= String.format("%,.0f", order.getTotalPrice()) %> ₫</p>
-    <% } %>
-    <p><strong>Reason:</strong>      <%= refund.getReason() %></p>
-    <% if (refund.getDescription() != null && !refund.getDescription().isEmpty()) { %>
-    <p><strong>Description:</strong> <%= refund.getDescription() %></p>
-    <% } %>
-    <p><strong>Submitted:</strong>   <%= refund.getCreatedAt() != null
-            ? refund.getCreatedAt().toLocalDate().toString() : "" %></p>
-    <p><strong>Status:</strong>
-        <span class="status-badge badge-<%= status %>"><%= status %></span>
-    </p>
-</div>
+        <!-- Navigation -->
+        <nav class="refund-nav">
+            <span>Welcome, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong></span>
+            <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">📦 Back to Order</a>
+            <a href="${pageContext.request.contextPath}/orders">📋 My Orders</a>
+            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+        </nav>
 
-<%-- Return instructions shown when admin has approved and is waiting for the return shipment --%>
-<% if ("WaitForReturn".equals(status)) { %>
-<div class="return-info">
-    <h3>&#9993; Please Return the Product</h3>
-    <% if (refund.getReturnAddress() != null && !refund.getReturnAddress().isEmpty()) { %>
-    <p><strong>Return Address:</strong></p>
-    <p><%= refund.getReturnAddress() %></p>
-    <% } %>
-    <div class="instruction-box">
-        <strong>Instructions:</strong>
-        <ul style="margin: 6px 0; padding-left: 20px;">
-            <li>Pack the item(s) securely before shipping.</li>
-            <li>Please write <strong>Refund ID: #<%= refund.getId() %></strong> and
-                <strong>Order ID: #<%= refund.getOrderId() %></strong> on the
-                <em>outside</em> of the return package.</li>
-            <li>Keep your shipping receipt until the refund is completed.</li>
-        </ul>
+        <!-- Refund Information Card -->
+        <div class="surface-card refund-info-card">
+            <h2 class="text-xl font-semibold mb-lg">Refund Information</h2>
+
+            <div class="info-grid">
+                <span class="info-label">Refund ID:</span>
+                <span class="info-value">#<%= refund.getId() %></span>
+
+                <span class="info-label">Order ID:</span>
+                <span class="info-value">#<%= refund.getOrderId() %></span>
+
+                <% if (order != null) { %>
+                <span class="info-label">Order Total:</span>
+                <span class="info-value"><%= String.format("%,.0f", order.getTotalPrice()) %> ₫</span>
+                <% } %>
+
+                <span class="info-label">Reason:</span>
+                <span class="info-value"><%= refund.getReason() %></span>
+
+                <% if (refund.getDescription() != null && !refund.getDescription().isEmpty()) { %>
+                <span class="info-label">Description:</span>
+                <span class="info-value"><%= refund.getDescription() %></span>
+                <% } %>
+
+                <span class="info-label">Submitted:</span>
+                <span class="info-value">
+                    <%= refund.getCreatedAt() != null ? refund.getCreatedAt().toLocalDate().toString() : "" %>
+                </span>
+
+                <span class="info-label">Status:</span>
+                <span class="info-value">
+                    <span class="status-badge badge-<%= status.toLowerCase() %>">
+                        <%
+                            String statusIcon = "";
+                            switch(status) {
+                                case "Pending": statusIcon = "⏳"; break;
+                                case "WaitForReturn": statusIcon = "📦"; break;
+                                case "Verifying": statusIcon = "🔍"; break;
+                                case "Done": statusIcon = "✅"; break;
+                                case "Rejected": statusIcon = "❌"; break;
+                                case "Cancelled": statusIcon = "🚫"; break;
+                                default: statusIcon = "📋"; break;
+                            }
+                        %>
+                        <%= statusIcon %> <%= status %>
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Return instructions shown when admin has approved and is waiting for the return shipment -->
+        <% if ("WaitForReturn".equals(status)) { %>
+        <div class="surface-card return-instructions-card">
+            <h3>📮 Please Return the Product</h3>
+            <% if (refund.getReturnAddress() != null && !refund.getReturnAddress().isEmpty()) { %>
+            <div class="mb-md">
+                <span class="info-label">Return Address:</span>
+                <div class="mt-2 p-3 bg-surface-tertiary rounded-md">
+                    <%= refund.getReturnAddress() %>
+                </div>
+            </div>
+            <% } %>
+            <div class="instruction-box">
+                <strong>📋 Instructions:</strong>
+                <ul>
+                    <li>📦 Pack the item(s) securely before shipping.</li>
+                    <li>✍️ Please write <strong>Refund ID: #<%= refund.getId() %></strong> and
+                        <strong>Order ID: #<%= refund.getOrderId() %></strong> on the
+                        <em>outside</em> of the return package.</li>
+                    <li>📄 Keep your shipping receipt until the refund is completed.</li>
+                </ul>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Actions -->
+        <div class="refund-actions">
+            <!-- Cancel button only available when status is Pending -->
+            <% if ("Pending".equals(status)) { %>
+            <form action="${pageContext.request.contextPath}/refund" method="post" style="display:inline;">
+                <input type="hidden" name="action" value="cancel">
+                <input type="hidden" name="id"     value="<%= refund.getId() %>">
+                <button type="submit" class="btn btn--error btn--lg"
+                        onclick="return confirm('⚠️ Are you sure you want to cancel this refund request?')">
+                    🚫 Cancel Refund Request
+                </button>
+            </form>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>"
+               class="btn btn--secondary btn--lg">
+                ← Back to Order
+            </a>
+        </div>
     </div>
-</div>
-<% } %>
 
-<%-- Cancel button only available when status is Pending --%>
-<% if ("Pending".equals(status)) { %>
-<form action="${pageContext.request.contextPath}/refund" method="post" style="display:inline;">
-    <input type="hidden" name="action" value="cancel">
-    <input type="hidden" name="id"     value="<%= refund.getId() %>">
-    <button type="submit" class="btn btn-cancel"
-            onclick="return confirm('Are you sure you want to cancel this refund request?')">
-        Cancel Refund Request
-    </button>
-</form>
-&nbsp;
-<% } %>
-<a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>"
-   class="btn btn-back">&#8592; Back to Order</a>
+    <!-- Glassmorphism Interactive Effects -->
+    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 
 </body>
 </html>

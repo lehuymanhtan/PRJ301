@@ -1,130 +1,169 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List, models.User" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - User Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - TechStore Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { margin-bottom: 10px; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 10px; }
-        .msg-success { color: green; margin-bottom: 10px; }
-        .msg-error   { color: red;   margin-bottom: 10px; }
-        .search-form { margin-bottom: 15px; }
-        .search-form input[type="text"] { padding: 5px; width: 250px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
-        th { background: #f0f0f0; }
-        a.btn { display: inline-block; padding: 4px 10px; margin-right: 5px;
-                text-decoration: none; border: 1px solid #999; border-radius: 3px; }
-        a.btn-add   { background: #4caf50; color: white; border-color: #4caf50; }
-        a.btn-edit  { background: #2196f3; color: white; border-color: #2196f3; }
-        a.btn-del   { background: #f44336; color: white; border-color: #f44336; }
-        a.btn-pts   { background: #558b2f; color: white; border-color: #558b2f; }
-        .inline-form { display: inline; }
-        .inline-form input[type="number"] { width: 60px; padding: 2px 4px; }
-        .inline-form select { padding: 2px 4px; }
-        .inline-form button { padding: 3px 8px; cursor: pointer; font-size: 12px; }
+        .table-container { overflow-x: auto; }
+        .user-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+        .user-table th,
+        .user-table td {
+            padding: var(--space-3) var(--space-4);
+            text-align: left;
+            border-bottom: 1px solid var(--border-primary);
+            vertical-align: middle;
+        }
+        .user-table th {
+            background: var(--surface-tertiary);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .user-table tr:hover { background: rgba(59, 130, 246, 0.04); }
+        .user-actions { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            width: 100%;
+            max-width: 640px;
+        }
+        .tier-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-weight-semibold);
+            background: var(--surface-tertiary);
+            color: var(--text-primary);
+        }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
     List<User> users = (List<User>) request.getAttribute("users");
-    String kw      = (String) request.getAttribute("searchKeyword");
-    String success  = request.getParameter("success");
+    String kw = (String) request.getAttribute("searchKeyword");
+    String success = request.getParameter("success");
     String errParam = request.getParameter("error");
 %>
 
-<h1>Admin - User Management</h1>
-<nav>
-    Welcome, <strong><%= currentUser.getUsername() %></strong> |
-    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a> |
-    <a href="${pageContext.request.contextPath}/admin/users">User Management</a> |
-    <a href="${pageContext.request.contextPath}/admin/products">Product Management</a> |
-    <a href="${pageContext.request.contextPath}/admin/suppliers">Supplier Management</a> |
-    <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
+<div class="admin-layout">
+    <div class="admin-header">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">User Management</h1>
+            <p class="dashboard-subtitle">Manage users, permissions, and loyalty overview</p>
+        </div>
 
-<% if ("created".equals(success)) { %><p class="msg-success">User created successfully.</p><% } %>
-<% if ("updated".equals(success)) { %><p class="msg-success">User updated successfully.</p><% } %>
-<% if ("deleted".equals(success)) { %><p class="msg-success">User deleted successfully.</p><% } %>
-<% if ("notfound".equals(errParam)) { %><p class="msg-error">User not found.</p><% } %>
-<% if (errParam != null && !"notfound".equals(errParam)) { %><p class="msg-error">Error: <%= errParam %></p><% } %>
+        <nav class="admin-nav">
+            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/users" class="active">Users</a>
+            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
+            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
+            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
+            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
+            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
+            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </nav>
+    </div>
 
-<div>
-    <a href="${pageContext.request.contextPath}/admin/users?action=create" class="btn btn-add">+ Add User</a>
+    <div class="admin-content">
+        <% if ("created".equals(success)) { %>
+            <div class="message message--success mb-lg">✅ User created successfully.</div>
+        <% } %>
+        <% if ("updated".equals(success)) { %>
+            <div class="message message--success mb-lg">✅ User updated successfully.</div>
+        <% } %>
+        <% if ("deleted".equals(success)) { %>
+            <div class="message message--success mb-lg">✅ User deleted successfully.</div>
+        <% } %>
+        <% if ("notfound".equals(errParam)) { %>
+            <div class="message message--danger mb-lg">❌ User not found.</div>
+        <% } %>
+        <% if (errParam != null && !"notfound".equals(errParam)) { %>
+            <div class="message message--danger mb-lg">❌ Error: <%= errParam %></div>
+        <% } %>
+
+        <div class="flex justify-between items-center mb-lg" style="gap: var(--space-3); flex-wrap: wrap;">
+            <a href="${pageContext.request.contextPath}/admin/users?action=create" class="btn btn--success btn--md">+ Add User</a>
+
+            <form class="search-form" method="get" action="${pageContext.request.contextPath}/admin/users">
+                <input type="text" name="q" class="form-input" placeholder="Search by username"
+                       value="<%= kw != null ? kw : "" %>">
+                <button type="submit" class="btn btn--primary btn--sm">Search</button>
+                <% if (kw != null && !kw.isEmpty()) { %>
+                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn--secondary btn--sm">Clear</a>
+                <% } %>
+            </form>
+        </div>
+
+        <div class="surface-card">
+            <div class="table-container">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Role</th>
+                            <th>Points</th>
+                            <th>Tier</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (users == null || users.isEmpty()) { %>
+                            <tr>
+                                <td colspan="7" class="text-center py-xl">
+                                    <div class="text-secondary">👤 No users found.</div>
+                                </td>
+                            </tr>
+                        <% } else {
+                            for (User u : users) { %>
+                            <tr>
+                                <td><span class="font-semibold text-primary">#<%= u.getUserId() %></span></td>
+                                <td><span class="font-medium text-primary"><%= u.getUsername() %></span></td>
+                                <td><span class="text-secondary"><%= u.getPassword() %></span></td>
+                                <td><span class="text-secondary"><%= u.getRole() %></span></td>
+                                <td><span class="font-semibold text-primary"><%= String.format("%,d", u.getPoints()) %></span></td>
+                                <td><span class="tier-pill"><%= u.getMembershipTier() %></span></td>
+                                <td>
+                                    <div class="user-actions">
+                                        <a href="${pageContext.request.contextPath}/admin/users?action=edit&id=<%= u.getUserId() %>"
+                                           class="btn btn--primary btn--xs">Edit</a>
+                                        <a href="${pageContext.request.contextPath}/admin/point-history?userId=<%= u.getUserId() %>"
+                                           class="btn btn--info btn--xs">Points</a>
+                                        <% if (!u.getUserId().equals(currentUser.getUserId())) { %>
+                                            <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=<%= u.getUserId() %>"
+                                               class="btn btn--danger btn--xs"
+                                               onclick="return confirm('Delete user <%= u.getUsername().replace("'", "\\'") %>?')">Delete</a>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
-<form class="search-form" method="get" action="${pageContext.request.contextPath}/admin/users">
-    <input type="text" name="q" placeholder="Search by username"
-           value="<%= kw != null ? kw : "" %>">
-    <button type="submit">Search</button>
-    <% if (kw != null && !kw.isEmpty()) { %>
-        <a href="${pageContext.request.contextPath}/admin/users">Clear</a>
-    <% } %>
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Password</th>
-            <th>Role</th>
-            <th>Points</th>
-            <th>Tier</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if (users == null || users.isEmpty()) { %>
-            <tr><td colspan="7">No users found.</td></tr>
-        <% } else {
-            for (User u : users) { %>
-            <tr>
-                <td><%= u.getUserId() %></td>
-                <td><%= u.getUsername() %></td>
-                <td><%= u.getPassword() %></td>
-                <td><%= u.getRole() %></td>
-                <td><%= String.format("%,d", u.getPoints()) %></td>
-                <td><%= u.getMembershipTier() %></td>
-                <td>
-                    <a href="${pageContext.request.contextPath}/admin/users?action=edit&id=<%= u.getUserId() %>" class="btn btn-edit">Edit</a>
-                    <a href="${pageContext.request.contextPath}/admin/point-history?userId=<%= u.getUserId() %>" class="btn btn-pts">Points</a>
-                    <% if (!u.getUserId().equals(currentUser.getUserId())) { %>
-                        <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=<%= u.getUserId() %>"
-                           class="btn btn-del"
-                           onclick="return confirm('Delete user <%= u.getUsername() %>?')">Delete</a>
-                    <% } %>
-                    <br><br>
-                    <form class="inline-form" method="post" action="${pageContext.request.contextPath}/admin/loyalty">
-                        <input type="hidden" name="action" value="adjustPoints">
-                        <input type="hidden" name="userId" value="<%= u.getUserId() %>">
-                        <input type="number" name="points" placeholder="+/-" style="width:60px;">
-                        <button type="submit">Adjust Pts</button>
-                    </form>
-                    <form class="inline-form" method="post" action="${pageContext.request.contextPath}/admin/loyalty"
-                          style="margin-top:4px;">
-                        <input type="hidden" name="action" value="changeTier">
-                        <input type="hidden" name="userId" value="<%= u.getUserId() %>">
-                        <select name="tier">
-                            <option value="Regular" <%= "Regular".equals(u.getMembershipTier()) ? "selected" : "" %>>Regular</option>
-                            <option value="Bronze"  <%= "Bronze".equals(u.getMembershipTier())  ? "selected" : "" %>>Bronze</option>
-                            <option value="Silver"  <%= "Silver".equals(u.getMembershipTier())  ? "selected" : "" %>>Silver</option>
-                            <option value="Gold"    <%= "Gold".equals(u.getMembershipTier())    ? "selected" : "" %>>Gold</option>
-                            <option value="Platinum"<%= "Platinum".equals(u.getMembershipTier())? "selected" : "" %>>Platinum</option>
-                            <option value="Diamond" <%= "Diamond".equals(u.getMembershipTier()) ? "selected" : "" %>>Diamond</option>
-                        </select>
-                        <button type="submit">Set Tier</button>
-                    </form>
-                </td>
-            </tr>
-        <% } } %>
-    </tbody>
-</table>
+<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>

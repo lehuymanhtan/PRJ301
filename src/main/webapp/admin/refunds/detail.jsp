@@ -1,41 +1,141 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="models.Order, models.RefundRequest" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Refund Request #${refund.id}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund #${refund.id} Details - TechStore Admin</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-        h1 { margin-bottom: 6px; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 12px; text-decoration: none; color: #333; }
-        nav a:hover { text-decoration: underline; }
-        .info-box { background: white; border: 1px solid #ddd; border-radius: 4px;
-                    padding: 16px; max-width: 600px; margin-bottom: 20px; }
-        .info-box p { margin: 6px 0; }
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px;
-                        font-size: 13px; font-weight: bold; }
-        .badge-Pending       { background: #fff3cd; color: #856404; }
-        .badge-WaitForReturn { background: #cce5ff; color: #004085; }
-        .badge-Verifying     { background: #d1ecf1; color: #0c5460; }
-        .badge-Done          { background: #d4edda; color: #155724; }
-        .badge-Rejected      { background: #f8d7da; color: #721c24; }
-        .badge-Cancelled     { background: #e2e3e5; color: #383d41; }
-        .update-form { background: white; border: 1px solid #ddd; border-radius: 4px;
-                       padding: 16px; max-width: 600px; margin-bottom: 20px; }
-        .update-form h2 { margin: 0 0 12px; font-size: 16px; }
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 14px; }
-        select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc;
-                           border-radius: 3px; font-size: 14px; box-sizing: border-box; }
-        textarea { resize: vertical; min-height: 80px; }
+        .refund-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-3);
+        }
+
+        .meta-item {
+            padding: var(--space-3);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            background: var(--surface-secondary);
+        }
+
+        .meta-label {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-1);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .meta-value {
+            font-size: var(--text-md);
+            color: var(--text-primary);
+            font-weight: var(--font-weight-medium);
+            word-break: break-word;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge--pending {
+            background: var(--surface-warning);
+            color: var(--text-warning);
+        }
+
+        .status-badge--waitforreturn {
+            background: var(--surface-info);
+            color: var(--text-info);
+        }
+
+        .status-badge--verifying {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--glass-primary);
+        }
+
+        .status-badge--done {
+            background: var(--surface-success);
+            color: var(--text-success);
+        }
+
+        .status-badge--rejected {
+            background: var(--surface-danger);
+            color: var(--text-danger);
+        }
+
+        .status-badge--cancelled {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .update-form {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .form-group {
+            display: grid;
+            gap: var(--space-2);
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--text-sm);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            background: var(--surface-primary);
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--glass-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         #returnAddressGroup { display: none; }
-        .btn { display: inline-block; padding: 6px 16px; text-decoration: none;
-               border: 1px solid #999; border-radius: 3px; font-size: 13px; cursor: pointer; }
-        .btn-save { background: #2e7d32; color: white; border-color: #2e7d32; }
-        .btn-back { background: #555;    color: white; border-color: #555; }
-        .btn-order { background: #0277bd; color: white; border-color: #0277bd; }
+
+        .actions {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+            margin-top: var(--space-lg);
+        }
+
+        .form-hint {
+            color: var(--text-secondary);
+            font-size: var(--text-xs);
+        }
     </style>
     <script>
         function toggleReturnAddress() {
@@ -46,78 +146,132 @@
         window.onload = function() { toggleReturnAddress(); };
     </script>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     RefundRequest refund = (RefundRequest) request.getAttribute("refund");
     Order         order  = (Order)         request.getAttribute("order");
     String        status = refund.getStatus();
+    String        statusClass = "status-badge--" + status.toLowerCase();
 %>
 
-<h1>Refund Request #<%= refund.getId() %></h1>
-<nav>
-    <a href="${pageContext.request.contextPath}/admin/refunds">&#8592; Back to Refunds</a> |
-    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
-
-<div class="info-box">
-    <p><strong>Refund ID:</strong>  #<%= refund.getId() %></p>
-    <p><strong>Order ID:</strong>   #<%= refund.getOrderId() %>
-        &nbsp;
-        <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=<%= refund.getOrderId() %>"
-           class="btn btn-order" style="padding:2px 8px; font-size:12px;">View Order</a>
-    </p>
-    <p><strong>User ID:</strong>    <%= refund.getUserId() %></p>
-    <% if (order != null) { %>
-    <p><strong>Order Total:</strong> <%= String.format("%,.0f", order.getTotalPrice()) %> ₫</p>
-    <% } %>
-    <p><strong>Reason:</strong>     <%= refund.getReason() %></p>
-    <% if (refund.getDescription() != null && !refund.getDescription().isEmpty()) { %>
-    <p><strong>Description:</strong> <%= refund.getDescription() %></p>
-    <% } %>
-    <p><strong>Submitted:</strong>  <%= refund.getCreatedAt() != null
-            ? refund.getCreatedAt().toLocalDate() : "" %></p>
-    <p><strong>Status:</strong>
-        <span class="status-badge badge-<%= status %>"><%= status %></span>
-    </p>
-    <% if (refund.getReturnAddress() != null && !refund.getReturnAddress().isEmpty()) { %>
-    <p><strong>Return Address:</strong> <%= refund.getReturnAddress() %></p>
-    <% } %>
-</div>
-
-<%-- Update form is hidden for terminal statuses --%>
-<% if (!"Done".equals(status) && !"Rejected".equals(status) && !"Cancelled".equals(status)) { %>
-<div class="update-form">
-    <h2>Update Refund Status</h2>
-    <form action="${pageContext.request.contextPath}/admin/refunds" method="post">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="id"     value="<%= refund.getId() %>">
-
-        <div class="form-group">
-            <label for="statusSelect">New Status</label>
-            <select name="status" id="statusSelect" onchange="toggleReturnAddress()" required>
-                <option value="Pending"       <%="Pending"      .equals(status) ? "selected" : ""%>>Pending</option>
-                <option value="WaitForReturn" <%="WaitForReturn".equals(status) ? "selected" : ""%>>Wait for Return</option>
-                <option value="Verifying"     <%="Verifying"    .equals(status) ? "selected" : ""%>>Verifying</option>
-                <option value="Done"          <%="Done"         .equals(status) ? "selected" : ""%>>Done</option>
-                <option value="Rejected"      <%="Rejected"     .equals(status) ? "selected" : ""%>>Rejected</option>
-            </select>
+<div class="admin-layout">
+    <div class="admin-header">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Refund #<%= refund.getId() %></h1>
+            <p class="dashboard-subtitle">Review details and update refund workflow status</p>
         </div>
 
-        <div class="form-group" id="returnAddressGroup">
-            <label for="returnAddress">Return Address
-                <span style="color:#666; font-weight:normal;">(shown to user for shipping the goods back)</span>
-            </label>
-            <textarea name="returnAddress" id="returnAddress"
-                      placeholder="e.g. 123 Nguyen Hue, District 1, Ho Chi Minh City"><%= refund.getReturnAddress() != null ? refund.getReturnAddress() : "" %></textarea>
+        <nav class="admin-nav">
+            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
+            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
+            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/admin/refunds" class="active">Refunds</a>
+            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
+            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
+            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
+            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </nav>
+    </div>
+
+    <div class="admin-content">
+        <div class="surface-card mb-lg">
+            <div class="refund-meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">Refund ID</div>
+                    <div class="meta-value">#<%= refund.getId() %></div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Order ID</div>
+                    <div class="meta-value">
+                        #<%= refund.getOrderId() %>
+                        <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=<%= refund.getOrderId() %>"
+                           class="text-primary" style="margin-left: 8px;">View Order</a>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Customer</div>
+                    <div class="meta-value">User ID: <%= refund.getUserId() %></div>
+                </div>
+                <% if (order != null) { %>
+                <div class="meta-item">
+                    <div class="meta-label">Order Total</div>
+                    <div class="meta-value"><%= String.format("%,.0f", order.getTotalPrice()) %> ₫</div>
+                </div>
+                <% } %>
+                <div class="meta-item" style="grid-column: 1 / -1;">
+                    <div class="meta-label">Reason</div>
+                    <div class="meta-value"><%= refund.getReason() %></div>
+                </div>
+                <% if (refund.getDescription() != null && !refund.getDescription().isEmpty()) { %>
+                <div class="meta-item" style="grid-column: 1 / -1;">
+                    <div class="meta-label">Description</div>
+                    <div class="meta-value"><%= refund.getDescription() %></div>
+                </div>
+                <% } %>
+                <div class="meta-item">
+                    <div class="meta-label">Submitted</div>
+                    <div class="meta-value"><%= refund.getCreatedAt() != null ? refund.getCreatedAt().toLocalDate() : "" %></div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Status</div>
+                    <div class="meta-value"><span class="status-badge <%= statusClass %>"><%= status %></span></div>
+                </div>
+                <% if (refund.getReturnAddress() != null && !refund.getReturnAddress().isEmpty()) { %>
+                <div class="meta-item" style="grid-column: 1 / -1;">
+                    <div class="meta-label">Return Address</div>
+                    <div class="meta-value"><%= refund.getReturnAddress() %></div>
+                </div>
+                <% } %>
+            </div>
         </div>
 
-        <button type="submit" class="btn btn-save">Save Changes</button>
-    </form>
-</div>
-<% } %>
+        <% if (!"Done".equals(status) && !"Rejected".equals(status) && !"Cancelled".equals(status)) { %>
+        <div class="surface-card">
+            <h2 class="text-xl font-semibold text-primary mb-md">Update Refund Status</h2>
 
-<a href="${pageContext.request.contextPath}/admin/refunds" class="btn btn-back">&#8592; Back to List</a>
+            <form action="${pageContext.request.contextPath}/admin/refunds" method="post" class="update-form">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="<%= refund.getId() %>">
+
+                <div class="form-group">
+                    <label class="form-label" for="statusSelect">New Status</label>
+                    <select class="form-control" name="status" id="statusSelect" onchange="toggleReturnAddress()" required>
+                        <option value="Pending"       <%="Pending"      .equals(status) ? "selected" : ""%>>Pending</option>
+                        <option value="WaitForReturn" <%="WaitForReturn".equals(status) ? "selected" : ""%>>Wait for Return</option>
+                        <option value="Verifying"     <%="Verifying"    .equals(status) ? "selected" : ""%>>Verifying</option>
+                        <option value="Done"          <%="Done"         .equals(status) ? "selected" : ""%>>Done</option>
+                        <option value="Rejected"      <%="Rejected"     .equals(status) ? "selected" : ""%>>Rejected</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="returnAddressGroup">
+                    <label class="form-label" for="returnAddress">Return Address</label>
+                    <div class="form-hint">Shown to customer for return shipment.</div>
+                    <textarea class="form-control" name="returnAddress" id="returnAddress"
+                              placeholder="e.g. 123 Nguyen Hue, District 1, Ho Chi Minh City"><%= refund.getReturnAddress() != null ? refund.getReturnAddress() : "" %></textarea>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn--success">Save Changes</button>
+                    <a href="${pageContext.request.contextPath}/admin/refunds" class="btn btn--secondary">← Back to Refunds</a>
+                </div>
+            </form>
+        </div>
+        <% } else { %>
+        <div class="surface-card">
+            <div class="text-secondary">This refund is in a terminal state and can no longer be updated.</div>
+            <div class="actions">
+                <a href="${pageContext.request.contextPath}/admin/refunds" class="btn btn--secondary">← Back to Refunds</a>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 
 </body>
 </html>

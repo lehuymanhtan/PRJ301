@@ -1,75 +1,436 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List, models.PointHistory, models.User" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Point History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point History - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { margin-bottom: 6px; }
-        nav { margin-bottom: 20px; }
-        nav a { margin-right: 10px; }
-        table { border-collapse: collapse; width: 100%; max-width: 800px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background: #f0f0f0; }
-        .type-earn   { color: green; font-weight: bold; }
-        .type-use    { color: #e65100; font-weight: bold; }
-        .type-refund { color: #c62828; font-weight: bold; }
-        .type-adjust { color: #1565c0; font-weight: bold; }
-        .pts-pos { color: green; }
-        .pts-neg { color: red; }
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .nav-breadcrumb a {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition-colors);
+            font-size: var(--text-sm);
+            background: var(--surface-tertiary);
+            border: 1px solid var(--gray-200);
+        }
+
+        .nav-breadcrumb a:hover,
+        .nav-breadcrumb a.active {
+            background: var(--glass-primary);
+            color: var(--text-inverse);
+            transform: translateY(-1px);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--space-lg);
+        }
+
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card--balance .stat-value {
+            color: var(--glass-primary);
+        }
+
+        .stat-card--tier .stat-value {
+            color: var(--success);
+        }
+
+        .table-container {
+            background: var(--surface-primary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--glass-shadow-light);
+        }
+
+        .table-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .table-count {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            background: var(--surface-tertiary);
+            padding: var(--space-md) var(--space-lg);
+            text-align: left;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .history-table td {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--text-primary);
+            font-size: var(--text-md);
+        }
+
+        .history-table tr:hover {
+            background: var(--surface-secondary);
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .transaction-id {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+        }
+
+        .order-link {
+            color: var(--glass-primary);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .order-link:hover {
+            text-decoration: underline;
+        }
+
+        .amount-value {
+            font-family: var(--font-mono);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-3xl) var(--space-lg);
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: var(--text-6xl);
+            margin-bottom: var(--space-lg);
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .back-button {
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 768px) {
+            .stats-overview {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .nav-breadcrumb {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: var(--space-md);
+                text-align: center;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: var(--space-sm);
+                font-size: var(--text-sm);
+            }
+
+            /* Hide less important columns on mobile */
+            .history-table th:nth-child(1),
+            .history-table td:nth-child(1),
+            .history-table th:nth-child(4),
+            .history-table td:nth-child(4) {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
+
 <%
     User currentUser = (User) session.getAttribute("user");
     List<PointHistory> pointHistory = (List<PointHistory>) request.getAttribute("pointHistory");
 %>
 
-<h1>My Point History</h1>
-<nav>
-    <a href="${pageContext.request.contextPath}/users">My Profile</a> |
-    <a href="${pageContext.request.contextPath}/orders">My Orders</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Back Button -->
+        <div class="back-button">
+            <a href="${pageContext.request.contextPath}/users" class="btn btn--back btn--sm">
+                ← Back to Profile
+            </a>
+        </div>
 
-<p>Current balance: <strong><%= currentUser.getPoints() %> pts</strong> &nbsp;|&nbsp; Tier: <strong><%= currentUser.getMembershipTier() %></strong></p>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="text-3xl font-bold text-primary mb-md">
+                💎 Point History
+            </h1>
+            <p class="text-secondary">
+                Track all your loyalty point transactions and activities
+            </p>
+        </div>
 
-<% if (pointHistory == null || pointHistory.isEmpty()) { %>
-    <p>No point history yet.</p>
-<% } else { %>
-<table>
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Order</th>
-            <th>Amount (VND)</th>
-            <th>Points</th>
-            <th>Type</th>
-        </tr>
-    </thead>
-    <tbody>
-    <% for (PointHistory h : pointHistory) {
-           String typeClass = "type-earn";
-           if ("USE".equals(h.getType()))    typeClass = "type-use";
-           if ("REFUND".equals(h.getType())) typeClass = "type-refund";
-           if ("Adjust".equals(h.getType())) typeClass = "type-adjust";
-           String ptsClass = (h.getPointsEarned() != null && h.getPointsEarned() >= 0) ? "pts-pos" : "pts-neg";
-           String ptsSign  = (h.getPointsEarned() != null && h.getPointsEarned() > 0) ? "+" : "";
-    %>
-        <tr>
-            <td><%= h.getId() %></td>
-            <td><%= h.getCreatedAt() != null ? h.getCreatedAt().toString().replace("T", " ").substring(0, 16) : "-" %></td>
-            <td><%= h.getOrderId() != null ? "#" + h.getOrderId() : "-" %></td>
-            <td><%= (h.getAmount() != null && h.getAmount() > 0) ? String.format("%,.0f", h.getAmount()) : "-" %></td>
-            <td class="<%= ptsClass %>"><%= ptsSign %><%= h.getPointsEarned() %></td>
-            <td class="<%= typeClass %>"><%= h.getType() %></td>
-        </tr>
-    <% } %>
-    </tbody>
-</table>
-<% } %>
+        <!-- Navigation Breadcrumb -->
+        <nav class="nav-breadcrumb">
+            <a href="${pageContext.request.contextPath}/users">👤 My Profile</a>
+            <a href="${pageContext.request.contextPath}/orders">📦 My Orders</a>
+            <a href="${pageContext.request.contextPath}/points" class="active">💎 Point History</a>
+            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+        </nav>
+
+        <!-- Current Stats Overview -->
+        <div class="stats-overview">
+            <div class="surface-card stat-card stat-card--balance">
+                <div class="stat-value"><%= String.format("%,d", currentUser.getPoints()) %></div>
+                <div class="stat-label">Current Balance</div>
+            </div>
+            <div class="surface-card stat-card stat-card--tier">
+                <div class="stat-value"><%= currentUser.getMembershipTier() %></div>
+                <div class="stat-label">Membership Tier</div>
+            </div>
+            <div class="surface-card stat-card">
+                <div class="stat-value">
+                    <% if (pointHistory != null) { %>
+                        <%= pointHistory.size() %>
+                    <% } else { %>
+                        0
+                    <% } %>
+                </div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+        </div>
+
+        <!-- Transaction History Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <div>
+                    <div class="table-title">Transaction History</div>
+                    <div class="table-count">
+                        <% if (pointHistory != null && !pointHistory.isEmpty()) { %>
+                            Showing <%= pointHistory.size() %> transactions
+                        <% } else { %>
+                            No transactions found
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <% if (pointHistory == null || pointHistory.isEmpty()) { %>
+                <div class="empty-state">
+                    <div class="empty-state-icon">💸</div>
+                    <div class="empty-state-title">No Point History Yet</div>
+                    <p>Start shopping to earn loyalty points and see your transaction history here!</p>
+                    <div class="mt-lg">
+                        <a href="${pageContext.request.contextPath}/products" class="btn btn--primary">
+                            🛍️ Start Shopping
+                        </a>
+                    </div>
+                </div>
+            <% } else { %>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date & Time</th>
+                            <th>Order Reference</th>
+                            <th>Amount (VND)</th>
+                            <th>Points</th>
+                            <th>Transaction Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% for (PointHistory h : pointHistory) {
+                           String badgeClass = "badge--completed";
+                           String badgeText = h.getType();
+
+                           if ("USE".equals(h.getType())) {
+                               badgeClass = "badge--processing";
+                               badgeText = "Redeemed";
+                           } else if ("REFUND".equals(h.getType())) {
+                               badgeClass = "badge--cancelled";
+                               badgeText = "Refunded";
+                           } else if ("Adjust".equals(h.getType())) {
+                               badgeClass = "badge--shipped";
+                               badgeText = "Adjusted";
+                           } else if ("EARN".equals(h.getType())) {
+                               badgeClass = "badge--completed";
+                               badgeText = "Earned";
+                           }
+
+                           boolean isPositive = (h.getPointsEarned() != null && h.getPointsEarned() >= 0);
+                           String pointsClass = isPositive ? "points-earned" : "points-spent";
+                           String pointsSign = (h.getPointsEarned() != null && h.getPointsEarned() > 0) ? "+" : "";
+                    %>
+                        <tr>
+                            <td><span class="transaction-id">#<%= h.getId() %></span></td>
+
+                            <td>
+                                <%= h.getCreatedAt() != null ?
+                                    h.getCreatedAt().toString().replace("T", " ").substring(0, 16) :
+                                    "-" %>
+                            </td>
+
+                            <td>
+                                <% if (h.getOrderId() != null) { %>
+                                    <a href="${pageContext.request.contextPath}/orders?action=detail&orderId=<%= h.getOrderId() %>"
+                                       class="order-link">
+                                        Order #<%= h.getOrderId() %>
+                                    </a>
+                                <% } else { %>
+                                    <span class="text-tertiary">Manual Entry</span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <% if (h.getAmount() != null && h.getAmount() > 0) { %>
+                                    <span class="amount-value"><%= String.format("%,.0f", h.getAmount()) %> ₫</span>
+                                <% } else { %>
+                                    <span class="text-tertiary">-</span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <span class="<%= pointsClass %> font-semibold">
+                                    <%= pointsSign %><%= h.getPointsEarned() %> pts
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge <%= badgeClass %>">
+                                    <%= badgeText %>
+                                </span>
+                            </td>
+                        </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-xl text-center">
+            <a href="${pageContext.request.contextPath}/products" class="btn btn--primary btn--md mr-md">
+                🛍️ Continue Shopping
+            </a>
+            <a href="${pageContext.request.contextPath}/users" class="btn btn--secondary btn--md">
+                👤 Back to Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Glassmorphism Interactive Effects -->
+    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150 + 200);
+            });
+
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('.history-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.01)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Animate table appearance
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.style.opacity = '0';
+                tableContainer.style.transform = 'translateY(30px)';
+
+                setTimeout(() => {
+                    tableContainer.style.transition = 'all 0.8s ease';
+                    tableContainer.style.opacity = '1';
+                    tableContainer.style.transform = 'translateY(0)';
+                }, 600);
+            }
+        });
+    </script>
+
 </body>
 </html>

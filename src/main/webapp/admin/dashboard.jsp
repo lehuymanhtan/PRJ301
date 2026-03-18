@@ -3,53 +3,88 @@
 <%@ page import="models.DailyIncome" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-        h1 { margin-bottom: 6px; }
-        .subtitle { color: #666; margin-bottom: 20px; }
-        nav { margin-bottom: 24px; }
-        nav a { margin-right: 12px; text-decoration: none; color: #333; }
-        nav a:hover { text-decoration: underline; }
-        .cards { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
-        .card {
-            background: white; border: 1px solid #ddd; border-radius: 6px;
-            padding: 24px 32px; min-width: 160px; text-align: center;
+        /* Dashboard-specific enhancements */
+        .dashboard-header {
+            margin-bottom: var(--space-xl);
         }
-        .card .count { font-size: 40px; font-weight: bold; margin-bottom: 6px; }
-        .card .label { color: #666; font-size: 14px; }
-        .card.blue   .count { color: #2196f3; }
-        .card.green  .count { color: #4caf50; }
-        .card.orange .count { color: #ff9800; }
-        .card.purple .count { color: #9c27b0; }
-        .links h2 { margin-bottom: 12px; }
-        .links ul { list-style: none; padding: 0; }
-        .links ul li { margin-bottom: 8px; }
-        .links ul li a {
-            display: inline-block; padding: 8px 18px;
-            background: white; border: 1px solid #ccc; border-radius: 4px;
-            text-decoration: none; color: #333; min-width: 200px;
+
+        .dashboard-title {
+            color: var(--text-primary);
+            font-size: var(--text-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-1);
         }
-        .links ul li a:hover { background: #e8e8e8; }
-        .chart-section {
-            margin-top: 32px; background: white; border: 1px solid #ddd;
-            border-radius: 6px; padding: 24px;
+
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: var(--text-lg);
+            font-weight: var(--font-weight-normal);
         }
-        .chart-section h2 { margin: 0 0 16px; }
-        .chart-section .chart-footer {
-            margin-top: 10px; text-align: right;
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: var(--space-md);
         }
-        .chart-section .chart-footer a {
-            font-size: 13px; color: #2196f3; text-decoration: none;
+
+        .chart-footer {
+            text-align: right;
+            margin-top: var(--space-lg);
         }
-        .chart-section .chart-footer a:hover { text-decoration: underline; }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-md);
+            background: var(--surface-primary);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition-base);
+            border: 1px solid var(--border-primary);
+        }
+
+        .quick-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow-medium);
+            border-color: var(--glass-primary);
+        }
+
+        .quick-link-icon {
+            font-size: var(--text-xl);
+        }
+
+        .quick-link-text {
+            font-weight: var(--font-weight-medium);
+            font-size: var(--text-md);
+        }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
     int totalUsers     = (Integer) request.getAttribute("totalUsers");
@@ -61,66 +96,122 @@
     List<DailyIncome> chartData = (List<DailyIncome>) request.getAttribute("dashboardChartData");
 %>
 
-<h1>Admin Dashboard</h1>
-<p class="subtitle">Welcome back, <strong><%= currentUser.getUsername() %></strong></p>
+<!-- Admin Layout Container -->
+<div class="admin-layout">
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome back, <strong><%= currentUser.getUsername() %></strong></p>
+        </div>
 
-<nav>
-    <a href="${pageContext.request.contextPath}/admin/dashboard"><strong>Dashboard</strong></a> |
-    <a href="${pageContext.request.contextPath}/admin/users">Users</a> |
-    <a href="${pageContext.request.contextPath}/admin/products">Products</a> |
-    <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
-    <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
-    <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
-    <a href="${pageContext.request.contextPath}/admin/income">Income Report</a> |
-    <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a> |
-    <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a> |
-    <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
+            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
+            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
+            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
+            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
+            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
+            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </nav>
+    </div>
 
-<div class="cards">
-    <div class="card blue">
-        <div class="count"><%= totalUsers %></div>
-        <div class="label">Users</div>
-    </div>
-    <div class="card green">
-        <div class="count"><%= totalProducts %></div>
-        <div class="label">Products</div>
-    </div>
-    <div class="card orange">
-        <div class="count"><%= totalSuppliers %></div>
-        <div class="label">Suppliers</div>
-    </div>
-    <div class="card purple">
-        <div class="count"><%= totalOrders %></div>
-        <div class="label">Orders</div>
-    </div>
-    <div class="card" style="border-color:#ddd;">
-        <div class="count" style="color:#e53935;"><%= totalRefunds %></div>
-        <div class="label">Refunds</div>
+    <!-- Admin Content -->
+    <div class="admin-content">
+        <!-- Stats Grid -->
+        <div class="stats-grid mb-xl">
+            <div class="stats-card stats-card--info">
+                <div class="stats-card__icon">👥</div>
+                <div class="stats-card__value"><%= String.format("%,d", totalUsers) %></div>
+                <div class="stats-card__label">Total Users</div>
+            </div>
+
+            <div class="stats-card stats-card--success">
+                <div class="stats-card__icon">📦</div>
+                <div class="stats-card__value"><%= String.format("%,d", totalProducts) %></div>
+                <div class="stats-card__label">Products</div>
+            </div>
+
+            <div class="stats-card stats-card--warning">
+                <div class="stats-card__icon">🏪</div>
+                <div class="stats-card__value"><%= String.format("%,d", totalSuppliers) %></div>
+                <div class="stats-card__label">Suppliers</div>
+            </div>
+
+            <div class="stats-card stats-card--primary">
+                <div class="stats-card__icon">🛒</div>
+                <div class="stats-card__value"><%= String.format("%,d", totalOrders) %></div>
+                <div class="stats-card__label">Order Count</div>
+            </div>
+
+            <div class="stats-card" style="background: var(--gradient-danger); color: var(--text-inverse);">
+                <div class="stats-card__icon">🔄</div>
+                <div class="stats-card__value"><%= String.format("%,d", totalRefunds) %></div>
+                <div class="stats-card__label">Refunds</div>
+            </div>
+        </div>
+
+        <!-- Income Chart Section -->
+        <div class="surface-card mb-xl">
+            <h2 class="text-xl font-semibold text-primary mb-lg">Income Last 7 Days</h2>
+            <div class="chart-container">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+            <div class="chart-footer">
+                <a href="${pageContext.request.contextPath}/admin/income" class="btn btn--secondary btn--sm">
+                    View full income report →
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div class="surface-card">
+            <h2 class="text-xl font-semibold text-primary mb-lg">Quick Access</h2>
+            <div class="quick-links-grid">
+                <a href="${pageContext.request.contextPath}/admin/users" class="quick-link">
+                    <span class="quick-link-icon">👥</span>
+                    <span class="quick-link-text">Manage Users</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/products" class="quick-link">
+                    <span class="quick-link-icon">📦</span>
+                    <span class="quick-link-text">Manage Products</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/suppliers" class="quick-link">
+                    <span class="quick-link-icon">🏪</span>
+                    <span class="quick-link-text">Manage Suppliers</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/orders" class="quick-link">
+                    <span class="quick-link-icon">🛒</span>
+                    <span class="quick-link-text">Manage Orders</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/refunds" class="quick-link">
+                    <span class="quick-link-icon">🔄</span>
+                    <span class="quick-link-text">Manage Refunds</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/income" class="quick-link">
+                    <span class="quick-link-icon">📊</span>
+                    <span class="quick-link-text">Income Report</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/loyalty" class="quick-link">
+                    <span class="quick-link-icon">⭐</span>
+                    <span class="quick-link-text">Loyalty Management</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/forecast" class="quick-link">
+                    <span class="quick-link-icon">📈</span>
+                    <span class="quick-link-text">Sales Forecast</span>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="chart-section">
-    <h2>Income Last 7 Days</h2>
-    <canvas id="dashboardChart" height="90"></canvas>
-    <div class="chart-footer">
-        <a href="${pageContext.request.contextPath}/admin/income">View full income report &rarr;</a>
-    </div>
-</div>
-
-<div class="links" style="margin-top:32px;">
-    <h2>Quick Links</h2>
-    <ul>
-        <li><a href="${pageContext.request.contextPath}/admin/users">&#9654; Manage Users</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/products">&#9654; Manage Products</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/suppliers">&#9654; Manage Suppliers</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/orders">&#9654; Manage Orders</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/refunds">&#9654; Manage Refunds</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/income">&#9654; Income Report</a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/loyalty">&#9654; Loyalty Management</a></li>
-    </ul>
-</div>
+<!-- Glassmorphism Interactive Features -->
+<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 
 <script>
 (function () {
@@ -157,61 +248,125 @@
         }
     %>];
 
+    // Modern glassmorphism-themed chart
     new Chart(document.getElementById("dashboardChart"), {
         type: "bar",
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: "Completed (\u20AB)",
+                    label: "Completed Revenue (₫)",
                     data: completed,
-                    backgroundColor: "rgba(76,175,80,0.7)",
-                    borderColor: "#4caf50",
-                    borderWidth: 1,
+                    backgroundColor: "rgba(34, 197, 94, 0.8)",
+                    borderColor: "#22c55e",
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
                     order: 2
                 },
                 {
-                    label: "Pending (\u20AB)",
+                    label: "Pending Revenue (₫)",
                     data: pending,
-                    backgroundColor: "rgba(255,152,0,0.7)",
-                    borderColor: "#ff9800",
-                    borderWidth: 1,
+                    backgroundColor: "rgba(251, 146, 60, 0.8)",
+                    borderColor: "#fb923c",
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
                     order: 2
                 },
                 {
-                    label: "Total (\u20AB)",
+                    label: "Total Revenue (₫)",
                     data: total,
                     type: "line",
-                    borderColor: "#2196f3",
-                    backgroundColor: "rgba(33,150,243,0.08)",
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    fill: false,
-                    tension: 0.3,
+                    borderColor: "#3b82f6",
+                    backgroundColor: "rgba(59, 130, 246, 0.1)",
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: "#3b82f6",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
                     order: 1
                 }
             ]
         },
         options: {
             responsive: true,
-            interaction: { mode: "index", intersect: false },
-            scales: {
-                x: { stacked: false },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(v) {
-                            return new Intl.NumberFormat("vi-VN").format(v) + " \u20AB";
+            maintainAspectRatio: false,
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        font: {
+                            family: 'Poppins',
+                            size: 14,
+                            weight: '500'
+                        },
+                        color: '#f8fafc'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#f8fafc',
+                    borderColor: 'rgba(255, 255, 255, 0.25)',
+                    borderWidth: 1,
+                    cornerRadius: 12,
+                    titleFont: {
+                        family: 'Poppins',
+                        size: 14,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        family: 'Poppins',
+                        size: 13
+                    },
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.dataset.label + ": " +
+                                new Intl.NumberFormat("vi-VN").format(ctx.parsed.y) + " ₫";
                         }
                     }
                 }
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) {
-                            return ctx.dataset.label + ": " +
-                                new Intl.NumberFormat("vi-VN").format(ctx.parsed.y) + " \u20AB";
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)',
+                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Poppins',
+                            size: 12
+                        },
+                        color: '#f8fafc'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)',
+                        borderColor: 'rgba(255, 255, 255, 0.3)'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Poppins',
+                            size: 12
+                        },
+                        color: '#f8fafc',
+                        callback: function(v) {
+                            return new Intl.NumberFormat("vi-VN", {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(v) + " ₫";
                         }
                     }
                 }

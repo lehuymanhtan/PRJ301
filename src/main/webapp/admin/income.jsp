@@ -5,40 +5,139 @@
 <%@ page import="models.YearlyIncome" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Income Report – Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Report - TechStore Admin</title>
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-        h1   { margin-bottom: 6px; }
-        .subtitle { color: #666; margin-bottom: 20px; }
-        nav { margin-bottom: 24px; }
-        nav a { margin-right: 12px; text-decoration: none; color: #333; }
-        nav a:hover { text-decoration: underline; }
+        /* Income report specific enhancements */
+        .report-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .report-title {
+            color: var(--text-primary);
+            font-size: var(--text-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-2);
+        }
+
+        .report-subtitle {
+            color: var(--text-secondary);
+            font-size: var(--text-lg);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-xl);
+        }
 
         .chart-card {
-            background: white; border: 1px solid #ddd; border-radius: 6px;
-            padding: 24px; margin-bottom: 28px;
+            background: var(--surface-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--glass-shadow-light);
+            border: 1px solid var(--border-primary);
+            transition: var(--transition-base);
         }
-        .chart-card h2 { margin: 0 0 14px; font-size: 18px; }
 
-        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-        .filter-bar a {
-            display: inline-block; padding: 5px 14px;
-            border: 1px solid #ccc; border-radius: 20px;
-            text-decoration: none; color: #333; font-size: 13px;
-            background: #f9f9f9; transition: background 0.15s;
+        .chart-card:hover {
+            box-shadow: var(--glass-shadow-medium);
+            transform: translateY(-2px);
         }
-        .filter-bar a:hover  { background: #e0e0e0; }
-        .filter-bar a.active {
-            background: #2196f3; color: white;
-            border-color: #1976d2; font-weight: bold;
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .chart-title {
+            color: var(--text-primary);
+            font-size: var(--text-xl);
+            font-weight: var(--font-weight-semibold);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-medium);
+            background: var(--surface-secondary);
+            transition: var(--transition-base);
+        }
+
+        .filter-btn:hover {
+            background: var(--surface-tertiary);
+            border-color: var(--glass-primary);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--gradient-primary-light);
+            color: var(--text-inverse);
+            border-color: var(--glass-primary);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-top: var(--space-lg);
+        }
+
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Chart enhancements */
+        .chart-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: var(--text-secondary);
+            font-size: var(--text-lg);
+        }
+
+        .chart-icon {
+            font-size: var(--text-2xl);
         }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
     int dayFilter   = (Integer) request.getAttribute("dayFilter");
@@ -49,73 +148,105 @@
     @SuppressWarnings("unchecked") List<YearlyIncome>  yearData  = (List<YearlyIncome>)  request.getAttribute("yearData");
 %>
 
-<h1>Income Report</h1>
-<p class="subtitle">Logged in as <strong><%= currentUser.getUsername() %></strong></p>
+<!-- Admin Layout Container -->
+<div class="admin-layout">
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="report-header">
+            <h1 class="report-title">Income Reports</h1>
+            <p class="report-subtitle">Comprehensive revenue analysis and trends</p>
+        </div>
 
-<nav>
-    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a> |
-    <a href="${pageContext.request.contextPath}/admin/users">Users</a> |
-    <a href="${pageContext.request.contextPath}/admin/products">Products</a> |
-    <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a> |
-    <a href="${pageContext.request.contextPath}/admin/orders">Orders</a> |
-    <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a> |
-    <a href="${pageContext.request.contextPath}/admin/income"><strong>Income Report</strong></a> |
-    <a href="${pageContext.request.contextPath}/">Go to Shop</a> |
-    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-</nav>
-
-<%-- ═══════════════════════════════════════════════════════════════
-     CHART 1 — Income by Day
-     ════════════════════════════════════════════════════════════════ --%>
-<div class="chart-card">
-    <h2>Income by Day</h2>
-    <div class="filter-bar">
-        <a href="?dayFilter=7&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
-           class="<%= dayFilter == 7  ? "active" : "" %>">Last 7 Days</a>
-        <a href="?dayFilter=14&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
-           class="<%= dayFilter == 14 ? "active" : "" %>">Last 14 Days</a>
-        <a href="?dayFilter=30&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
-           class="<%= dayFilter == 30 ? "active" : "" %>">Last 30 Days</a>
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
+            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
+            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
+            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
+            <a href="${pageContext.request.contextPath}/admin/income" class="active">Income Report</a>
+            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
+            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
+            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </nav>
     </div>
-    <canvas id="dayChart" height="90"></canvas>
-</div>
 
-<%-- ═══════════════════════════════════════════════════════════════
-     CHART 2 — Income by Month
-     ════════════════════════════════════════════════════════════════ --%>
-<div class="chart-card">
-    <h2>Income by Month</h2>
-    <div class="filter-bar">
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=1&yearFilter=<%= yearFilter %>"
-           class="<%= monthFilter == 1  ? "active" : "" %>">This Month</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=2&yearFilter=<%= yearFilter %>"
-           class="<%= monthFilter == 2  ? "active" : "" %>">Last Month</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=3&yearFilter=<%= yearFilter %>"
-           class="<%= monthFilter == 3  ? "active" : "" %>">3 Months</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=6&yearFilter=<%= yearFilter %>"
-           class="<%= monthFilter == 6  ? "active" : "" %>">6 Months</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=12&yearFilter=<%= yearFilter %>"
-           class="<%= monthFilter == 12 ? "active" : "" %>">12 Months</a>
-    </div>
-    <canvas id="monthChart" height="90"></canvas>
-</div>
+    <!-- Admin Content -->
+    <div class="admin-content">
+        <!-- Charts Grid -->
+        <div class="chart-grid">
+            <!-- Daily Income Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <span class="chart-icon">📊</span>
+                        Daily Income Analysis
+                    </h2>
+                    <div class="filter-bar">
+                        <a href="?dayFilter=7&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= dayFilter == 7 ? "active" : "" %>">Last 7 Days</a>
+                        <a href="?dayFilter=14&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= dayFilter == 14 ? "active" : "" %>">Last 14 Days</a>
+                        <a href="?dayFilter=30&monthFilter=<%= monthFilter %>&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= dayFilter == 30 ? "active" : "" %>">Last 30 Days</a>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="dayChart"></canvas>
+                </div>
+            </div>
 
-<%-- ═══════════════════════════════════════════════════════════════
-     CHART 3 — Income by Year
-     ════════════════════════════════════════════════════════════════ --%>
-<div class="chart-card">
-    <h2>Income by Year</h2>
-    <div class="filter-bar">
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=1"
-           class="<%= yearFilter == 1 ? "active" : "" %>">This Year</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=2"
-           class="<%= yearFilter == 2 ? "active" : "" %>">Last 2 Years</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=3"
-           class="<%= yearFilter == 3 ? "active" : "" %>">Last 3 Years</a>
-        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=5"
-           class="<%= yearFilter == 5 ? "active" : "" %>">Last 5 Years</a>
+            <!-- Monthly Income Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <span class="chart-icon">📈</span>
+                        Monthly Income Trends
+                    </h2>
+                    <div class="filter-bar">
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=1&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= monthFilter == 1 ? "active" : "" %>">This Month</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=2&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= monthFilter == 2 ? "active" : "" %>">Last Month</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=3&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= monthFilter == 3 ? "active" : "" %>">3 Months</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=6&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= monthFilter == 6 ? "active" : "" %>">6 Months</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=12&yearFilter=<%= yearFilter %>"
+                           class="filter-btn <%= monthFilter == 12 ? "active" : "" %>">12 Months</a>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="monthChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Yearly Income Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <span class="chart-icon">📅</span>
+                        Yearly Performance Overview
+                    </h2>
+                    <div class="filter-bar">
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=1"
+                           class="filter-btn <%= yearFilter == 1 ? "active" : "" %>">This Year</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=2"
+                           class="filter-btn <%= yearFilter == 2 ? "active" : "" %>">Last 2 Years</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=3"
+                           class="filter-btn <%= yearFilter == 3 ? "active" : "" %>">Last 3 Years</a>
+                        <a href="?dayFilter=<%= dayFilter %>&monthFilter=<%= monthFilter %>&yearFilter=5"
+                           class="filter-btn <%= yearFilter == 5 ? "active" : "" %>">Last 5 Years</a>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="yearChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
-    <canvas id="yearChart" height="90"></canvas>
 </div>
 
 <script>
@@ -267,14 +398,40 @@
                 responsive: true,
                 interaction: { mode: "index", intersect: false },
                 scales: {
-                    x: { stacked: false },
+                    x: {
+                        stacked: false,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)',
+                            borderColor: 'rgba(255, 255, 255, 0.3)'
+                        },
+                        ticks: {
+                            color: '#f8fafc'
+                        }
+                    },
                     y: {
                         beginAtZero: true,
-                        ticks: { callback: function(v) { return vndFmt(v); } }
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)',
+                            borderColor: 'rgba(255, 255, 255, 0.3)'
+                        },
+                        ticks: {
+                            color: '#f8fafc',
+                            callback: function(v) { return vndFmt(v); }
+                        }
                     }
                 },
                 plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f8fafc'
+                        }
+                    },
                     tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                        titleColor: '#f8fafc',
+                        bodyColor: '#f8fafc',
+                        borderColor: 'rgba(255, 255, 255, 0.25)',
+                        borderWidth: 1,
                         callbacks: {
                             label: function(ctx) {
                                 return ctx.dataset.label + ": " + vndFmt(ctx.parsed.y);
@@ -291,5 +448,8 @@
     buildChart("yearChart",  yearLabels,  yearCompleted,  yearPending,  yearTotal);
 }());
 </script>
+
+<!-- Glassmorphism Interactive Features -->
+<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>

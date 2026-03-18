@@ -1,0 +1,307 @@
+/**
+ * Glassmorphism Design System Tokens
+ * Based on Phuong's modern design system with glassmorphism effects
+ */
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+
+  /* Primary Glass Colors */
+  --glass-primary: #2563eb;
+  --glass-primary-light: #60a5fa;
+  --glass-primary-dark: #1e40af;
+  --glass-primary-darker: #1e293b;
+
+  /* Glass Background Effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg-light: rgba(255, 255, 255, 0.05);
+  --glass-bg-medium: rgba(255, 255, 255, 0.15);
+  --glass-bg-dark: rgba(255, 255, 255, 0.2);
+  --glass-bg-focus: rgba(255, 255, 255, 0.3);
+
+  /* Glass Effects */
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-border-light: rgba(255, 255, 255, 0.1);
+  --glass-border-dark: rgba(255, 255, 255, 0.3);
+  --glass-backdrop: blur(10px);
+  --glass-backdrop-light: blur(5px);
+  --glass-backdrop-heavy: blur(18px);
+
+  /* Glass Shadows */
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  --glass-shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --glass-shadow-medium: 0 5px 20px rgba(0, 0, 0, 0.1);
+  --glass-shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.3);
+  --glass-shadow-hover: 0 12px 40px rgba(37, 99, 235, 0.4);
+  --glass-shadow-focus: 0 20px 60px rgba(37, 99, 235, 0.4);
+
+  /* Surface Colors */
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f1f5f9;
+  --surface-raised: #ffffff;
+
+  /* Status Colors */
+  --success: #22c55e;
+  --success-light: #16a34a;
+  --success-dark: #166534;
+  --success-bg: #dcfce7;
+  --success-glass: rgba(34, 197, 94, 0.1);
+
+  --warning: #f59e0b;
+  --warning-light: #d97706;
+  --warning-dark: #92400e;
+  --warning-bg: #fef3c7;
+  --warning-glass: rgba(245, 158, 11, 0.1);
+
+  --error: #ef4444;
+  --error-light: #b91c1c;
+  --error-dark: #991b1b;
+  --error-bg: #fee2e2;
+  --error-glass: rgba(239, 68, 68, 0.1);
+
+  /* Backward-compatible danger aliases */
+  --danger: var(--error);
+  --danger-light: var(--error-light);
+  --danger-dark: var(--error-dark);
+
+  --info: #2563eb;
+  --info-light: #1e40af;
+  --info-dark: #004085;
+  --info-bg: #dbeafe;
+  --info-glass: rgba(37, 99, 235, 0.1);
+
+  /* Neutral Colors */
+  --gray-50: #f9fafb;
+  --gray-100: #f1f5f9;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #1e293b;
+
+  /* Text Colors */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-inverse: #ffffff;
+  --text-inverse-secondary: rgba(255, 255, 255, 0.9);
+  --text-inverse-tertiary: rgba(255, 255, 255, 0.7);
+  --text-muted: #9ca3af;
+  --text-placeholder: #d1d5db;
+
+  /* Semantic text aliases used by JSP pages */
+  --text-success: var(--success);
+  --text-warning: var(--warning);
+  --text-info: var(--info);
+  --text-danger: var(--danger);
+
+  /* Generic border aliases used by JSP pages */
+  --border-primary: var(--gray-200);
+  --border-secondary: var(--gray-300);
+
+  /* ===== TYPOGRAPHY ===== */
+
+  /* Font Families */
+  --font-primary: 'Poppins', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --text-xs: 11px;      /* Micro text, hints */
+  --text-sm: 12px;      /* Small buttons, badges */
+  --text-base: 13px;    /* Form labels, links */
+  --text-md: 14px;      /* Body text, navigation */
+  --text-lg: 16px;      /* Large body text */
+  --text-xl: 18px;      /* Logo text, headings */
+  --text-2xl: 20px;     /* Section headings */
+  --text-3xl: 24px;     /* Page titles */
+  --text-4xl: 28px;     /* OTP inputs, large numbers */
+  --text-5xl: 32px;     /* Hero titles */
+  --text-6xl: 40px;     /* Large display text */
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* ===== SPACING SCALE ===== */
+
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 10px;
+  --space-5: 12px;
+  --space-6: 14px;
+  --space-7: 15px;
+  --space-8: 16px;
+  --space-9: 18px;
+  --space-10: 20px;
+  --space-12: 25px;
+  --space-15: 30px;
+  --space-16: 32px;
+  --space-20: 40px;
+  --space-24: 48px;
+  --space-25: 50px;
+  --space-32: 64px;
+
+  /* Semantic Spacing */
+  --space-xs: var(--space-3);    /* 8px */
+  --space-sm: var(--space-5);    /* 12px */
+  --space-md: var(--space-8);    /* 16px */
+  --space-lg: var(--space-10);   /* 20px */
+  --space-xl: var(--space-15);   /* 30px */
+  --space-2xl: var(--space-20);  /* 40px */
+  --space-3xl: var(--space-25);  /* 50px */
+
+  /* ===== BORDER RADIUS ===== */
+
+  --radius-none: 0;
+  --radius-sm: 6px;      /* Small elements */
+  --radius-md: 8px;      /* Buttons, badges */
+  --radius-lg: 10px;     /* Form inputs */
+  --radius-xl: 16px;     /* Cards */
+  --radius-2xl: 18px;    /* Large cards, modals */
+  --radius-3xl: 24px;    /* Hero sections */
+  --radius-full: 50%;    /* Circular elements */
+  --radius-pill: 999px;  /* Pill-shaped elements */
+
+  /* ===== LAYOUT ===== */
+
+  /* Container Widths */
+  --container-xs: 480px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+
+  /* ===== TRANSITIONS ===== */
+
+  /* Duration */
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-250: 250ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* Easing Functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Common Transitions */
+  --transition-base: all var(--duration-200) var(--ease-out);
+  --transition-colors: color var(--duration-200) var(--ease-out), background-color var(--duration-200) var(--ease-out), border-color var(--duration-200) var(--ease-out);
+  --transition-transform: transform var(--duration-200) var(--ease-out);
+  --transition-glass: all var(--duration-300) var(--ease-out);
+
+  /* ===== LOYALTY SYSTEM COLORS ===== */
+
+  /* Tier Colors */
+  --tier-regular: var(--gray-500);
+  --tier-regular-dark: var(--gray-600);
+  --tier-bronze: #cd7f32;
+  --tier-bronze-dark: #8b5a2b;
+  --tier-silver: #c0c0c0;
+  --tier-silver-dark: #808080;
+  --tier-gold: #ffd700;
+  --tier-gold-dark: #b8860b;
+  --tier-platinum: #e5e4e2;
+  --tier-platinum-dark: #9c9c9c;
+  --tier-diamond: #b9f2ff;
+  --tier-diamond-dark: #40e0d0;
+
+  /* Point Transaction Colors */
+  --points-earned: var(--success);
+  --points-spent: var(--error);
+  --points-refunded: var(--info);
+  --points-adjusted: var(--warning);
+
+  /* ===== BREAKPOINTS ===== */
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ===== GRADIENTS ===== */
+
+  /* Background Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--glass-primary-darker), var(--glass-primary));
+  --gradient-primary-light: linear-gradient(135deg, var(--glass-primary), var(--glass-primary-light));
+  --gradient-success: linear-gradient(135deg, var(--success), #34d399);
+  --gradient-warning: linear-gradient(135deg, var(--warning), #fbbf24);
+  --gradient-error: linear-gradient(135deg, var(--error), #f87171);
+  --gradient-danger: var(--gradient-error);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+
+  /* Surface aliases used by admin badges/components */
+  --surface-success: var(--success-bg);
+  --surface-warning: var(--warning-bg);
+  --surface-info: var(--info-bg);
+  --surface-danger: var(--error-bg);
+
+  /* Glass tint aliases used by shared components */
+  --glass-success-light: var(--success-glass);
+  --glass-warning-light: var(--warning-glass);
+  --glass-info-light: var(--info-glass);
+  --glass-error-light: var(--error-glass);
+
+  /* Form Gradients */
+  --gradient-form-bg: linear-gradient(135deg, #e0e7ff, #f8fafc);
+  --gradient-auth-bg: linear-gradient(135deg, var(--glass-primary-darker), var(--glass-primary));
+  --gradient-hero-bg: linear-gradient(135deg, var(--glass-primary-darker), var(--glass-primary));
+  --gradient-loading-bg: linear-gradient(135deg, var(--glass-primary), #7c3aed);
+}
+
+/* ===== GLASSMORPHISM UTILITIES ===== */
+
+/* Backdrop Filter Fallbacks */
+@supports not (backdrop-filter: blur(10px)) {
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-bg-light: rgba(255, 255, 255, 0.8);
+    --glass-bg-medium: rgba(255, 255, 255, 0.95);
+    --glass-bg-dark: rgba(255, 255, 255, 1);
+    --glass-backdrop: none;
+    --glass-backdrop-light: none;
+    --glass-backdrop-heavy: none;
+  }
+}
+
+/* Dark Mode Support (Future Enhancement) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-primary: #1f2937;
+    --surface-secondary: #111827;
+    --surface-tertiary: #0f172a;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+  }
+}

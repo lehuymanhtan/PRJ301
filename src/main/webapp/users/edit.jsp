@@ -1,89 +1,173 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="models.User" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { margin-bottom: 20px; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 4px; font-weight: bold; }
-        input[type="text"], input[type="password"], input[type="date"],
-        input[type="email"], select { padding: 6px; width: 280px; }
-        .msg-error { color: red; margin-bottom: 10px; }
-        .actions { margin-top: 15px; }
-        .actions a { margin-left: 10px; text-decoration: none; color: #555; }
-        .note { color: #666; font-size: 13px; }
+        .edit-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .edit-form-card {
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInScale var(--duration-500) var(--ease-out);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-top: var(--space-xl);
+        }
+
+        .note {
+            grid-column: 1 / -1;
+            padding: var(--space-3);
+            background: var(--surface-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            text-align: center;
+            margin-top: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="bg-surface-secondary">
 <%
     User profileUser = (User) request.getAttribute("profileUser");
 %>
 
-<h1>Edit Profile</h1>
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Edit Header -->
+        <div class="edit-header">
+            <h1 class="text-3xl font-bold text-primary mb-md">
+                ✏️ Edit Profile
+            </h1>
+            <p class="text-secondary">
+                Update your account information
+            </p>
+        </div>
 
-<% if (request.getAttribute("error") != null) { %>
-    <p class="msg-error"><%= request.getAttribute("error") %></p>
-<% } %>
+        <!-- Error Message -->
+        <% if (request.getAttribute("error") != null) { %>
+            <div class="message message--error mb-lg">
+                ❌ <%= request.getAttribute("error") %>
+            </div>
+        <% } %>
 
-<form method="post" action="${pageContext.request.contextPath}/users">
-    <input type="hidden" name="action" value="edit">
+        <!-- Edit Form Card -->
+        <div class="surface-card edit-form-card">
+            <form method="post" action="${pageContext.request.contextPath}/users">
+                <input type="hidden" name="action" value="edit">
 
-    <div class="form-group">
-        <label for="username">Username *</label>
-        <input type="text" id="username" name="username" required
-               value="<%= profileUser != null ? profileUser.getUsername() : "" %>">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username *</label>
+                        <input type="text" id="username" name="username" required
+                               class="form-input"
+                               value="<%= profileUser != null ? profileUser.getUsername() : "" %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password *</label>
+                        <input type="password" id="password" name="password" required
+                               class="form-input"
+                               value="<%= profileUser != null ? profileUser.getPassword() : "" %>">
+                    </div>
+
+                    <div class="form-group-full">
+                        <label for="name" class="form-label">Full Name *</label>
+                        <input type="text" id="name" name="name" required
+                               class="form-input"
+                               value="<%= profileUser != null && profileUser.getName() != null ? profileUser.getName() : "" %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender" class="form-label">Gender *</label>
+                        <select id="gender" name="gender" required class="form-select">
+                            <option value="">-- Select Gender --</option>
+                            <option value="male"   <%= profileUser != null && "male".equals(profileUser.getGender())   ? "selected" : "" %>>👨 Male</option>
+                            <option value="female" <%= profileUser != null && "female".equals(profileUser.getGender()) ? "selected" : "" %>>👩 Female</option>
+                            <option value="other"  <%= profileUser != null && "other".equals(profileUser.getGender())  ? "selected" : "" %>>🏳️ Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateOfBirth" class="form-label">Date of Birth *</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required
+                               class="form-input"
+                               value="<%= profileUser != null && profileUser.getDateOfBirth() != null ? profileUser.getDateOfBirth().toString() : "" %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" id="phone" name="phone"
+                               class="form-input"
+                               placeholder="Enter your phone number"
+                               value="<%= profileUser != null && profileUser.getPhone() != null ? profileUser.getPhone() : "" %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" id="email" name="email" required
+                               class="form-input"
+                               value="<%= profileUser != null ? profileUser.getEmail() : "" %>">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary btn--lg">
+                            💾 Save Changes
+                        </button>
+                        <a href="${pageContext.request.contextPath}/users" class="btn btn--secondary btn--lg">
+                            ❌ Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="password">Password *</label>
-        <input type="password" id="password" name="password" required
-               value="<%= profileUser != null ? profileUser.getPassword() : "" %>">
-    </div>
-
-    <div class="form-group">
-        <label for="name">Full Name *</label>
-        <input type="text" id="name" name="name" required
-               value="<%= profileUser != null && profileUser.getName() != null ? profileUser.getName() : "" %>">
-    </div>
-
-    <div class="form-group">
-        <label for="gender">Gender *</label>
-        <select id="gender" name="gender" required>
-            <option value="">-- Select --</option>
-            <option value="male"   <%= profileUser != null && "male".equals(profileUser.getGender())   ? "selected" : "" %>>Male</option>
-            <option value="female" <%= profileUser != null && "female".equals(profileUser.getGender()) ? "selected" : "" %>>Female</option>
-            <option value="other"  <%= profileUser != null && "other".equals(profileUser.getGender())  ? "selected" : "" %>>Other</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="dateOfBirth">Date of Birth *</label>
-        <input type="date" id="dateOfBirth" name="dateOfBirth" required
-               value="<%= profileUser != null && profileUser.getDateOfBirth() != null ? profileUser.getDateOfBirth().toString() : "" %>">
-    </div>
-
-    <div class="form-group">
-        <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone"
-               value="<%= profileUser != null && profileUser.getPhone() != null ? profileUser.getPhone() : "" %>">
-    </div>
-
-    <div class="form-group">
-        <label for="email">Email *</label>
-        <input type="email" id="email" name="email" required
-               value="<%= profileUser != null ? profileUser.getEmail() : "" %>">
-    </div>
-
-    <p class="note">Note: role cannot be changed here.</p>
-
-    <div class="actions">
-        <button type="submit">Save Changes</button>
-        <a href="${pageContext.request.contextPath}/users">Cancel</a>
-    </div>
-</form>
+    <!-- Glassmorphism Interactive Effects -->
+    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>

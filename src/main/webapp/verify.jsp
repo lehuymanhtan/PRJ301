@@ -1,89 +1,258 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Verify Email</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - TechStore</title>
+
+    <!-- Glassmorphism Design System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
+
+    <!-- Page-specific styles -->
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center;
-               align-items: flex-start; min-height: 100vh; margin: 0; background: #f0f0f0;
-               padding: 50px 0; }
-        .box { background: white; padding: 32px 40px; border-radius: 6px;
-               border: 1px solid #ccc; width: 420px; }
-        h1 { margin-bottom: 6px; font-size: 22px; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="email"] {
-            width: 100%; padding: 8px; box-sizing: border-box;
-            border: 1px solid #ccc; border-radius: 3px; font-size: 15px; }
-        input[type="text"]#code {
-            font-size: 26px; letter-spacing: 8px; text-align: center; }
-        .btn-primary { width: 100%; padding: 10px; background: #2e7d32; color: white;
-                       border: none; border-radius: 3px; cursor: pointer; font-size: 15px; }
-        .btn-primary:hover { background: #1b5e20; }
-        .btn-resend { width: 100%; padding: 8px; background: #555; color: white;
-                      border: none; border-radius: 3px; cursor: pointer; font-size: 14px;
-                      margin-top: 8px; }
-        .btn-resend:hover { background: #333; }
-        .msg-error { color: red; background: #fff0f0; border: 1px solid #ffcccc;
-                     padding: 10px; border-radius: 4px; margin-bottom: 16px; }
-        .msg-info  { color: #155724; background: #d4edda; border: 1px solid #c3e6cb;
-                     padding: 10px; border-radius: 4px; margin-bottom: 16px; }
-        .divider { border: none; border-top: 1px solid #eee; margin: 22px 0; }
-        .links { margin-top: 16px; font-size: 13px; text-align: center; }
-        .hint { font-size: 12px; color: #888; margin-top: 5px; }
+        .verify-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-inverse);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .verify-card {
+            width: 100%;
+            max-width: 450px;
+            animation: fadeInScale var(--duration-500) var(--ease-out);
+        }
+
+        .verify-icon {
+            font-size: var(--text-6xl);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-divider {
+            margin: var(--space-lg) 0;
+            border: none;
+            border-top: 1px solid var(--glass-border);
+            opacity: 0.5;
+        }
+
+        .form-footer {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            text-align: center;
+        }
+
+        .form-footer a {
+            color: var(--text-inverse-secondary);
+            transition: var(--transition-colors);
+            font-size: var(--text-md);
+        }
+
+        .form-footer a:hover {
+            color: var(--text-inverse);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
     </style>
 </head>
-<body>
-<div class="box">
-    <h1>&#9993; Verify Your Email</h1>
-    <p class="subtitle">
-        Enter the 6-digit code sent to your email address,
-        or click the verification link in the email.
-    </p>
+<body class="bg-gradient-auth">
 
-    <%-- Flash messages --%>
-    <% if (request.getAttribute("error") != null) { %>
-        <div class="msg-error"><%= request.getAttribute("error") %></div>
-    <% } %>
-    <% if (request.getAttribute("info") != null) { %>
-        <div class="msg-info"><%= request.getAttribute("info") %></div>
-    <% } %>
-
-    <%-- Verify by code form --%>
-    <form method="post" action="${pageContext.request.contextPath}/verify">
-        <input type="hidden" name="action" value="verify">
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="emailDisplay" name="email" required
-                   value="${not empty param.email ? param.email : (not empty requestScope.email ? requestScope.email : '')}">
+    <!-- Glass Verify Container -->
+    <div class="auth-container">
+        <!-- Logo -->
+        <div class="verify-logo">
+            ⚡ TechStore
         </div>
 
-        <div class="form-group">
-            <label for="code">Verification Code</label>
-            <input type="text" id="code" name="code" maxlength="6" placeholder="000000"
-                   autocomplete="one-time-code" required>
-            <p class="hint">Check your inbox (and spam folder). The code expires in 24&nbsp;hours.</p>
+        <!-- Glass Verification Card -->
+        <div class="glass-card verify-card">
+            <!-- Verification Icon -->
+            <div class="verify-icon">
+                ✉️
+            </div>
+
+            <!-- Page Title -->
+            <h1 class="text-3xl font-semibold text-center text-inverse mb-md">
+                Verify Your Email
+            </h1>
+            <p class="text-center text-inverse-secondary mb-xl">
+                Enter the 6-digit code sent to your email address, or click the verification link in the email.
+            </p>
+
+            <!-- Messages -->
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="message message--glass-error">
+                    <%= request.getAttribute("error") %>
+                </div>
+            <% } %>
+
+            <% if (request.getAttribute("info") != null) { %>
+                <div class="message message--glass-success">
+                    <%= request.getAttribute("info") %>
+                </div>
+            <% } %>
+
+            <!-- Verification Form -->
+            <form method="post" action="${pageContext.request.contextPath}/verify" id="verifyForm">
+                <input type="hidden" name="action" value="verify">
+
+                <div class="form-group">
+                    <label for="email" class="form-label form-label--glass">
+                        Email Address
+                    </label>
+                    <input type="email"
+                           id="emailDisplay"
+                           name="email"
+                           class="form-input form-input--glass"
+                           placeholder="Enter your email"
+                           required
+                           readonly
+                           value="${not empty param.email ? param.email : (not empty requestScope.email ? requestScope.email : '')}">
+                </div>
+
+                <div class="form-group">
+                    <label for="code" class="form-label form-label--glass">
+                        Verification Code
+                    </label>
+                    <input type="text"
+                           id="code"
+                           name="code"
+                           class="form-input form-input--glass form-input--otp"
+                           maxlength="6"
+                           placeholder="000000"
+                           autocomplete="one-time-code"
+                           required
+                           autofocus>
+                    <div class="form-hint">
+                        Check your inbox and spam folder. Code expires in 24 hours.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn--success btn--lg">
+                    Verify Email Address
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <hr class="form-divider">
+
+            <!-- Resend Form -->
+            <form method="post" action="${pageContext.request.contextPath}/verify" id="resendForm">
+                <input type="hidden" name="action" value="resend">
+                <input type="hidden" name="email"
+                       value="${not empty requestScope.email ? requestScope.email : param.email}">
+
+                <button type="submit" class="btn btn--secondary btn--lg">
+                    🔄 Resend Verification Code
+                </button>
+            </form>
+
+            <!-- Footer Links -->
+            <div class="form-footer">
+                <div>
+                    Already verified?
+                    <a href="${pageContext.request.contextPath}/login" class="link--inverse font-medium">
+                        Sign In
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn-primary">Verify Email</button>
-    </form>
-
-    <hr class="divider">
-
-    <%-- Resend form --%>
-    <form method="post" action="${pageContext.request.contextPath}/verify">
-        <input type="hidden" name="action" value="resend">
-        <input type="hidden" name="email"
-               value="${not empty requestScope.email ? requestScope.email : param.email}">
-        <button type="submit" class="btn-resend">&#8635; Resend verification code</button>
-    </form>
-
-    <div class="links">
-        Already verified? <a href="${pageContext.request.contextPath}/login">Login</a>
     </div>
-</div>
+
+    <!-- Glassmorphism Interactive Effects -->
+    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        // OTP input enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('code');
+            const verifyForm = document.getElementById('verifyForm');
+            const resendForm = document.getElementById('resendForm');
+
+            // Auto-focus and format OTP input
+            if (codeInput) {
+                codeInput.addEventListener('input', function() {
+                    // Only allow numbers
+                    this.value = this.value.replace(/[^0-9]/g, '');
+
+                    // Auto-submit when 6 digits entered
+                    if (this.value.length === 6) {
+                        setTimeout(() => {
+                            verifyForm.submit();
+                        }, 500);
+                    }
+                });
+
+                // Prevent pasting non-numeric content
+                codeInput.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const numericPaste = paste.replace(/[^0-9]/g, '').slice(0, 6);
+                    this.value = numericPaste;
+
+                    if (numericPaste.length === 6) {
+                        setTimeout(() => {
+                            verifyForm.submit();
+                        }, 500);
+                    }
+                });
+            }
+
+            // Resend cooldown
+            let resendCooldown = false;
+            resendForm.addEventListener('submit', function(e) {
+                if (resendCooldown) {
+                    e.preventDefault();
+                    GlassUtils.showNotification('Please wait before requesting another code', 'warning');
+                    return;
+                }
+
+                resendCooldown = true;
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+
+                // Cooldown for 30 seconds
+                let countdown = 30;
+                submitButton.disabled = true;
+
+                const updateButton = () => {
+                    submitButton.textContent = `⏳ Resend in ${countdown}s`;
+                    countdown--;
+
+                    if (countdown < 0) {
+                        submitButton.textContent = originalText;
+                        submitButton.disabled = false;
+                        resendCooldown = false;
+                    } else {
+                        setTimeout(updateButton, 1000);
+                    }
+                };
+
+                setTimeout(updateButton, 1000);
+            });
+        });
+    </script>
+
 </body>
 </html>
