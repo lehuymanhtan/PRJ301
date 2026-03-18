@@ -1,0 +1,10 @@
+.git
+.gitignore
+target
+**/target
+model/.venv
+model/outputs
+database/*.mdf
+database/*.ldf
+*.log
+*.tmp
