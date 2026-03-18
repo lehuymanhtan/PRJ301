@@ -218,11 +218,17 @@
 
         <!-- Navigation -->
         <nav class="profile-nav">
-            <a href="${pageContext.request.contextPath}/users" class="active">👤 My Profile</a>
-            <a href="${pageContext.request.contextPath}/orders">📦 My Orders</a>
-            <a href="${pageContext.request.contextPath}/users/addresses">📍 Addresses</a>
-            <a href="${pageContext.request.contextPath}/points">💎 Point History</a>
-            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+            <a href="${pageContext.request.contextPath}/">Home</a>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
+            <a href="${pageContext.request.contextPath}/cart">Cart</a>
+            <a href="${pageContext.request.contextPath}/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/users" class="active">Profile</a>
+            <a href="${pageContext.request.contextPath}/users/addresses">Addresses</a>
+            <a href="${pageContext.request.contextPath}/points">Point History</a>
+            <% if ("admin".equalsIgnoreCase(profileUser.getRole())) { %>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
         </nav>
 
         <!-- Profile Grid -->

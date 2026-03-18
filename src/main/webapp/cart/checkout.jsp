@@ -431,9 +431,15 @@
                 Welcome back, <span class="welcome-user"><%= currentUser != null ? currentUser.getName() : "Guest" %></span>!
             </div>
             <div class="nav-links">
-                <a href="${pageContext.request.contextPath}/cart">🛍️ Back to Cart</a>
-                <a href="${pageContext.request.contextPath}/products">🏪 Continue Shopping</a>
-                <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+                <a href="${pageContext.request.contextPath}/">Home</a>
+                <a href="${pageContext.request.contextPath}/products">Products</a>
+                <a href="${pageContext.request.contextPath}/cart">Cart</a>
+                <a href="${pageContext.request.contextPath}/orders">Orders</a>
+                <a href="${pageContext.request.contextPath}/users">Profile</a>
+                <% if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                    <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+                <% } %>
+                <a href="${pageContext.request.contextPath}/logout">Logout</a>
             </div>
         </div>
 

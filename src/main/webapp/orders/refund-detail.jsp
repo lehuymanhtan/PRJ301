@@ -172,10 +172,17 @@
 
         <!-- Navigation -->
         <nav class="refund-nav">
-            <span>Welcome, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong></span>
-            <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">📦 Back to Order</a>
-            <a href="${pageContext.request.contextPath}/orders">📋 My Orders</a>
-            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+            <a href="${pageContext.request.contextPath}/orders?action=detail&id=<%= refund.getOrderId() %>">Back to Order</a>
+            <a href="${pageContext.request.contextPath}/">Home</a>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
+            <a href="${pageContext.request.contextPath}/cart">Cart</a>
+            <a href="${pageContext.request.contextPath}/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/users">Profile</a>
+            <% if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+            <span><strong><%= currentUser != null ? currentUser.getName() : "" %></strong></span>
         </nav>
 
         <!-- Refund Information Card -->

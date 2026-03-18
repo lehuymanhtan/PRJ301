@@ -269,14 +269,17 @@
 
         <!-- Navigation Breadcrumb -->
         <nav class="nav-breadcrumb">
-            <a href="${pageContext.request.contextPath}/">🏠 Home</a>
-            <a href="${pageContext.request.contextPath}/products">🛍️ Products</a>
-            <a href="${pageContext.request.contextPath}/orders" class="active">📦 Orders</a>
+            <a href="${pageContext.request.contextPath}/">Home</a>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
             <% if (currentUser != null) { %>
-                <span class="user-info">👤 <%= currentUser.getUsername() %></span>
-                <a href="${pageContext.request.contextPath}/cart">🛒 Cart</a>
-                <a href="${pageContext.request.contextPath}/users">📱 Profile</a>
-                <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+                <a href="${pageContext.request.contextPath}/cart">Cart</a>
+                <a href="${pageContext.request.contextPath}/orders" class="active">Orders</a>
+                <a href="${pageContext.request.contextPath}/users">Profile</a>
+                <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                    <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+                <% } %>
+                <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                <span class="user-info"><%= currentUser.getName() %></span>
             <% } %>
         </nav>
 

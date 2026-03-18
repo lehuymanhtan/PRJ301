@@ -228,11 +228,16 @@
 
         <!-- Navigation Breadcrumb -->
         <nav class="nav-breadcrumb">
-            <a href="${pageContext.request.contextPath}/">🏠 Home</a>
-            <a href="${pageContext.request.contextPath}/users">👤 Profile</a>
-            <a href="${pageContext.request.contextPath}/users/addresses" class="active">📍 Addresses</a>
-            <a href="${pageContext.request.contextPath}/orders">📦 Orders</a>
-            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+            <a href="${pageContext.request.contextPath}/">Home</a>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
+            <a href="${pageContext.request.contextPath}/cart">Cart</a>
+            <a href="${pageContext.request.contextPath}/orders">Orders</a>
+            <a href="${pageContext.request.contextPath}/users">Profile</a>
+            <a href="${pageContext.request.contextPath}/users/addresses" class="active">Addresses</a>
+            <% if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
         </nav>
 
         <!-- Checkout Notice -->

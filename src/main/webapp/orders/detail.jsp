@@ -199,13 +199,23 @@
 
         <!-- Navigation -->
         <div class="order-nav">
-            <span>Welcome, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong></span>
+            <a href="${pageContext.request.contextPath}/">Home</a>
             <span>|</span>
-            <a href="${pageContext.request.contextPath}/orders">📋 My Orders</a>
+            <a href="${pageContext.request.contextPath}/products">Products</a>
             <span>|</span>
-            <a href="${pageContext.request.contextPath}/products">🛒 Products</a>
+            <a href="${pageContext.request.contextPath}/cart">Cart</a>
             <span>|</span>
-            <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+            <a href="${pageContext.request.contextPath}/orders">Orders</a>
+            <span>|</span>
+            <a href="${pageContext.request.contextPath}/users">Profile</a>
+            <span>|</span>
+            <% if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+                <span>|</span>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+            <span>|</span>
+            <span><strong><%= currentUser != null ? currentUser.getName() : "" %></strong></span>
         </div>
 
         <!-- Order Information Grid -->

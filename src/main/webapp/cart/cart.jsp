@@ -234,12 +234,15 @@
             <a href="${pageContext.request.contextPath}/cart" class="app-header__nav-link app-header__nav-link--active">Cart</a>
             <% if (currentUser != null) { %>
                 <a href="${pageContext.request.contextPath}/orders" class="app-header__nav-link">Orders</a>
+                <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                    <a href="${pageContext.request.contextPath}/admin/dashboard" class="app-header__nav-link">Admin Dashboard</a>
+                <% } %>
             <% } %>
         </div>
 
         <div class="app-header__user">
             <% if (currentUser != null) { %>
-                <span class="app-header__user-name">👤 <%= currentUser.getUsername() %></span>
+                <span class="app-header__user-name"><%= currentUser.getName() %></span>
                 <a href="${pageContext.request.contextPath}/users" class="app-header__user-link">Profile</a>
                 <a href="${pageContext.request.contextPath}/logout" class="app-header__user-link">Logout</a>
             <% } else { %>

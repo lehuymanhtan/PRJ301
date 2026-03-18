@@ -463,6 +463,9 @@
             <% if (currentUser != null) { %>
                 <a href="${pageContext.request.contextPath}/cart">Cart</a>
                 <a href="${pageContext.request.contextPath}/orders">Orders</a>
+                <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                    <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+                <% } %>
             <% } %>
         </div>
 
