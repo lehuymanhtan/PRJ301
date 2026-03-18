@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - TechStore</title>
+    <title>Edit Profile - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -171,3 +171,4 @@
     <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
+

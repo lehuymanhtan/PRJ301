@@ -9,7 +9,7 @@
         User editUser = (User) request.getAttribute("user");
         boolean isEdit = (editUser != null);
     %>
-    <title><%= isEdit ? "Edit User" : "Add User" %> - TechStore Admin</title>
+    <title><%= isEdit ? "Edit User" : "Add User" %> - Ruby Tech Admin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -206,3 +206,4 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
+

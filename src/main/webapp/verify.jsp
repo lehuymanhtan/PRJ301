@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Verification - TechStore</title>
+    <title>Email Verification - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,7 +81,8 @@
     <div class="auth-container">
         <!-- Logo -->
         <div class="verify-logo">
-            ⚡ TechStore
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 44px; width: auto;">
+            <span>Ruby Tech</span>
         </div>
 
         <!-- Glass Verification Card -->
@@ -256,3 +257,4 @@
 
 </body>
 </html>
+

@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - TechStore</title>
+    <title>Admin Dashboard - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -377,3 +377,4 @@
 </script>
 </body>
 </html>
+

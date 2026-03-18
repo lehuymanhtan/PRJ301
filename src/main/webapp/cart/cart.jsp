@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cart - TechStore</title>
+    <title>My Cart - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -225,7 +225,8 @@
 <div class="main-container">
     <div class="app-header">
         <a href="${pageContext.request.contextPath}/" class="app-header__logo">
-            <span>⚡</span>TechStore
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 36px; width: auto; vertical-align: middle;">
+            <span>Ruby Tech</span>
         </a>
 
         <div class="app-header__nav">
@@ -485,3 +486,4 @@
 
 </body>
 </html>
+

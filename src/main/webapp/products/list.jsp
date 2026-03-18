@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - TechStore</title>
+    <title>Products - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,10 +33,14 @@
             font-size: var(--text-xl);
             font-weight: var(--font-weight-bold);
             color: var(--glass-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
-        .logo-icon {
-            margin-right: var(--space-2);
+        .logo img {
+            height: 36px;
+            width: auto;
         }
 
         .nav-menu {
@@ -454,7 +458,8 @@
 <div class="main-container">
     <div class="header">
         <div class="logo">
-            <span class="logo-icon">⚡</span>TechStore
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo">
+            <span>Ruby Tech</span>
         </div>
 
         <div class="nav-menu">
@@ -674,3 +679,4 @@
 
 </body>
 </html>
+

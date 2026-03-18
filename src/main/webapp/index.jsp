@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to TechStore</title>
+    <title>Welcome to Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,7 +101,7 @@
     <div class="welcome-container">
         <!-- Welcome Logo -->
         <div class="welcome-logo">
-            ⚡ TechStore
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 96px; width: auto;">
         </div>
 
         <!-- Welcome Message -->
@@ -123,3 +123,4 @@
 
 </body>
 </html>
+

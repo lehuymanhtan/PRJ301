@@ -10,7 +10,7 @@
         List<Supplier> suppliers = (List<Supplier>) request.getAttribute("suppliers");
         boolean isEdit = (editProduct != null);
     %>
-    <title><%= isEdit ? "Edit Product" : "Add Product" %> - TechStore Admin</title>
+    <title><%= isEdit ? "Edit Product" : "Add Product" %> - Ruby Tech Admin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,3 +143,4 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
+

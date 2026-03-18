@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password - TechStore</title>
+    <title>Forgot Password - Ruby Tech</title>
 
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,8 @@
     <div class="auth-container">
         <!-- Logo -->
         <div class="login-logo">
-            ⚡ TechStore
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 44px; width: auto;">
+            <span>Ruby Tech</span>
         </div>
 
         <!-- Glass Forgot Password Card -->
@@ -88,3 +89,4 @@
 
 </body>
 </html>
+
