@@ -10,146 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .refund-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .refund-nav {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-        }
-
-        .refund-nav a {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-lg);
-            color: var(--text-inverse-secondary);
-            text-decoration: none;
-            transition: var(--transition-colors);
-            font-size: var(--text-sm);
-            background: var(--glass-secondary);
-            border: 1px solid var(--gray-200);
-        }
-
-        .refund-nav a:hover {
-            background: var(--glass-primary);
-            color: var(--text-inverse);
-            transform: translateY(-1px);
-        }
-
-        .refund-info-card {
-            max-width: 700px;
-            margin: 0 auto var(--space-xl) auto;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: var(--space-md);
-            align-items: center;
-        }
-
-        .info-label {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-        }
-
-        .info-value {
-            font-weight: var(--font-weight-medium);
-            color: var(--text-primary);
-        }
-
-        .return-instructions-card {
-            max-width: 700px;
-            margin: 0 auto var(--space-xl) auto;
-            background: var(--info-bg);
-            border: 1px solid var(--info);
-        }
-
-        .return-instructions-card h3 {
-            color: var(--info);
-            margin-bottom: var(--space-md);
-        }
-
-        .instruction-box {
-            background: var(--warning-bg);
-            border: 1px solid var(--warning);
-            border-radius: var(--radius-md);
-            padding: var(--space-md);
-            margin-top: var(--space-md);
-            color: var(--warning-text);
-        }
-
-        .instruction-box ul {
-            margin: var(--space-2) 0;
-            padding-left: var(--space-lg);
-        }
-
-        .instruction-box li {
-            margin-bottom: var(--space-2);
-        }
-
-        .refund-actions {
-            max-width: 700px;
-            margin: 0 auto;
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-1);
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .badge-pending { background: var(--warning-bg); color: var(--warning-text); }
-        .badge-waitforreturn { background: var(--info-bg); color: var(--info-text); }
-        .badge-verifying { background: var(--info-bg); color: var(--info-text); }
-        .badge-done { background: var(--success-bg); color: var(--success-text); }
-        .badge-rejected { background: var(--error-bg); color: var(--error-text); }
-        .badge-cancelled { background: var(--gray-100); color: var(--text-tertiary); }
-
-        @media (max-width: 768px) {
-            .refund-nav {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-2);
-            }
-
-            .info-label,
-            .info-value {
-                text-align: left;
-            }
-
-            .refund-actions {
-                flex-direction: column;
-            }
-
-            .refund-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User          currentUser = (User)          session.getAttribute("user");
@@ -264,7 +126,7 @@
         <div class="refund-actions">
             <!-- Cancel button only available when status is Pending -->
             <% if ("Pending".equals(status)) { %>
-            <form action="${pageContext.request.contextPath}/refund" method="post" style="display:inline;">
+            <form action="${pageContext.request.contextPath}/refund" method="post">
                 <input type="hidden" name="action" value="cancel">
                 <input type="hidden" name="id"     value="<%= refund.getId() %>">
                 <button type="submit" class="btn btn--error btn--lg"
@@ -285,4 +147,3 @@
 
 </body>
 </html>
-

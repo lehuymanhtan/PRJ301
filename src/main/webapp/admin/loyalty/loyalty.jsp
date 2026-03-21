@@ -10,79 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .loyalty-header {
-            margin-bottom: var(--space-xl);
-        }
-
-        .loyalty-title {
-            color: var(--text-primary);
-            font-size: var(--text-3xl);
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-2);
-        }
-
-        .loyalty-subtitle {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-        }
-
-        .section-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--space-xl);
-            max-width: 800px;
-        }
-
-        .rate-form {
-            display: flex;
-            align-items: end;
-            gap: var(--space-md);
-            margin-top: var(--space-md);
-        }
-
-        .rate-input-group {
-            flex: 1;
-        }
-
-        .stats-table-container {
-            overflow-x: auto;
-        }
-
-        .stats-table {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .tier-badge {
-            display: inline-block;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-medium);
-            color: var(--text-inverse);
-            background: var(--gradient-primary);
-        }
-
-        .tier-badge--regular { background: var(--surface-tertiary); color: var(--text-primary); }
-        .tier-badge--bronze { background: linear-gradient(135deg, #cd7f32 0%, #a0522d 100%); }
-        .tier-badge--silver { background: linear-gradient(135deg, #c0c0c0 0%, #708090 100%); }
-        .tier-badge--gold { background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%); color: var(--text-primary); }
-        .tier-badge--platinum { background: linear-gradient(135deg, #e5e4e2 0%, #b8860b 100%); color: var(--text-primary); }
-        .tier-badge--diamond { background: linear-gradient(135deg, #b9f2ff 0%, #00bfff 100%); }
-
-        @media (max-width: 768px) {
-            .rate-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");

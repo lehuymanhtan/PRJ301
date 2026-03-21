@@ -13,28 +13,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <style>
-        .form-shell { max-width: 840px; margin: 0 auto; }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: var(--space-md);
-        }
-        .full-span { grid-column: 1 / -1; }
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: var(--space-3);
-            margin-top: var(--space-lg);
-        }
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <div class="admin-layout">
     <div class="admin-header">
@@ -123,4 +102,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

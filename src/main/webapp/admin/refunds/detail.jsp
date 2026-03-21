@@ -10,133 +10,7 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .refund-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: var(--space-3);
-        }
-
-        .meta-item {
-            padding: var(--space-3);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-md);
-            background: var(--surface-secondary);
-        }
-
-        .meta-label {
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-1);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .meta-value {
-            font-size: var(--text-md);
-            color: var(--text-primary);
-            font-weight: var(--font-weight-medium);
-            word-break: break-word;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-bold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-badge--pending {
-            background: var(--surface-warning);
-            color: var(--text-warning);
-        }
-
-        .status-badge--waitforreturn {
-            background: var(--surface-info);
-            color: var(--text-info);
-        }
-
-        .status-badge--verifying {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--glass-primary);
-        }
-
-        .status-badge--done {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .status-badge--rejected {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .status-badge--cancelled {
-            background: rgba(107, 114, 128, 0.1);
-            color: #6b7280;
-        }
-
-        .update-form {
-            display: grid;
-            gap: var(--space-md);
-        }
-
-        .form-group {
-            display: grid;
-            gap: var(--space-2);
-        }
-
-        .form-label {
-            color: var(--text-primary);
-            font-weight: var(--font-weight-semibold);
-            font-size: var(--text-sm);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: var(--space-3);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            color: var(--text-primary);
-            background: var(--surface-primary);
-            box-sizing: border-box;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--glass-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        #returnAddressGroup { display: none; }
-
-        .actions {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            margin-top: var(--space-lg);
-        }
-
-        .form-hint {
-            color: var(--text-secondary);
-            font-size: var(--text-xs);
-        }
-    </style>
     <script>
         function toggleReturnAddress() {
             var sel = document.getElementById("statusSelect");
@@ -188,7 +62,7 @@
                     <div class="meta-value">
                         #<%= refund.getOrderId() %>
                         <a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=<%= refund.getOrderId() %>"
-                           class="text-primary" style="margin-left: 8px;">View Order</a>
+                           class="text-primary">View Order</a>
                     </div>
                 </div>
                 <div class="meta-item">
@@ -201,12 +75,12 @@
                     <div class="meta-value"><%= String.format("%,.0f", order.getTotalPrice()) %> ₫</div>
                 </div>
                 <% } %>
-                <div class="meta-item" style="grid-column: 1 / -1;">
+                <div class="meta-item">
                     <div class="meta-label">Reason</div>
                     <div class="meta-value"><%= refund.getReason() %></div>
                 </div>
                 <% if (refund.getDescription() != null && !refund.getDescription().isEmpty()) { %>
-                <div class="meta-item" style="grid-column: 1 / -1;">
+                <div class="meta-item">
                     <div class="meta-label">Description</div>
                     <div class="meta-value"><%= refund.getDescription() %></div>
                 </div>
@@ -220,7 +94,7 @@
                     <div class="meta-value"><span class="status-badge <%= statusClass %>"><%= status %></span></div>
                 </div>
                 <% if (refund.getReturnAddress() != null && !refund.getReturnAddress().isEmpty()) { %>
-                <div class="meta-item" style="grid-column: 1 / -1;">
+                <div class="meta-item">
                     <div class="meta-label">Return Address</div>
                     <div class="meta-value"><%= refund.getReturnAddress() %></div>
                 </div>
@@ -275,4 +149,3 @@
 
 </body>
 </html>
-

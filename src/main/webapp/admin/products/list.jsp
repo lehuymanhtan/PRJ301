@@ -10,107 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        /* Product management specific enhancements */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--text-sm);
-        }
-
-        .product-table th,
-        .product-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-
-        .product-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .product-table tr:hover {
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .product-actions {
-            display: flex;
-            gap: var(--space-2);
-            align-items: center;
-        }
-
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: var(--space-2);
-            margin-top: var(--space-lg);
-            padding: var(--space-lg) 0;
-        }
-
-        .pagination-info {
-            padding: var(--space-2) var(--space-4);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            font-weight: var(--font-weight-medium);
-        }
-
-        .stock-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-sm);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .stock-badge--high {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .stock-badge--medium {
-            background: var(--surface-warning);
-            color: var(--text-warning);
-        }
-
-        .stock-badge--low {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .price-display {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: var(--space-1) var(--space-2);
-            background: var(--surface-secondary);
-            color: var(--text-secondary);
-            border-radius: var(--radius-sm);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-medium);
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -293,4 +194,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

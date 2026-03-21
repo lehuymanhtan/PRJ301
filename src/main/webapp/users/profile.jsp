@@ -10,164 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .profile-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .profile-nav {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-        }
-
-        .profile-nav a {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-lg);
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition-colors);
-            font-size: var(--text-sm);
-            background: var(--surface-tertiary);
-            border: 1px solid var(--gray-200);
-        }
-
-        .profile-nav a:hover,
-        .profile-nav a.active {
-            background: var(--glass-primary);
-            color: var(--text-inverse);
-            transform: translateY(-1px);
-        }
-
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-xl);
-        }
-
-        .profile-info {
-            display: grid;
-            gap: var(--space-md);
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-3) 0;
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: var(--font-weight-medium);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-        }
-
-        .info-value {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .loyalty-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: var(--space-lg);
-        }
-
-        .loyalty-stat {
-            text-align: center;
-        }
-
-        .loyalty-stat-value {
-            font-size: var(--text-2xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--glass-primary);
-            display: block;
-        }
-
-        .loyalty-stat-label {
-            font-size: var(--text-xs);
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .tier-progress {
-            margin: var(--space-lg) 0;
-        }
-
-        .tier-progress-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-2);
-            font-size: var(--text-sm);
-        }
-
-        .tier-next {
-            color: var(--text-secondary);
-        }
-
-        .max-tier-message {
-            text-align: center;
-            color: var(--success);
-            font-weight: var(--font-weight-semibold);
-            padding: var(--space-md);
-            background: var(--success-bg);
-            border-radius: var(--radius-md);
-            margin: var(--space-lg) 0;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: var(--space-md);
-            margin-top: var(--space-xl);
-            flex-wrap: wrap;
-        }
-
-        .profile-actions .btn {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        @media (max-width: 768px) {
-            .profile-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-
-            .profile-nav {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .loyalty-stats {
-                flex-direction: column;
-                gap: var(--space-md);
-            }
-
-            .profile-actions {
-                flex-direction: column;
-            }
-
-            .profile-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 
 <%
@@ -348,9 +192,8 @@
                             </span>
                         </div>
                         <div class="loyalty-progress">
-                            <div class="loyalty-progress-fill"
-                                 style="width: <%= String.format("%.1f", pct) %>%"
-                                 data-width="<%= String.format("%.1f", pct) %>%">
+                               <div class="loyalty-progress-fill"
+                                   data-width="<%= String.format("%.1f", pct) %>%">
                             </div>
                             <div class="loyalty-progress-text">
                                 <%= String.format("%.0f", pct) %>%
@@ -435,4 +278,3 @@
 
 </body>
 </html>
-

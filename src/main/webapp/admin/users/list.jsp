@@ -9,48 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <style>
-        .table-container { overflow-x: auto; }
-        .user-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
-        .user-table th,
-        .user-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-        .user-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .user-table tr:hover { background: rgba(59, 130, 246, 0.04); }
-        .user-actions { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
-        .search-form {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            width: 100%;
-            max-width: 640px;
-        }
-        .tier-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-semibold);
-            background: var(--surface-tertiary);
-            color: var(--text-primary);
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -99,7 +58,7 @@
             <div class="message message--danger mb-lg">❌ Error: <%= errParam %></div>
         <% } %>
 
-        <div class="flex justify-between items-center mb-lg" style="gap: var(--space-3); flex-wrap: wrap;">
+        <div class="flex justify-between items-center mb-lg">
             <a href="${pageContext.request.contextPath}/admin/users?action=create" class="btn btn--success btn--md">+ Add User</a>
 
             <form class="search-form" method="get" action="${pageContext.request.contextPath}/admin/users">
@@ -167,4 +126,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

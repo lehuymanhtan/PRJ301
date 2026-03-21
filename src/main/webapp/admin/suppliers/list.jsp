@@ -10,95 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        /* Supplier management specific enhancements */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .supplier-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--text-sm);
-        }
-
-        .supplier-table th,
-        .supplier-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-
-        .supplier-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .supplier-table tr:hover {
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .supplier-actions {
-            display: flex;
-            gap: var(--space-2);
-            align-items: center;
-        }
-
-        .supplier-id {
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-        }
-
-        .supplier-name {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .contact-info {
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            width: 100%;
-            justify-content: center;
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-bold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-badge--active {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .status-badge--inactive {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .address-cell {
-            max-width: 200px;
-            font-size: var(--text-xs);
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 
 <%
@@ -252,4 +165,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

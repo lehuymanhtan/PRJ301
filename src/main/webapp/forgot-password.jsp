@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,16 +9,14 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-</head>
+    </head>
 <body class="bg-gradient-auth">
 
     <!-- Glass Forgot Password Container -->
     <div class="auth-container">
         <!-- Logo -->
         <div class="login-logo">
-            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 44px; width: auto;">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo">
             <span>Ruby Tech</span>
         </div>
 
@@ -89,4 +87,3 @@
 
 </body>
 </html>
-

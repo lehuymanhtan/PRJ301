@@ -11,179 +11,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .forecast-header {
-            margin-bottom: var(--space-xl);
-        }
-
-        .forecast-title {
-            color: var(--text-primary);
-            font-size: var(--text-3xl);
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-2);
-        }
-
-        .forecast-subtitle {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-        }
-
-        .forecast-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--space-xl);
-        }
-
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
-
-        .chart-box {
-            background: var(--surface-primary);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            transition: var(--transition-base);
-        }
-
-        .chart-box:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glass-shadow-medium);
-        }
-
-        .chart-box--full {
-            grid-column: 1 / -1;
-        }
-
-        .chart-title {
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            margin-bottom: var(--space-md);
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-        }
-
-        .chart-image {
-            width: 100%;
-            height: auto;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-secondary);
-        }
-
-        .forecast-details {
-            background: var(--surface-tertiary);
-            border: 1px solid var(--border-secondary);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-lg);
-        }
-
-        .forecast-details strong {
-            color: var(--text-primary);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-sm);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-medium);
-            color: var(--text-inverse);
-            background: var(--gradient-success);
-        }
-
-        .trigger-btn {
-            position: relative;
-            overflow: hidden;
-            background: var(--gradient-primary);
-            border: none;
-            color: var(--text-inverse);
-            font-weight: var(--font-weight-semibold);
-            transition: var(--transition-base);
-        }
-
-        .trigger-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glass-shadow-large);
-        }
-
-        .trigger-btn:active {
-            transform: translateY(0);
-        }
-
-        .trigger-btn:disabled {
-            background: var(--surface-tertiary);
-            color: var(--text-tertiary);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--text-inverse-tertiary);
-            border-top: 2px solid var(--text-inverse);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: var(--space-2);
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .info-section {
-            background: var(--surface-tertiary);
-            border: 1px solid var(--border-secondary);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            margin-top: var(--space-lg);
-        }
-
-        .info-section h3 {
-            color: var(--text-primary);
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-semibold);
-            margin-top: 0;
-            margin-bottom: var(--space-md);
-        }
-
-        .info-section ul {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .info-section li {
-            margin-bottom: var(--space-2);
-        }
-
-        .timestamp {
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: var(--text-sm);
-            margin-top: var(--space-xl);
-            padding-top: var(--space-lg);
-            border-top: 1px solid var(--border-secondary);
-        }
-
-        @media (max-width: 768px) {
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -242,7 +71,7 @@
                         <button class="btn btn--lg trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
                             🚀 Run New Forecast
                         </button>
-                        <div id="forecastAlert" class="message mt-md" style="display: none;"></div>
+                        <div id="forecastAlert" class="message mt-md"></div>
                     </div>
                 </div>
 
@@ -301,7 +130,7 @@
                         <button class="btn btn--lg trigger-btn" id="forecastTriggerBtn" onclick="triggerForecast()">
                             🚀 Run Forecast Now
                         </button>
-                        <div id="forecastAlert" class="message mt-md" style="display: none;"></div>
+                        <div id="forecastAlert" class="message mt-md"></div>
                     </div>
 
                     <div class="info-section">

@@ -10,112 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .refund-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .refund-nav {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-        }
-
-        .refund-nav a {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-lg);
-            color: var(--text-inverse-secondary);
-            text-decoration: none;
-            transition: var(--transition-colors);
-            font-size: var(--text-sm);
-            background: var(--glass-secondary);
-            border: 1px solid var(--gray-200);
-        }
-
-        .refund-nav a:hover {
-            background: var(--glass-primary);
-            color: var(--text-inverse);
-            transform: translateY(-1px);
-        }
-
-        .order-info-card {
-            max-width: 600px;
-            margin: 0 auto var(--space-xl) auto;
-        }
-
-        .refund-form-card {
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: var(--space-md);
-            align-items: center;
-        }
-
-        .info-label {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-        }
-
-        .info-value {
-            font-weight: var(--font-weight-medium);
-            color: var(--text-primary);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            margin-top: var(--space-xl);
-        }
-
-        .form-help {
-            padding: var(--space-3);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            margin-top: var(--space-md);
-        }
-
-        @media (max-width: 768px) {
-            .refund-nav {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-2);
-            }
-
-            .info-label,
-            .info-value {
-                text-align: left;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User  currentUser = (User)  session.getAttribute("user");
@@ -220,4 +116,3 @@
 
 </body>
 </html>
-

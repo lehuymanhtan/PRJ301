@@ -9,72 +9,14 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        /* Login-specific layout enhancements */
-        .login-logo {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            justify-content: center;
-            margin-bottom: var(--space-xl);
-            font-size: var(--text-2xl);
-            font-weight: var(--font-weight-bold);
-            color: var(--text-inverse);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .form-footer {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-            margin-top: var(--space-lg);
-            text-align: center;
-        }
-
-        .form-footer a {
-            color: var(--text-inverse-secondary);
-            transition: var(--transition-colors);
-            font-size: var(--text-md);
-        }
-
-        .form-footer a:hover {
-            color: var(--text-inverse);
-        }
-
-        .divider {
-            margin: var(--space-md) 0;
-            color: var(--text-inverse-tertiary);
-            font-size: var(--text-sm);
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-gradient-auth">
     <!-- Glass Login Container -->
     <div class="auth-container">
         <!-- Logo -->
         <div class="login-logo">
-            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 44px; width: auto;">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo">
             <span>Ruby Tech</span>
         </div>
 
@@ -215,4 +157,3 @@
 
 </body>
 </html>
-

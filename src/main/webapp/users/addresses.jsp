@@ -10,192 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .page-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .nav-breadcrumb {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-        }
-
-        .nav-breadcrumb a {
-            padding: var(--space-2) var(--space-4);
-            border-radius: var(--radius-lg);
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition-colors);
-            font-size: var(--text-sm);
-            background: var(--surface-tertiary);
-            border: 1px solid var(--gray-200);
-        }
-
-        .nav-breadcrumb a:hover,
-        .nav-breadcrumb a.active {
-            background: var(--glass-primary);
-            color: var(--text-inverse);
-            transform: translateY(-1px);
-        }
-
-        .address-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
-            gap: var(--space-md);
-        }
-
-        .address-count {
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-        }
-
-        .address-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: var(--space-lg);
-            margin-bottom: var(--space-xl);
-        }
-
-        .address-card {
-            position: relative;
-            transition: var(--transition-base);
-        }
-
-        .address-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .address-card--default {
-            border-color: var(--success);
-            box-shadow: 0 0 0 1px var(--success-glass);
-        }
-
-        .address-card--default::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-success);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-
-        .address-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: var(--space-md);
-        }
-
-        .address-name {
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            margin-bottom: var(--space-1);
-        }
-
-        .address-phone {
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: var(--space-1);
-        }
-
-        .address-text {
-            color: var(--text-primary);
-            line-height: var(--leading-relaxed);
-            margin: var(--space-md) 0;
-            padding: var(--space-md);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-        }
-
-        .address-actions-row {
-            display: flex;
-            gap: var(--space-sm);
-            flex-wrap: wrap;
-        }
-
-        .address-actions-row .btn {
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: var(--space-3xl) var(--space-lg);
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: var(--text-6xl);
-            margin-bottom: var(--space-lg);
-            opacity: 0.5;
-        }
-
-        .empty-state-title {
-            font-size: var(--text-xl);
-            font-weight: var(--font-weight-semibold);
-            margin-bottom: var(--space-md);
-            color: var(--text-primary);
-        }
-
-        .back-button {
-            margin-bottom: var(--space-lg);
-        }
-
-        .checkout-notice {
-            background: var(--info-bg);
-            color: var(--info-dark);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-lg);
-            border: 1px solid var(--info);
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-        }
-
-        @media (max-width: 768px) {
-            .address-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-md);
-            }
-
-            .nav-breadcrumb {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .address-actions {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .address-actions-row {
-                flex-direction: column;
-            }
-
-            .address-actions-row .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 
 <%
@@ -349,7 +165,7 @@
                                     🗑️ Delete
                                 </a>
                             <% } else { %>
-                                <div class="btn btn--ghost btn--sm" style="opacity: 0.5; cursor: not-allowed;">
+                                <div class="btn btn--ghost btn--sm">
                                     🔒 Protected
                                 </div>
                             <% } %>
@@ -425,4 +241,3 @@
 
 </body>
 </html>
-

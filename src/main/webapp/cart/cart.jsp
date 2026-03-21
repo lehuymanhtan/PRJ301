@@ -10,209 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .main-container {
-            max-width: var(--container-xl);
-            margin: 0 auto;
-            padding: 0 var(--space-lg);
-        }
-
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: var(--space-xl);
-            align-items: start;
-        }
-
-        .cart-items {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-lg);
-        }
-
-        .cart-item {
-            transition: var(--transition-base);
-            border-left: 4px solid transparent;
-        }
-
-        .cart-item:hover {
-            transform: translateY(-2px);
-            border-left-color: var(--glass-primary);
-        }
-
-        .cart-item-content {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: var(--space-lg);
-            align-items: center;
-        }
-
-        .item-info {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-        }
-
-        .item-name {
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .item-price {
-            font-size: var(--text-md);
-            color: var(--success);
-            font-weight: var(--font-weight-medium);
-        }
-
-        .quantity-controls {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-            align-items: center;
-        }
-
-        .quantity-form {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .quantity-input {
-            width: 70px;
-            padding: var(--space-2) var(--space-3);
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            text-align: center;
-            background: var(--surface-primary);
-            color: var(--text-primary);
-        }
-
-        .quantity-input:focus {
-            border-color: var(--glass-primary);
-            outline: none;
-            box-shadow: 0 0 0 2px var(--glass-primary-light);
-        }
-
-        .item-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-            align-items: flex-end;
-        }
-
-        .item-subtotal {
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-            text-align: right;
-        }
-
-        .cart-sidebar {
-            position: sticky;
-            top: var(--space-lg);
-        }
-
-        .cart-summary {
-            margin-bottom: var(--space-lg);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .summary-row:last-child {
-            border-bottom: none;
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-            font-size: var(--text-lg);
-            border-top: 2px solid var(--glass-primary);
-            padding-top: var(--space-lg);
-            margin-top: var(--space-md);
-        }
-
-        .summary-label {
-            color: var(--text-secondary);
-        }
-
-        .summary-value {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .cart-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: var(--space-3xl) var(--space-lg);
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: var(--text-6xl);
-            margin-bottom: var(--space-lg);
-            opacity: 0.5;
-        }
-
-        .empty-state-title {
-            font-size: var(--text-xl);
-            font-weight: var(--font-weight-semibold);
-            margin-bottom: var(--space-md);
-            color: var(--text-primary);
-        }
-
-        @media (max-width: 968px) {
-            .cart-layout {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-
-            .cart-item-content {
-                grid-template-columns: 1fr;
-                gap: var(--space-md);
-                text-align: center;
-            }
-
-            .item-actions {
-                align-items: center;
-            }
-
-            .nav-breadcrumb {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .quantity-form {
-                flex-direction: column;
-                gap: var(--space-sm);
-            }
-
-            .cart-actions {
-                gap: var(--space-sm);
-            }
-
-            .cart-actions .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -225,7 +24,7 @@
 <div class="main-container">
     <div class="app-header">
         <a href="${pageContext.request.contextPath}/" class="app-header__logo">
-            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo" style="height: 36px; width: auto; vertical-align: middle;">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo">
             <span>Ruby Tech</span>
         </a>
 
@@ -257,23 +56,23 @@
 <!-- Page Content -->
 <div class="main-container">
     <!-- Page Title Section -->
-    <div style="text-align: center; margin: var(--space-xl) 0;">
-        <h1 style="font-size: var(--text-3xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-md);">
+    <div>
+        <h1>
             🛒 Shopping Cart
         </h1>
-        <p style="color: var(--text-secondary); font-size: var(--text-lg);">
+        <p>
             Review your items before checkout
         </p>
     </div>
 
     <!-- Success/Warning Messages -->
     <% if (cartMessage != null) { %>
-        <div class="alert-message" style="background: var(--glass-success); color: var(--success-dark); margin-bottom: var(--space-lg);">
+        <div class="alert-message">
             ✅ <%= cartMessage %>
         </div>
     <% } %>
     <% if (stockMessage != null) { %>
-        <div class="alert-message" style="background: var(--glass-warning); color: var(--warning-dark); margin-bottom: var(--space-lg);">
+        <div class="alert-message">
             ⚠️ <%= stockMessage %>
         </div>
     <% } %>
@@ -486,4 +285,3 @@
 
 </body>
 </html>
-

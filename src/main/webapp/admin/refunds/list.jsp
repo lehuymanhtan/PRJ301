@@ -10,123 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        /* Refund management specific enhancements */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .refund-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--text-sm);
-        }
-
-        .refund-table th,
-        .refund-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-
-        .refund-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .refund-table tr:hover {
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .refund-id {
-            font-weight: var(--font-weight-bold);
-            color: var(--text-primary);
-            font-family: var(--font-mono);
-        }
-
-        .order-id-link {
-            font-family: var(--font-mono);
-            color: var(--glass-primary);
-            text-decoration: none;
-            font-weight: var(--font-weight-medium);
-        }
-
-        .order-id-link:hover {
-            text-decoration: underline;
-        }
-
-        .reason-text {
-            max-width: 200px;
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            line-height: 1.4;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-bold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-badge--pending {
-            background: var(--surface-warning);
-            color: var(--text-warning);
-        }
-
-        .status-badge--waitforreturn {
-            background: var(--surface-info);
-            color: var(--text-info);
-        }
-
-        .status-badge--verifying {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--glass-primary);
-        }
-
-        .status-badge--done {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .status-badge--rejected {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .status-badge--cancelled {
-            background: rgba(107, 114, 128, 0.1);
-            color: #6b7280;
-        }
-
-        .date-display {
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-            font-size: var(--text-xs);
-        }
-
-        .stats-footer {
-            margin-top: var(--space-lg);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-medium);
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 
 <%
@@ -253,4 +138,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

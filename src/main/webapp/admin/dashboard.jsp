@@ -12,78 +12,11 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <!-- Page-specific styles -->
-    <style>
-        /* Dashboard-specific enhancements */
-        .dashboard-header {
-            margin-bottom: var(--space-xl);
-        }
-
-        .dashboard-title {
-            color: var(--text-primary);
-            font-size: var(--text-3xl);
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-1);
-        }
-
-        .dashboard-subtitle {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-            font-weight: var(--font-weight-normal);
-        }
-
-        .chart-container {
-            position: relative;
-            height: 350px;
-            margin-bottom: var(--space-md);
-        }
-
-        .chart-footer {
-            text-align: right;
-            margin-top: var(--space-lg);
-        }
-
-        .quick-links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-md);
-        }
-
-        .quick-link {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-md);
-            background: var(--surface-primary);
-            border-radius: var(--radius-lg);
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: var(--transition-base);
-            border: 1px solid var(--border-primary);
-        }
-
-        .quick-link:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glass-shadow-medium);
-            border-color: var(--glass-primary);
-        }
-
-        .quick-link-icon {
-            font-size: var(--text-xl);
-        }
-
-        .quick-link-text {
-            font-weight: var(--font-weight-medium);
-            font-size: var(--text-md);
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -149,7 +82,7 @@
                 <div class="stats-card__label">Order Count</div>
             </div>
 
-            <div class="stats-card" style="background: var(--gradient-danger); color: var(--text-inverse);">
+            <div class="stats-card">
                 <div class="stats-card__icon">🔄</div>
                 <div class="stats-card__value"><%= String.format("%,d", totalRefunds) %></div>
                 <div class="stats-card__label">Refunds</div>
@@ -377,4 +310,3 @@
 </script>
 </body>
 </html>
-

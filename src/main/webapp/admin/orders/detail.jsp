@@ -10,139 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .order-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: var(--space-3);
-        }
-
-        .meta-item {
-            padding: var(--space-3);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-md);
-            background: var(--surface-secondary);
-        }
-
-        .meta-label {
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-1);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .meta-value {
-            font-size: var(--text-md);
-            color: var(--text-primary);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-bold);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-badge--pending {
-            background: var(--surface-warning);
-            color: var(--text-warning);
-        }
-
-        .status-badge--processing {
-            background: var(--surface-info);
-            color: var(--text-info);
-        }
-
-        .status-badge--shipped {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--glass-primary);
-        }
-
-        .status-badge--delivered,
-        .status-badge--completed {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .status-badge--cancelled {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .status-badge--refunded {
-            background: rgba(124, 58, 237, 0.1);
-            color: #7c3aed;
-        }
-
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--text-sm);
-        }
-
-        .items-table th,
-        .items-table td {
-            padding: var(--space-3) var(--space-4);
-            border-bottom: 1px solid var(--border-primary);
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        .items-table th {
-            background: var(--surface-tertiary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .items-table tr:hover {
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .price {
-            font-family: var(--font-mono);
-            color: var(--text-primary);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .qty {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-secondary);
-        }
-
-        .total-row td {
-            font-weight: var(--font-weight-bold);
-            background: var(--surface-tertiary);
-        }
-
-        .actions {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            margin-top: var(--space-lg);
-        }
-
-        @media (max-width: 768px) {
-            .items-table th,
-            .items-table td {
-                padding: var(--space-2) var(--space-3);
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     Order          order   = (Order)          request.getAttribute("order");
@@ -195,7 +64,7 @@
                     </div>
                 </div>
                 <% if (refund != null) { %>
-                <div class="meta-item" style="grid-column: 1 / -1;">
+                <div class="meta-item">
                     <div class="meta-label">Related Refund</div>
                     <div class="meta-value">
                         <a href="${pageContext.request.contextPath}/admin/refunds?action=detail&id=<%= refund.getId() %>"
@@ -255,4 +124,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

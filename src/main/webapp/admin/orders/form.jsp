@@ -9,44 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <style>
-        .form-shell { max-width: 700px; margin: 0 auto; }
-        .order-meta {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: var(--space-md);
-            margin-bottom: var(--space-lg);
-        }
-        .meta-card {
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-lg);
-            padding: var(--space-4);
-        }
-        .meta-label {
-            color: var(--text-secondary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: var(--space-1);
-        }
-        .meta-value {
-            color: var(--text-primary);
-            font-weight: var(--font-weight-semibold);
-        }
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: var(--space-3);
-            margin-top: var(--space-lg);
-        }
-        @media (max-width: 768px) {
-            .order-meta { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     Order order = (Order) request.getAttribute("order");
@@ -126,4 +89,3 @@
 <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-

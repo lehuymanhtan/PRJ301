@@ -10,67 +10,8 @@
     <!-- Glassmorphism Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
     <!-- Page-specific styles -->
-    <style>
-        .edit-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .edit-form-card {
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
-
-        .form-group-full {
-            grid-column: 1 / -1;
-        }
-
-        .form-actions {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            margin-top: var(--space-xl);
-        }
-
-        .note {
-            grid-column: 1 / -1;
-            padding: var(--space-3);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            text-align: center;
-            margin-top: var(--space-md);
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-md);
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+    </head>
 <body class="bg-surface-secondary">
 <%
     User profileUser = (User) request.getAttribute("profileUser");
@@ -171,4 +112,3 @@
     <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
 </body>
 </html>
-
