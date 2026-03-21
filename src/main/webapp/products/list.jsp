@@ -106,7 +106,7 @@
             </a>
         </div>
     <% } else { %>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
             <% for (Product p : products) { %>
                 <div class="col">
                     <div class="card product-card h-100 shadow-sm">
@@ -185,9 +185,34 @@
                         </a>
                     </li>
                 <% } %>
-                <li class="page-item active">
-                    <span class="page-link">Page <%= pageNumber %> of <%= totalPages %></span>
-                </li>
+                
+                <%
+                    long startPage = Math.max(1, pageNumber - 2);
+                    long endPage = Math.min(totalPages, pageNumber + 2);
+                    
+                    if (startPage > 1) {
+                %>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=1">1</a></li>
+                        <% if (startPage > 2) { %>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <% } %>
+                <%  }
+                    
+                    for (long i = startPage; i <= endPage; i++) {
+                %>
+                        <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                            <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= i %>"><%= i %></a>
+                        </li>
+                <%  }
+                    
+                    if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) {
+                %>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                <%      } %>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>"><%= totalPages %></a></li>
+                <%  } %>
+
                 <% if (pageNumber < totalPages) { %>
                     <li class="page-item">
                         <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>">

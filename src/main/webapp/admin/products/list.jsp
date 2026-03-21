@@ -103,7 +103,34 @@
                 <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
                 <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %>">← Prev</a></li>
             <% } %>
-            <li class="page-item disabled"><span class="page-link">Page <%= pageNumber %> of <%= totalPages %></span></li>
+            
+            <%
+                long startPage = Math.max(1, pageNumber - 2);
+                long endPage = Math.min(totalPages, pageNumber + 2);
+                
+                if (startPage > 1) {
+            %>
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+            <%  }
+                
+                for (long i = startPage; i <= endPage; i++) {
+            %>
+                    <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+            <%  }
+                
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+            %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+            <%      } %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a></li>
+            <%  } %>
+
             <% if (pageNumber < totalPages) { %>
                 <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %>">Next →</a></li>
                 <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>">Last</a></li>

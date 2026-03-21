@@ -5,3 +5,4 @@ PROPHET_INTEGRATION.md
 __pycache__/
 model/outputs/
 model/API.md
+database/schema.sql
