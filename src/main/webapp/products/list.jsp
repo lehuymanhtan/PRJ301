@@ -6,149 +6,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Page-specific styles -->
-    </head>
-<body class="bg-surface-secondary">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+</head>
+<body>
 <%
     User currentUser = (User) session.getAttribute("user");
     List<Product> products = (List<Product>) request.getAttribute("products");
     String cartMessage = (String) request.getAttribute("cartMessage");
 %>
 
-<!-- Header Navigation -->
-<div class="main-container">
-    <div class="header">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="Ruby Tech logo">
-            <span>Ruby Tech</span>
-        </div>
-
-        <div class="nav-menu">
-            <a href="${pageContext.request.contextPath}/">Home</a>
-            <a href="${pageContext.request.contextPath}/products">Products</a>
-            <% if (currentUser != null) { %>
-                <a href="${pageContext.request.contextPath}/cart">Cart</a>
-                <a href="${pageContext.request.contextPath}/orders">Orders</a>
-                <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
-                    <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/products">Products</a></li>
+                <% if (currentUser != null) { %>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
                 <% } %>
-            <% } %>
-        </div>
-
-        <div class="user-section">
-            <% if (currentUser != null) { %>
-                <span class="user-name"><%= currentUser.getName() %></span>
-                <a href="${pageContext.request.contextPath}/users">Profile</a>
-                <a href="${pageContext.request.contextPath}/logout">Logout</a>
-            <% } else { %>
-                <a href="${pageContext.request.contextPath}/login">Login</a>
-                <a href="${pageContext.request.contextPath}/register">Register</a>
-            <% } %>
+            </ul>
+            <ul class="navbar-nav">
+                <% if (currentUser != null) { %>
+                    <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin</a></li>
+                    <% } %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white opacity-75" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= currentUser.getName() %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Profile</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/orders">Orders</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users/addresses">Addresses</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/points">Point History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/register">Register</a></li>
+                <% } %>
+            </ul>
         </div>
     </div>
-</div>
+</nav>
 
 <!-- Hero Section -->
-<div class="hero">
-    <div class="hero-content">
+<section class="rt-hero">
+    <div class="container">
         <h1>Next-Gen Tech is Here 🚀</h1>
-        <p>Discover cutting-edge technology and upgrade your digital lifestyle with our premium product collection.</p>
-
-        <div class="hero-buttons">
-            <a href="#products" class="btn-hero-primary">🛍️ Shop Now</a>
+        <p>Discover cutting-edge appliances and upgrade your home with our premium product collection.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="#products" class="btn btn-rt-primary btn-lg hero-action-btn">
+                <i class="bi bi-bag me-2"></i>Shop Now
+            </a>
             <% if (currentUser != null) { %>
-                <a href="${pageContext.request.contextPath}/cart" class="btn-hero-secondary">🛒 View Cart</a>
+                <a href="${pageContext.request.contextPath}/cart" class="btn btn-rt-outline btn-lg">
+                    <i class="bi bi-cart3 me-2"></i>View Cart
+                </a>
             <% } else { %>
-                <a href="${pageContext.request.contextPath}/register" class="btn-hero-secondary">✨ Join Now</a>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-rt-outline btn-lg">
+                    <i class="bi bi-stars me-2"></i>Join Now
+                </a>
             <% } %>
         </div>
     </div>
-</div>
+</section>
 
-<div class="main-container">
-    <!-- Success Messages -->
+<!-- Main Content -->
+<div class="container py-5" id="products">
+    <!-- Cart Message -->
     <% if (cartMessage != null) { %>
-        <div class="alert-message">
-            🛒 <%= cartMessage %>
+        <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert">
+            <i class="bi bi-cart-check me-2"></i><%= cartMessage %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <% } %>
 
-    <!-- Section Title -->
-    <div class="section-title" id="products">Featured Products</div>
+    <h2 class="section-title mb-4">Featured Products</h2>
 
-        <!-- Products Grid -->
-        <% if (products == null || products.isEmpty()) { %>
-            <div class="surface-card">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📦</div>
-                    <div class="empty-state-title">No Products Available</div>
-                    <p>We're working on adding more products to our catalog. Please check back soon!</p>
-                    <div class="mt-lg">
-                        <a href="${pageContext.request.contextPath}/" class="btn btn--primary">
-                            🏠 Go Home
-                        </a>
-                    </div>
-                </div>
-            </div>
-        <% } else { %>
-            <div class="products-container">
-                <% for (Product p : products) { %>
-                    <div class="surface-card product-card">
-                        <!-- Product Header -->
-                        <div class="product-header">
-                            <div class="product-name"><%= p.getName() %></div>
-                            <div class="product-price">
-                                💰 <%= String.format("%,.0f", p.getPrice()) %> ₫
+    <!-- Products Grid -->
+    <% if (products == null || products.isEmpty()) { %>
+        <div class="text-center py-5">
+            <i class="bi bi-box-seam" style="font-size:4rem; color:#cbd5e1"></i>
+            <h3 class="mt-3 text-muted">No Products Available</h3>
+            <p class="text-muted">We're working on adding more products. Please check back soon!</p>
+            <a href="${pageContext.request.contextPath}/" class="btn btn-rt-primary">
+                <i class="bi bi-house me-2"></i>Go Home
+            </a>
+        </div>
+    <% } else { %>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% for (Product p : products) { %>
+                <div class="col">
+                    <div class="card product-card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><%= p.getName() %></h5>
+                            <p class="product-price mb-2">
+                                <i class="bi bi-tag me-1"></i><%= String.format("%,.0f", p.getPrice()) %> ₫
+                            </p>
+
+                            <% if (p.getDescription() != null && !p.getDescription().isEmpty()) { %>
+                                <p class="card-text text-muted small flex-grow-1"><%= p.getDescription() %></p>
+                            <% } else { %><div class="flex-grow-1"></div><% } %>
+
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <% if (p.getStock() <= 0) { %>
+                                    <span class="badge badge-out-of-stock">
+                                        <i class="bi bi-x-circle me-1"></i>Out of Stock
+                                    </span>
+                                <% } else if (p.getStock() <= 10) { %>
+                                    <span class="badge badge-low-stock">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>Low Stock: <%= p.getStock() %> left
+                                    </span>
+                                <% } else { %>
+                                    <span class="badge badge-in-stock">
+                                        <i class="bi bi-check-circle me-1"></i>In Stock: <%= p.getStock() %>
+                                    </span>
+                                <% } %>
                             </div>
-                        </div>
 
-                        <!-- Product Description -->
-                        <% if (p.getDescription() != null && !p.getDescription().isEmpty()) { %>
-                            <div class="product-description">
-                                <%= p.getDescription() %>
-                            </div>
-                        <% } %>
-
-                        <!-- Stock Information -->
-                        <div class="product-stock">
-                            <% if (p.getStock() <= 0) { %>
-                                <span class="stock-out">❌ Out of Stock</span>
-                            <% } else if (p.getStock() <= 10) { %>
-                                <span class="stock-low">⚠️ Low Stock: <%= p.getStock() %> remaining</span>
+                            <!-- Add to Cart -->
+                            <% if (p.getStock() > 0) { %>
+                                <form class="add-to-cart-form" action="${pageContext.request.contextPath}/cart" method="post">
+                                    <input type="hidden" name="productId" value="<%= p.getId() %>">
+                                    <input type="hidden" name="action" value="add">
+                                    <div class="input-group">
+                                        <input type="number"
+                                               name="quantity"
+                                               value="1"
+                                               min="1"
+                                               max="<%= p.getStock() %>"
+                                               class="form-control qty-input"
+                                               style="max-width:80px"
+                                               title="Quantity">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                    </div>
+                                </form>
                             <% } else { %>
-                                <span class="stock-available">✅ In Stock: <%= p.getStock() %> available</span>
+                                <button class="btn btn-outline-secondary" disabled>
+                                    <i class="bi bi-slash-circle me-2"></i>Unavailable
+                                </button>
                             <% } %>
                         </div>
-
-                        <!-- Add to Cart Form -->
-                        <% if (p.getStock() > 0) { %>
-                            <form class="add-to-cart-form" action="${pageContext.request.contextPath}/cart" method="post">
-                                <input type="hidden" name="productId" value="<%= p.getId() %>">
-                                <input type="hidden" name="action" value="add">
-                                <input type="number"
-                                       name="quantity"
-                                       value="1"
-                                       min="1"
-                                       max="<%= p.getStock() %>"
-                                       class="quantity-input"
-                                       title="Quantity">
-                                <button type="submit" class="btn btn--success btn--md add-to-cart-btn">
-                                    🛒 Add to Cart
-                                </button>
-                            </form>
-                        <% } else { %>
-                            <div class="btn btn--ghost btn--md">
-                                🚫 Unavailable
-                            </div>
-                        <% } %>
                     </div>
-                <% } %>
-            </div>
-        <% } %>
+                </div>
+            <% } %>
+        </div>
 
         <!-- Pagination -->
         <%
@@ -156,91 +173,38 @@
             Integer pageNumber = (Integer) request.getAttribute("pageNumber");
             if (totalPages != null && totalPages > 1) {
         %>
-            <div class="pagination-container">
+        <nav class="mt-5" aria-label="Product pagination">
+            <ul class="pagination justify-content-center">
                 <% if (pageNumber > 1) { %>
-                    <a href="${pageContext.request.contextPath}/products?page=1" class="btn btn--secondary btn--sm pagination-btn">
-                        ⏮️ First
-                    </a>
-                    <a href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %>" class="btn btn--secondary btn--sm pagination-btn">
-                        ⬅️ Previous
-                    </a>
+                    <li class="page-item">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %>">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
                 <% } %>
-
-                <div class="pagination-info">
-                    📄 Page <%= pageNumber %> of <%= totalPages %>
-                </div>
-
+                <li class="page-item active">
+                    <span class="page-link">Page <%= pageNumber %> of <%= totalPages %></span>
+                </li>
                 <% if (pageNumber < totalPages) { %>
-                    <a href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>" class="btn btn--secondary btn--sm pagination-btn">
-                        Next ➡️
-                    </a>
-                    <a href="${pageContext.request.contextPath}/products?page=<%= totalPages %>" class="btn btn--secondary btn--sm pagination-btn">
-                        Last ⏭️
-                    </a>
+                    <li class="page-item">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>">Last</a>
+                    </li>
                 <% } %>
-            </div>
+            </ul>
+        </nav>
         <% } %>
-    </div>
+    <% } %>
+</div>
 
-    <!-- Glassmorphism Interactive Effects -->
-    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
-
-    <!-- Page-specific JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate product cards
-            const productCards = document.querySelectorAll('.product-card');
-            productCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100 + 200);
-            });
-
-            // Enhanced quantity input validation
-            const quantityInputs = document.querySelectorAll('.quantity-input');
-            quantityInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const max = parseInt(this.getAttribute('max'));
-                    const min = parseInt(this.getAttribute('min'));
-                    let value = parseInt(this.value);
-
-                    if (value > max) {
-                        this.value = max;
-                        this.style.borderColor = 'var(--warning)';
-                        setTimeout(() => {
-                            this.style.borderColor = '';
-                        }, 1000);
-                    } else if (value < min) {
-                        this.value = min;
-                    }
-                });
-            });
-
-            // Add to cart form enhancement
-            const addToCartForms = document.querySelectorAll('.add-to-cart-form');
-            addToCartForms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    const button = this.querySelector('button[type="submit"]');
-                    const originalText = button.innerHTML;
-
-                    // Add loading state
-                    button.disabled = true;
-                    button.innerHTML = '<span class="loading-spinner loading-spinner--sm"></span> Adding...';
-
-                    // Reset after 3 seconds if no redirect happens
-                    setTimeout(() => {
-                        button.disabled = false;
-                        button.innerHTML = originalText;
-                    }, 3000);
-                });
-            });
-        });
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>

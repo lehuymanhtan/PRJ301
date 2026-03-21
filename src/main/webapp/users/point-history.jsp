@@ -6,102 +6,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Point History - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Page-specific styles -->
-    </head>
-<body class="bg-surface-secondary">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+</head>
+<body>
 <%
     User currentUser = (User) session.getAttribute("user");
     List<PointHistory> pointHistory = (List<PointHistory>) request.getAttribute("pointHistory");
 %>
 
-    <!-- Page Container -->
-    <div class="page-container">
-        <!-- Back Button -->
-        <div class="back-button">
-            <a href="${pageContext.request.contextPath}/users" class="btn btn--back btn--sm">
-                ← Back to Profile
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <% if (currentUser != null) { %>
+                    <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin</a></li>
+                    <% } %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white opacity-75 active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= currentUser.getName() %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Profile</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/orders">Orders</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users/addresses">Addresses</a></li>
+                            <li><a class="dropdown-item active" href="${pageContext.request.contextPath}/points">Point History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="mb-3">
+        <a href="${pageContext.request.contextPath}/users" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Profile
+        </a>
+    </div>
+
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-gem me-2"></i>Point History</h1>
+    <p class="text-muted mb-4">Track all your loyalty point transactions</p>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-4">
+            <div class="card stat-card stat-card-blue text-center">
+                <div class="card-body">
+                    <div class="stat-value"><%= String.format("%,d", currentUser.getPoints()) %></div>
+                    <div class="stat-label">Current Balance</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card stat-card stat-card-orange text-center">
+                <div class="card-body">
+                    <div class="stat-value"><%= currentUser.getMembershipTier() %></div>
+                    <div class="stat-label">Membership Tier</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card stat-card stat-card-green text-center">
+                <div class="card-body">
+                    <div class="stat-value"><%= pointHistory != null ? pointHistory.size() : 0 %></div>
+                    <div class="stat-label">Transactions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Table -->
+    <% if (pointHistory == null || pointHistory.isEmpty()) { %>
+        <div class="text-center py-5">
+            <i class="bi bi-gem" style="font-size:4rem; color:#cbd5e1"></i>
+            <h3 class="mt-3 text-muted">No Point History Yet</h3>
+            <p class="text-muted">Start shopping to earn loyalty points!</p>
+            <a href="${pageContext.request.contextPath}/products" class="btn btn-rt-primary">
+                <i class="bi bi-bag me-2"></i>Start Shopping
             </a>
         </div>
-
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="text-3xl font-bold text-primary mb-md">
-                💎 Point History
-            </h1>
-            <p class="text-secondary">
-                Track all your loyalty point transactions and activities
-            </p>
-        </div>
-
-        <!-- Navigation Breadcrumb -->
-        <nav class="nav-breadcrumb">
-            <a href="${pageContext.request.contextPath}/">Home</a>
-            <a href="${pageContext.request.contextPath}/products">Products</a>
-            <a href="${pageContext.request.contextPath}/cart">Cart</a>
-            <a href="${pageContext.request.contextPath}/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/users">Profile</a>
-            <a href="${pageContext.request.contextPath}/points" class="active">Point History</a>
-            <% if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) { %>
-                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
-            <% } %>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
-
-        <!-- Current Stats Overview -->
-        <div class="stats-overview">
-            <div class="surface-card stat-card stat-card--balance">
-                <div class="stat-value"><%= String.format("%,d", currentUser.getPoints()) %></div>
-                <div class="stat-label">Current Balance</div>
+    <% } else { %>
+        <div class="card shadow-sm">
+            <div class="card-header bg-navy text-white fw-bold">
+                <i class="bi bi-clock-history me-2"></i>Transaction History
+                <span class="badge bg-light text-dark ms-2"><%= pointHistory.size() %></span>
             </div>
-            <div class="surface-card stat-card stat-card--tier">
-                <div class="stat-value"><%= currentUser.getMembershipTier() %></div>
-                <div class="stat-label">Membership Tier</div>
-            </div>
-            <div class="surface-card stat-card">
-                <div class="stat-value">
-                    <% if (pointHistory != null) { %>
-                        <%= pointHistory.size() %>
-                    <% } else { %>
-                        0
-                    <% } %>
-                </div>
-                <div class="stat-label">Total Transactions</div>
-            </div>
-        </div>
-
-        <!-- Transaction History Table -->
-        <div class="table-container">
-            <div class="table-header">
-                <div>
-                    <div class="table-title">Transaction History</div>
-                    <div class="table-count">
-                        <% if (pointHistory != null && !pointHistory.isEmpty()) { %>
-                            Showing <%= pointHistory.size() %> transactions
-                        <% } else { %>
-                            No transactions found
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-
-            <% if (pointHistory == null || pointHistory.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="empty-state-icon">💸</div>
-                    <div class="empty-state-title">No Point History Yet</div>
-                    <p>Start shopping to earn loyalty points and see your transaction history here!</p>
-                    <div class="mt-lg">
-                        <a href="${pageContext.request.contextPath}/products" class="btn btn--primary">
-                            🛍️ Start Shopping
-                        </a>
-                    </div>
-                </div>
-            <% } else { %>
-                <table class="history-table">
+            <div class="card-body p-0">
+                <table class="table admin-table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -109,134 +115,60 @@
                             <th>Order Reference</th>
                             <th>Amount (VND)</th>
                             <th>Points</th>
-                            <th>Transaction Type</th>
+                            <th>Type</th>
                         </tr>
                     </thead>
                     <tbody>
                     <% for (PointHistory h : pointHistory) {
-                           String badgeClass = "badge--completed";
-                           String badgeText = h.getType();
-
-                           if ("USE".equals(h.getType())) {
-                               badgeClass = "badge--processing";
-                               badgeText = "Redeemed";
-                           } else if ("REFUND".equals(h.getType())) {
-                               badgeClass = "badge--cancelled";
-                               badgeText = "Refunded";
-                           } else if ("Adjust".equals(h.getType())) {
-                               badgeClass = "badge--shipped";
-                               badgeText = "Adjusted";
-                           } else if ("EARN".equals(h.getType())) {
-                               badgeClass = "badge--completed";
-                               badgeText = "Earned";
-                           }
-
-                           boolean isPositive = (h.getPointsEarned() != null && h.getPointsEarned() >= 0);
-                           String pointsClass = isPositive ? "points-earned" : "points-spent";
-                           String pointsSign = (h.getPointsEarned() != null && h.getPointsEarned() > 0) ? "+" : "";
+                        String badgeClass;
+                        String badgeText = h.getType();
+                        if ("USE".equals(h.getType())) { badgeClass = "bg-warning text-dark"; badgeText = "Redeemed"; }
+                        else if ("REFUND".equals(h.getType())) { badgeClass = "bg-danger"; badgeText = "Refunded"; }
+                        else if ("Adjust".equals(h.getType())) { badgeClass = "bg-primary"; badgeText = "Adjusted"; }
+                        else { badgeClass = "bg-success"; badgeText = "Earned"; }
+                        boolean isPositive = (h.getPointsEarned() != null && h.getPointsEarned() >= 0);
+                        String pointsSign = (h.getPointsEarned() != null && h.getPointsEarned() > 0) ? "+" : "";
                     %>
-                        <tr>
-                            <td><span class="transaction-id">#<%= h.getId() %></span></td>
-
-                            <td>
-                                <%= h.getCreatedAt() != null ?
-                                    h.getCreatedAt().toString().replace("T", " ").substring(0, 16) :
-                                    "-" %>
-                            </td>
-
-                            <td>
-                                <% if (h.getOrderId() != null) { %>
-                                    <a href="${pageContext.request.contextPath}/orders?action=detail&orderId=<%= h.getOrderId() %>"
-                                       class="order-link">
-                                        Order #<%= h.getOrderId() %>
-                                    </a>
-                                <% } else { %>
-                                    <span class="text-tertiary">Manual Entry</span>
-                                <% } %>
-                            </td>
-
-                            <td>
-                                <% if (h.getAmount() != null && h.getAmount() > 0) { %>
-                                    <span class="amount-value"><%= String.format("%,.0f", h.getAmount()) %> ₫</span>
-                                <% } else { %>
-                                    <span class="text-tertiary">-</span>
-                                <% } %>
-                            </td>
-
-                            <td>
-                                <span class="<%= pointsClass %> font-semibold">
-                                    <%= pointsSign %><%= h.getPointsEarned() %> pts
-                                </span>
-                            </td>
-
-                            <td>
-                                <span class="badge <%= badgeClass %>">
-                                    <%= badgeText %>
-                                </span>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>#<%= h.getId() %></td>
+                        <td><%= h.getCreatedAt() != null ? h.getCreatedAt().toString().replace("T", " ").substring(0, 16) : "-" %></td>
+                        <td>
+                            <% if (h.getOrderId() != null) { %>
+                                <a href="${pageContext.request.contextPath}/orders?action=detail&orderId=<%= h.getOrderId() %>">
+                                    Order #<%= h.getOrderId() %>
+                                </a>
+                            <% } else { %><span class="text-muted">Manual Entry</span><% } %>
+                        </td>
+                        <td>
+                            <% if (h.getAmount() != null && h.getAmount() > 0) { %>
+                                <span class="fw-semibold"><%= String.format("%,.0f", h.getAmount()) %> ₫</span>
+                            <% } else { %>-<% } %>
+                        </td>
+                        <td>
+                            <span class="fw-bold <%= isPositive ? "text-success" : "text-danger" %>">
+                                <%= pointsSign %><%= h.getPointsEarned() %> pts
+                            </span>
+                        </td>
+                        <td><span class="badge <%= badgeClass %>"><%= badgeText %></span></td>
+                    </tr>
                     <% } %>
                     </tbody>
                 </table>
-            <% } %>
+            </div>
         </div>
+    <% } %>
 
-        <!-- Quick Actions -->
-        <div class="mt-xl text-center">
-            <a href="${pageContext.request.contextPath}/products" class="btn btn--primary btn--md mr-md">
-                🛍️ Continue Shopping
-            </a>
-            <a href="${pageContext.request.contextPath}/users" class="btn btn--secondary btn--md">
-                👤 Back to Profile
-            </a>
-        </div>
+    <div class="mt-4 d-flex gap-2">
+        <a href="${pageContext.request.contextPath}/products" class="btn btn-rt-primary">
+            <i class="bi bi-bag me-2"></i>Continue Shopping
+        </a>
+        <a href="${pageContext.request.contextPath}/users" class="btn btn-outline-secondary">
+            <i class="bi bi-person me-2"></i>Back to Profile
+        </a>
     </div>
+</div>
 
-    <!-- Glassmorphism Interactive Effects -->
-    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
-
-    <!-- Page-specific JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate stat cards
-            const statCards = document.querySelectorAll('.stat-card');
-            statCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 150 + 200);
-            });
-
-            // Add hover effects to table rows
-            const tableRows = document.querySelectorAll('.history-table tbody tr');
-            tableRows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.01)';
-                });
-
-                row.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-
-            // Animate table appearance
-            const tableContainer = document.querySelector('.table-container');
-            if (tableContainer) {
-                tableContainer.style.opacity = '0';
-                tableContainer.style.transform = 'translateY(30px)';
-
-                setTimeout(() => {
-                    tableContainer.style.transition = 'all 0.8s ease';
-                    tableContainer.style.opacity = '1';
-                    tableContainer.style.transform = 'translateY(0)';
-                }, 600);
-            }
-        });
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>

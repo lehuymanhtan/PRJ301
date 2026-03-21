@@ -6,19 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Page-specific styles -->
-    </head>
-<body class="bg-surface-secondary">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+</head>
+<body>
 <%
     User profileUser = (User) request.getAttribute("profileUser");
     String success   = request.getParameter("success");
 
-    // Tier thresholds
     int[] thresholds = {0, 10000, 20000, 50000, 100000, 200000};
     String[] tiers   = {"Regular", "Bronze", "Silver", "Gold", "Platinum", "Diamond"};
     int pts = profileUser.getPoints();
@@ -27,11 +23,15 @@
     int nextThreshold = -1;
     int prevThreshold = 0;
     String nextTier   = "";
-    for (int i = 0; i < tiers.length - 1; i++) {
+    int tierLevel = 0;
+    for (int i = 0; i < tiers.length; i++) {
         if (tier.equals(tiers[i])) {
-            prevThreshold = thresholds[i];
-            nextThreshold = thresholds[i + 1];
-            nextTier      = tiers[i + 1];
+            tierLevel = i;
+            if (i < tiers.length - 1) {
+                prevThreshold = thresholds[i];
+                nextThreshold = thresholds[i + 1];
+                nextTier      = tiers[i + 1];
+            }
             break;
         }
     }
@@ -41,240 +41,154 @@
     }
 %>
 
-    <!-- Page Container -->
-    <div class="page-container">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <h1 class="text-3xl font-bold text-primary mb-md">
-                Welcome back, <%= profileUser.getName() %>!
-            </h1>
-            <p class="text-secondary">
-                Manage your account and track your loyalty progress
-            </p>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <% if ("admin".equalsIgnoreCase(profileUser.getRole())) { %>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin</a></li>
+                <% } %>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white opacity-75 active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <%= profileUser.getName() %>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item active" href="${pageContext.request.contextPath}/users">Profile</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/orders">Orders</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users/addresses">Addresses</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/points">Point History</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-person-circle me-2"></i>Welcome back, <%= profileUser.getName() %>!</h1>
+    <p class="text-muted mb-4">Manage your account and track your loyalty progress</p>
+
+    <% if ("updated".equals(success)) { %>
+        <div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i>Profile updated successfully!</div>
+    <% } %>
+
+    <div class="row g-4">
+        <!-- Account Info -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-navy text-white fw-bold"><i class="bi bi-person me-2"></i>Account Information</div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-5 text-muted">User ID:</dt><dd class="col-7 fw-semibold">#<%= profileUser.getUserId() %></dd>
+                        <dt class="col-5 text-muted">Username:</dt><dd class="col-7">@<%= profileUser.getUsername() %></dd>
+                        <dt class="col-5 text-muted">Account Type:</dt>
+                        <dd class="col-7"><span class="badge bg-info"><%= profileUser.getRole().substring(0,1).toUpperCase() + profileUser.getRole().substring(1) %></span></dd>
+                        <dt class="col-5 text-muted">Full Name:</dt><dd class="col-7"><%= profileUser.getName() %></dd>
+                        <dt class="col-5 text-muted">Gender:</dt><dd class="col-7"><%= profileUser.getGender().substring(0,1).toUpperCase() + profileUser.getGender().substring(1) %></dd>
+                        <dt class="col-5 text-muted">Date of Birth:</dt><dd class="col-7"><%= profileUser.getDateOfBirth() %></dd>
+                        <dt class="col-5 text-muted">Phone:</dt><dd class="col-7"><%= profileUser.getPhone() != null ? profileUser.getPhone() : "Not provided" %></dd>
+                        <dt class="col-5 text-muted">Email:</dt><dd class="col-7"><%= profileUser.getEmail() %></dd>
+                    </dl>
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="${pageContext.request.contextPath}/users?action=edit" class="btn btn-rt-primary btn-sm">
+                            <i class="bi bi-pencil me-1"></i>Edit Profile
+                        </a>
+                        <a href="${pageContext.request.contextPath}/users?action=delete"
+                           class="btn btn-outline-danger btn-sm"
+                           onclick="return confirm('Delete your account? This cannot be undone.')">
+                            <i class="bi bi-trash me-1"></i>Delete Account
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Success Message -->
-        <% if ("updated".equals(success)) { %>
-            <div class="message message--success mb-lg">
-                ✅ Profile updated successfully!
-            </div>
-        <% } %>
-
-        <!-- Navigation -->
-        <nav class="profile-nav">
-            <a href="${pageContext.request.contextPath}/">Home</a>
-            <a href="${pageContext.request.contextPath}/products">Products</a>
-            <a href="${pageContext.request.contextPath}/cart">Cart</a>
-            <a href="${pageContext.request.contextPath}/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/users" class="active">Profile</a>
-            <a href="${pageContext.request.contextPath}/users/addresses">Addresses</a>
-            <a href="${pageContext.request.contextPath}/points">Point History</a>
-            <% if ("admin".equalsIgnoreCase(profileUser.getRole())) { %>
-                <a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
-            <% } %>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
-
-        <!-- Profile Grid -->
-        <div class="profile-grid">
-            <!-- User Information Card -->
-            <div class="surface-card">
-                <h2 class="text-xl font-semibold mb-lg">Account Information</h2>
-
-                <div class="profile-info">
-                    <div class="info-item">
-                        <span class="info-label">User ID</span>
-                        <span class="info-value">#<%= profileUser.getUserId() %></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Username</span>
-                        <span class="info-value">@<%= profileUser.getUsername() %></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Account Type</span>
-                        <span class="info-value">
-                            <span class="badge badge--processing">
-                                <%= profileUser.getRole().substring(0,1).toUpperCase() + profileUser.getRole().substring(1) %>
-                            </span>
+        <!-- Loyalty Program -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-navy text-white fw-bold"><i class="bi bi-gem me-2"></i>Loyalty Program</div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="badge fs-6 px-3 py-2
+                            <% if ("Diamond".equals(tier)) { %>bg-info
+                            <% } else if ("Platinum".equals(tier)) { %>text-bg-secondary" style="background:#e5e4e2!important
+                            <% } else if ("Gold".equals(tier)) { %>text-bg-warning
+                            <% } else if ("Silver".equals(tier)) { %>bg-secondary
+                            <% } else if ("Bronze".equals(tier)) { %>text-bg-warning" style="background:#cd7f32!important
+                            <% } else { %>bg-secondary
+                            <% } %>">
+                            <i class="bi bi-award me-1"></i><%= tier %> Member
                         </span>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">Full Name</span>
-                        <span class="info-value"><%= profileUser.getName() %></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Gender</span>
-                        <span class="info-value">
-                            <%= profileUser.getGender().substring(0,1).toUpperCase() + profileUser.getGender().substring(1) %>
-                        </span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Date of Birth</span>
-                        <span class="info-value"><%= profileUser.getDateOfBirth() %></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phone</span>
-                        <span class="info-value">
-                            <%= profileUser.getPhone() != null ? profileUser.getPhone() : "Not provided" %>
-                        </span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email</span>
-                        <span class="info-value"><%= profileUser.getEmail() %></span>
-                    </div>
-                </div>
-
-                <!-- Profile Actions -->
-                <div class="profile-actions">
-                    <a href="${pageContext.request.contextPath}/users?action=edit" class="btn btn--primary btn--md">
-                        ✏️ Edit Profile
-                    </a>
-                    <a href="${pageContext.request.contextPath}/users?action=delete"
-                       class="btn btn--error btn--md"
-                       onclick="return confirm('⚠️ Delete your account? This action cannot be undone.')">
-                        🗑️ Delete Account
-                    </a>
-                </div>
-            </div>
-
-            <!-- Loyalty System Card -->
-            <div class="surface-card">
-                <h2 class="text-xl font-semibold mb-lg">Loyalty Program</h2>
-
-                <!-- Current Tier Badge -->
-                <div class="text-center mb-lg">
-                    <div class="tier-badge tier-badge--<%= tier.toLowerCase() %> mb-md">
-                        <%= tier %> Member
-                    </div>
-                </div>
-
-                <!-- Loyalty Statistics -->
-                <div class="loyalty-stats">
-                    <div class="loyalty-stat">
-                        <span class="loyalty-stat-value"><%= String.format("%,d", pts) %></span>
-                        <span class="loyalty-stat-label">Total Points</span>
-                    </div>
-                    <div class="loyalty-stat">
-                        <span class="loyalty-stat-value">
-                            <%
-                                // Calculate tier level (0-5)
-                                int tierLevel = 0;
-                                for (int i = 0; i < tiers.length; i++) {
-                                    if (tier.equals(tiers[i])) {
-                                        tierLevel = i;
-                                        break;
-                                    }
-                                }
-                            %>
-                            <%= tierLevel %>/5
-                        </span>
-                        <span class="loyalty-stat-label">Tier Level</span>
-                    </div>
-                    <div class="loyalty-stat">
-                        <span class="loyalty-stat-value">
-                            <% if (nextThreshold > 0) { %>
-                                <%= String.format("%,d", nextThreshold - pts) %>
-                            <% } else { %>
-                                ∞
-                            <% } %>
-                        </span>
-                        <span class="loyalty-stat-label">Points to Next</span>
-                    </div>
-                </div>
-
-                <!-- Progress to Next Tier -->
-                <% if (nextThreshold > 0) { %>
-                    <div class="tier-progress">
-                        <div class="tier-progress-label">
-                            <span class="font-medium">Progress to <%= nextTier %></span>
-                            <span class="tier-next">
-                                <%= String.format("%,d", nextThreshold - pts) %> points needed
-                            </span>
+                    <div class="row text-center mb-3">
+                        <div class="col-4">
+                            <div class="fw-bold fs-4 text-orange"><%= String.format("%,d", pts) %></div>
+                            <small class="text-muted">Total Points</small>
                         </div>
-                        <div class="loyalty-progress">
-                               <div class="loyalty-progress-fill"
-                                   data-width="<%= String.format("%.1f", pct) %>%">
+                        <div class="col-4">
+                            <div class="fw-bold fs-4"><%= tierLevel %>/5</div>
+                            <small class="text-muted">Tier Level</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="fw-bold fs-4">
+                                <% if (nextThreshold > 0) { %><%= String.format("%,d", nextThreshold - pts) %><% } else { %>∞<% } %>
                             </div>
-                            <div class="loyalty-progress-text">
-                                <%= String.format("%.0f", pct) %>%
-                            </div>
+                            <small class="text-muted">Points to Next</small>
                         </div>
                     </div>
-                <% } else { %>
-                    <div class="max-tier-message">
-                        🏆 Congratulations! You've reached the highest tier!
+
+                    <% if (nextThreshold > 0) { %>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Progress to <%= nextTier %></span>
+                            <span><%= String.format("%.0f", pct) %>%</span>
+                        </div>
+                        <div class="progress" style="height:10px">
+                            <div class="progress-bar bg-warning" role="progressbar"
+                                 style="width:<%= String.format("%.1f", pct) %>%"></div>
+                        </div>
+                        <div class="small text-muted mt-1"><%= String.format("%,d", nextThreshold - pts) %> points needed</div>
                     </div>
-                <% } %>
+                    <% } else { %>
+                    <div class="alert alert-success small mb-3">
+                        <i class="bi bi-trophy me-2"></i>Congratulations! You've reached the highest tier!
+                    </div>
+                    <% } %>
 
-                <!-- Loyalty Actions -->
-                <div class="mt-lg">
-                    <a href="${pageContext.request.contextPath}/points" class="btn btn--success btn--lg w-full">
-                        💎 View Point History
+                    <a href="${pageContext.request.contextPath}/points" class="btn btn-rt-primary w-100 mb-3">
+                        <i class="bi bi-gem me-2"></i>View Point History
                     </a>
-                </div>
 
-                <!-- Tier Benefits Info -->
-                <div class="mt-lg p-4 bg-surface-secondary rounded-lg">
-                    <h4 class="text-sm font-semibold text-secondary mb-2">Current Tier Benefits:</h4>
-                    <ul class="text-xs text-tertiary">
-                        <li>• Earn 1 point per 1,000 VND spent</li>
-                        <li>• Redeem points: 1 point = 1 VND discount</li>
-                        <% if (tierLevel >= 1) { %><li>• Priority customer support</li><% } %>
-                        <% if (tierLevel >= 2) { %><li>• Exclusive member offers</li><% } %>
-                        <% if (tierLevel >= 3) { %><li>• Free shipping on all orders</li><% } %>
-                        <% if (tierLevel >= 4) { %><li>• Early access to new products</li><% } %>
-                        <% if (tierLevel >= 5) { %><li>• Personal shopping assistant</li><% } %>
+                    <ul class="list-unstyled text-start small text-muted mb-0">
+                        <li><i class="bi bi-check text-success me-1"></i>Earn 1 point per 1,000 VND spent</li>
+                        <li><i class="bi bi-check text-success me-1"></i>Redeem: 1 point = 1 VND discount</li>
+                        <% if (tierLevel >= 1) { %><li><i class="bi bi-check text-success me-1"></i>Priority customer support</li><% } %>
+                        <% if (tierLevel >= 2) { %><li><i class="bi bi-check text-success me-1"></i>Exclusive member offers</li><% } %>
+                        <% if (tierLevel >= 3) { %><li><i class="bi bi-check text-success me-1"></i>Free shipping on all orders</li><% } %>
+                        <% if (tierLevel >= 4) { %><li><i class="bi bi-check text-success me-1"></i>Early access to new products</li><% } %>
+                        <% if (tierLevel >= 5) { %><li><i class="bi bi-check text-success me-1"></i>Personal shopping assistant</li><% } %>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Glassmorphism Interactive Effects -->
-    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
-
-    <!-- Page-specific JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate progress bar
-            const progressFill = document.querySelector('.loyalty-progress-fill');
-            if (progressFill) {
-                const targetWidth = progressFill.dataset.width;
-                progressFill.style.width = '0%';
-
-                setTimeout(() => {
-                    progressFill.style.width = targetWidth;
-                }, 500);
-            }
-
-            // Animate loyalty stats
-            const statValues = document.querySelectorAll('.loyalty-stat-value');
-            statValues.forEach((stat, index) => {
-                stat.style.opacity = '0';
-                stat.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    stat.style.transition = 'all 0.6s ease';
-                    stat.style.opacity = '1';
-                    stat.style.transform = 'translateY(0)';
-                }, index * 200 + 300);
-            });
-
-            // Add hover effects to info items
-            const infoItems = document.querySelectorAll('.info-item');
-            infoItems.forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = 'var(--surface-tertiary)';
-                    this.style.transform = 'translateX(4px)';
-                });
-
-                item.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = 'transparent';
-                    this.style.transform = 'translateX(0)';
-                });
-            });
-        });
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>
