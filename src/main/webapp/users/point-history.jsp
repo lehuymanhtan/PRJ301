@@ -83,7 +83,7 @@
         <div class="col-4">
             <div class="card stat-card stat-card-green text-center">
                 <div class="card-body">
-                    <div class="stat-value"><%= pointHistory != null ? pointHistory.size() : 0 %></div>
+                    <div class="stat-value"><%= request.getAttribute("totalCount") != null ? String.format("%,d", request.getAttribute("totalCount")) : (pointHistory != null ? pointHistory.size() : 0) %></div>
                     <div class="stat-label">Transactions</div>
                 </div>
             </div>
@@ -104,7 +104,7 @@
         <div class="card shadow-sm">
             <div class="card-header bg-navy text-white fw-bold">
                 <i class="bi bi-clock-history me-2"></i>Transaction History
-                <span class="badge bg-light text-dark ms-2"><%= pointHistory.size() %></span>
+                <span class="badge bg-light text-dark ms-2"><%= request.getAttribute("totalCount") != null ? String.format("%,d", request.getAttribute("totalCount")) : pointHistory.size() %></span>
             </div>
             <div class="card-body p-0">
                 <table class="table admin-table table-hover mb-0">
@@ -156,6 +156,53 @@
                 </table>
             </div>
         </div>
+
+    <% 
+        Long totalPages = (Long) request.getAttribute("totalPages");
+        Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+        String queryString = "";
+    %>
+    <% if (totalPages != null && totalPages > 1) { %>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+            <% if (pageNumber > 1) { %>
+                <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %><%= queryString %>">← Prev</a></li>
+            <% } %>
+            
+            <%
+                long startPage = Math.max(1, pageNumber - 2);
+                long endPage = Math.min(totalPages, pageNumber + 2);
+                
+                if (startPage > 1) {
+            %>
+                    <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">1</a></li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+            <%  }
+                for (long i = startPage; i <= endPage; i++) {
+            %>
+                    <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                        <a class="page-link" href="?page=<%= i %><%= queryString %>"><%= i %></a>
+                    </li>
+            <%  }
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+            %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+            <%      } %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>"><%= totalPages %></a></li>
+            <%  } %>
+
+            <% if (pageNumber < totalPages) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %><%= queryString %>">Next →</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>">Last</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <% } %>
+
     <% } %>
 
     <div class="mt-4 d-flex gap-2">

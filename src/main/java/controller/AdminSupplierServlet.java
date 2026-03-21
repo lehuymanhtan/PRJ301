@@ -22,6 +22,7 @@ import java.util.List;
 public class AdminSupplierServlet extends HttpServlet {
 
     private final SupplierService supplierService = new SupplierService();
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -70,8 +71,28 @@ public class AdminSupplierServlet extends HttpServlet {
 
     private void listSuppliers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Supplier> suppliers = supplierService.findAll();
+        int pageNumber = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+                if (pageNumber < 1) pageNumber = 1;
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
+        long totalCount = supplierService.countAllSuppliers();
+        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (pageNumber > totalPages && totalPages > 0) pageNumber = (int) totalPages;
+
+        List<Supplier> suppliers = supplierService.getSuppliersPage(pageNumber, PAGE_SIZE);
+
         request.setAttribute("suppliers", suppliers);
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/admin/suppliers/list.jsp").forward(request, response);
     }
 

@@ -16,6 +16,7 @@ import models.User;
 public class PointHistoryServlet extends HttpServlet {
 
     private final PointHistoryDAO dao = new PointHistoryDAO();
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,8 +29,28 @@ public class PointHistoryServlet extends HttpServlet {
             return;
         }
 
-        List<PointHistory> list = dao.findByUserId(user.getUserId());
+        int pageNumber = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+                if (pageNumber < 1) pageNumber = 1;
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
+        long totalCount = dao.countByUserId(user.getUserId());
+        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (pageNumber > totalPages && totalPages > 0) pageNumber = (int) totalPages;
+
+        List<PointHistory> list = dao.findPageByUserId(user.getUserId(), pageNumber, PAGE_SIZE);
+
         request.setAttribute("pointHistory", list);
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/users/point-history.jsp").forward(request, response);
     }
 }

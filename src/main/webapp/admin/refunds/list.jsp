@@ -138,10 +138,57 @@
             
             <!-- Statistics Footer -->
             <div class="card-footer bg-light border-top-0 d-flex justify-content-between align-items-center">
-                <span class="text-muted small fw-semibold"><i class="bi bi-bar-chart me-1"></i>Total refund requests: <%= refunds != null ? String.format("%,d", refunds.size()) : 0 %></span>
+                <span class="text-muted small fw-semibold"><i class="bi bi-bar-chart me-1"></i>Total refund requests: <%= request.getAttribute("totalCount") != null ? String.format("%,d", request.getAttribute("totalCount")) : (refunds != null ? refunds.size() : 0) %></span>
             </div>
         </div>
     </div>
+
+    <% 
+        Long totalPages = (Long) request.getAttribute("totalPages");
+        Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+        String queryString = "";
+    %>
+    <% if (totalPages != null && totalPages > 1) { %>
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center">
+            <% if (pageNumber > 1) { %>
+                <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %><%= queryString %>">← Prev</a></li>
+            <% } %>
+            
+            <%
+                long startPage = Math.max(1, pageNumber - 2);
+                long endPage = Math.min(totalPages, pageNumber + 2);
+                
+                if (startPage > 1) {
+            %>
+                    <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">1</a></li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+            <%  }
+                for (long i = startPage; i <= endPage; i++) {
+            %>
+                    <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                        <a class="page-link" href="?page=<%= i %><%= queryString %>"><%= i %></a>
+                    </li>
+            <%  }
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+            %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+            <%      } %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>"><%= totalPages %></a></li>
+            <%  } %>
+
+            <% if (pageNumber < totalPages) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %><%= queryString %>">Next →</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>">Last</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <% } %>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

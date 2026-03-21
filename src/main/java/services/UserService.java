@@ -24,6 +24,22 @@ public class UserService {
         return userDAO.searchUserByName(keyword);
     }
 
+    public long countAllUsers() {
+        return userDAO.countAll();
+    }
+
+    public long countSearchUsers(String keyword) {
+        return userDAO.countSearch(keyword);
+    }
+
+    public List<User> getUsersPage(int pageNumber, int pageSize) {
+        return userDAO.findPage(pageNumber, pageSize);
+    }
+
+    public List<User> searchUsersPage(String keyword, int pageNumber, int pageSize) {
+        return userDAO.searchPage(keyword, pageNumber, pageSize);
+    }
+
     public User findById(Integer userId) {
         return userDAO.findById(userId);
     }

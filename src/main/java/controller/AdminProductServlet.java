@@ -15,26 +15,27 @@ import java.util.List;
 /**
  * Admin product management at /admin/products.
  *
- * GET  action=create  → show create form
- * GET  action=edit    → show edit form (requires id)
- * GET  action=delete  → delete product (requires id), redirect to list
- * GET  (default)      → list all products
- * POST action=create  → insert new product, redirect to list
- * POST action=edit    → update product, redirect to list
+ * GET action=create → show create form
+ * GET action=edit → show edit form (requires id)
+ * GET action=delete → delete product (requires id), redirect to list
+ * GET (default) → list all products
+ * POST action=create → insert new product, redirect to list
+ * POST action=edit → update product, redirect to list
  */
-@WebServlet(urlPatterns = {"/admin/products"})
+@WebServlet(urlPatterns = { "/admin/products" })
 public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
     private final SupplierService supplierService = new SupplierService();
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null)
+            action = "";
 
         switch (action) {
             case "create":
@@ -57,7 +58,8 @@ public class AdminProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null)
+            action = "";
 
         switch (action) {
             case "create":
@@ -81,7 +83,8 @@ public class AdminProductServlet extends HttpServlet {
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 pageNumber = Integer.parseInt(pageParam);
-                if (pageNumber < 1) pageNumber = 1;
+                if (pageNumber < 1)
+                    pageNumber = 1;
             } catch (NumberFormatException e) {
                 pageNumber = 1;
             }

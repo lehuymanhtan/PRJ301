@@ -34,6 +34,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public long countOrdersByUserId(Integer userId) {
+        return orderDAO.countByUserId(userId);
+    }
+
+    @Override
+    public List<Order> getOrdersPageByUserId(Integer userId, int pageNumber, int pageSize) {
+        return orderDAO.findPageByUserId(userId, pageNumber, pageSize);
+    }
+
+    @Override
     public Order getOrderById(Integer id) {
         return orderDAO.findById(id);
     }

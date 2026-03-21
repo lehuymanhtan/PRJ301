@@ -12,6 +12,14 @@ public class SupplierService {
         return supplierDAO.findAll();
     }
 
+    public long countAllSuppliers() {
+        return supplierDAO.countAll();
+    }
+
+    public List<Supplier> getSuppliersPage(int pageNumber, int pageSize) {
+        return supplierDAO.findPage(pageNumber, pageSize);
+    }
+
     public Supplier findById(Integer id) {
         return supplierDAO.findById(id);
     }

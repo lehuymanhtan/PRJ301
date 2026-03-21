@@ -15,6 +15,23 @@ public class RefundDAO {
         );
     }
 
+    public long countAll() {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(r) FROM RefundRequest r", Long.class)
+              .getSingleResult()
+        );
+    }
+
+    public List<RefundRequest> findPage(int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT r FROM RefundRequest r ORDER BY r.createdAt DESC", RefundRequest.class)
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
     public RefundRequest findById(Integer id) {
         return JpaHelper.query(em ->
             em.createQuery(

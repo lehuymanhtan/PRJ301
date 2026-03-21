@@ -33,6 +33,28 @@ public class OrderDAO {
         );
     }
 
+    public long countByUserId(Integer userId) {
+        return JpaHelper.query(em ->
+            em.createQuery(
+                "SELECT COUNT(o) FROM Order o WHERE o.userId = :uid AND o.status <> 'Deleted'",
+                Long.class
+            ).setParameter("uid", userId).getSingleResult()
+        );
+    }
+
+    public List<Order> findPageByUserId(Integer userId, int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery(
+                "SELECT o FROM Order o WHERE o.userId = :uid AND o.status <> 'Deleted' ORDER BY o.id DESC",
+                Order.class
+            ).setParameter("uid", userId)
+             .setFirstResult(offset)
+             .setMaxResults(pageSize)
+             .getResultList()
+        );
+    }
+
     public long countAll() {
         return JpaHelper.query(em ->
             em.createQuery(

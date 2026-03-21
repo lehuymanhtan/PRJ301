@@ -7,6 +7,10 @@ public interface RefundService {
 
     List<RefundRequest> getAllRefunds();
 
+    long countAllRefunds();
+
+    List<RefundRequest> getRefundsPage(int pageNumber, int pageSize);
+
     RefundRequest findById(Integer id);
 
     RefundRequest findByOrderId(Integer orderId);

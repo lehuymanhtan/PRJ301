@@ -16,25 +16,26 @@ import java.util.List;
 /**
  * Admin order management at /admin/orders.
  *
- * GET  action=list   (default) → list all orders
- * GET  action=detail&id=N      → view order details
- * GET  action=edit&id=N        → show edit-status form
- * POST action=update           → update order status
- * POST action=delete           → soft-delete order
+ * GET action=list (default) → list all orders
+ * GET action=detail&id=N → view order details
+ * GET action=edit&id=N → show edit-status form
+ * POST action=update → update order status
+ * POST action=delete → soft-delete order
  */
-@WebServlet(urlPatterns = {"/admin/orders"})
+@WebServlet(urlPatterns = { "/admin/orders" })
 public class AdminOrderServlet extends HttpServlet {
 
-    private final OrderService  orderService  = new OrderServiceImpl();
+    private final OrderService orderService = new OrderServiceImpl();
     private final RefundService refundService = new RefundServiceImpl();
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null)
+            action = "list";
 
         switch (action) {
             case "detail":
@@ -54,7 +55,8 @@ public class AdminOrderServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null)
+            action = "";
 
         switch (action) {
             case "update":
@@ -76,7 +78,8 @@ public class AdminOrderServlet extends HttpServlet {
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 pageNumber = Integer.parseInt(pageParam);
-                if (pageNumber < 1) pageNumber = 1;
+                if (pageNumber < 1)
+                    pageNumber = 1;
             } catch (NumberFormatException e) {
                 pageNumber = 1;
             }
@@ -119,7 +122,7 @@ public class AdminOrderServlet extends HttpServlet {
 
     private void updateStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id   = Integer.parseInt(request.getParameter("id"));
+        Integer id = Integer.parseInt(request.getParameter("id"));
         String status = request.getParameter("status");
         Order order = orderService.getOrderById(id);
         if (order != null) {

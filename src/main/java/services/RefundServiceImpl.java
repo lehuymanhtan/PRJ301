@@ -14,6 +14,16 @@ public class RefundServiceImpl implements RefundService {
     }
 
     @Override
+    public long countAllRefunds() {
+        return refundDAO.countAll();
+    }
+
+    @Override
+    public List<RefundRequest> getRefundsPage(int pageNumber, int pageSize) {
+        return refundDAO.findPage(pageNumber, pageSize);
+    }
+
+    @Override
     public RefundRequest findById(Integer id) {
         return refundDAO.findById(id);
     }

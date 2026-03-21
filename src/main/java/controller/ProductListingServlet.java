@@ -14,11 +14,11 @@ import java.util.List;
  *
  * GET (default) → list all products with pagination
  */
-@WebServlet(urlPatterns = {"/products"})
+@WebServlet(urlPatterns = { "/products" })
 public class ProductListingServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
-    private static final int PAGE_SIZE = 12;
+    private static final int PAGE_SIZE = 24;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,7 +28,8 @@ public class ProductListingServlet extends HttpServlet {
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 pageNumber = Integer.parseInt(pageParam);
-                if (pageNumber < 1) pageNumber = 1;
+                if (pageNumber < 1)
+                    pageNumber = 1;
             } catch (NumberFormatException e) {
                 pageNumber = 1;
             }
