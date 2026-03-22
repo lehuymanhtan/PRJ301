@@ -22,7 +22,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-rt">
     <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
             <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -30,7 +30,7 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
             </ul>

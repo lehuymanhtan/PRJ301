@@ -23,7 +23,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-rt">
     <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
             <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
         </a>
         <div class="collapse navbar-collapse">

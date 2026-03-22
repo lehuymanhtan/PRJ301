@@ -5,10 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <%
-        Category currentCategory = (Category) request.getAttribute("currentCategory");
-    %>
-    <title><%= currentCategory != null ? currentCategory.getName() : "Category" %> - Ruby Tech</title>
+    <title>Home - Ruby Tech</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
@@ -33,8 +30,8 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a></li>
-                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Categories
@@ -42,7 +39,7 @@
                     <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/products">All Products</a></li>
                         <% if (categories != null) { for (Category c : categories) { %>
-                            <li><a class="dropdown-item <%= (currentCategory != null && currentCategory.getId().equals(c.getId())) ? "active" : "" %>" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
                         <% } } %>
                     </ul>
                 </li>
@@ -77,6 +74,28 @@
     </div>
 </nav>
 
+<!-- Hero Section -->
+<section class="rt-hero">
+    <div class="container">
+        <h1>Next-Gen Tech is Here 🚀</h1>
+        <p>Discover cutting-edge appliances and upgrade your home with our premium product collection.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="#products" class="btn btn-rt-primary btn-lg hero-action-btn">
+                <i class="bi bi-bag me-2"></i>Shop Now
+            </a>
+            <% if (currentUser != null) { %>
+                <a href="${pageContext.request.contextPath}/cart" class="btn btn-rt-outline btn-lg">
+                    <i class="bi bi-cart3 me-2"></i>View Cart
+                </a>
+            <% } else { %>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-rt-outline btn-lg">
+                    <i class="bi bi-stars me-2"></i>Join Now
+                </a>
+            <% } %>
+        </div>
+    </div>
+</section>
+
 <!-- Main Content -->
 <div class="container py-5" id="products">
     <!-- Cart Message -->
@@ -87,43 +106,94 @@
         </div>
     <% } %>
 
-    <h2 class="section-title mb-4"><%= currentCategory != null ? currentCategory.getName() : "Category" %></h2>
-    <% if (currentCategory != null && currentCategory.getDescription() != null && !currentCategory.getDescription().trim().isEmpty()) { %>
-        <p class="text-muted mb-4"><%= currentCategory.getDescription() %></p>
-    <% } %>
+    <!-- Hot Products (Low Stock) -->
+    <h2 class="section-title mb-4">Hot</h2>
+    <%
+        java.util.List<Product> hotProducts = new java.util.ArrayList<>();
+        if (products != null) {
+            for (Product p : products) {
+                if (p.getStock() > 0 && p.getStock() <= 25) {
+                    hotProducts.add(p);
+                }
+            }
+            // Sort by stock ascending (lowest stock first)
+            hotProducts.sort((a, b) -> Integer.compare(a.getStock(), b.getStock()));
+            // Keep only first 12
+            if (hotProducts.size() > 12) {
+                hotProducts = hotProducts.subList(0, 12);
+            }
+        }
+    %>
+    <% if (!hotProducts.isEmpty()) { %>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+            <% for (Product p : hotProducts) { %>
+                <div class="col">
+                    <div class="card product-card h-100 shadow-sm border-warning-subtle">
+                        <img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" class="card-img-top" alt="<%= p.getName().replace("\"", "&quot;") %>" style="height: 200px; object-fit: contain;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><%= p.getName() %></h5>
+                            <p class="product-price mb-2">
+                                <i class="bi bi-tag me-1"></i><%= String.format("%,.0f", p.getPrice()) %> ₫
+                            </p>
 
-    <!-- Category Pills -->
-    <div class="mb-4">
-        <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-2" style="white-space: nowrap;">
-            <li class="nav-item">
-                <a class="nav-link bg-light text-dark border" href="${pageContext.request.contextPath}/products">All Products</a>
-            </li>
-            <% if (categories != null) { for (Category c : categories) {
-                boolean isActive = currentCategory != null && currentCategory.getId().equals(c.getId());
-            %>
-                <li class="nav-item">
-                    <a class="nav-link <%= isActive ? "active" : "bg-light text-dark border" %>" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a>
-                </li>
-            <% } } %>
-        </ul>
-    </div>
+                            <% if (p.getDescription() != null && !p.getDescription().isEmpty()) { %>
+                                <p class="card-text text-muted small flex-grow-1"><%= p.getDescription() %></p>
+                            <% } else { %><div class="flex-grow-1"></div><% } %>
 
-    <!-- Products Grid -->
-    <% if (products == null || products.isEmpty()) { %>
-        <div class="text-center py-5">
-            <i class="bi bi-box-seam" style="font-size:4rem; color:#cbd5e1"></i>
-            <h3 class="mt-3 text-muted">No Products Available</h3>
-            <p class="text-muted">There are no products in this category yet. Please check back soon!</p>
-            <a href="${pageContext.request.contextPath}/products" class="btn btn-rt-primary">
-                <i class="bi bi-arrow-left me-2"></i>Back to All Products
-            </a>
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <span class="badge badge-low-stock">
+                                    <i class="bi bi-fire me-1"></i>Only <%= p.getStock() %> left
+                                </span>
+                            </div>
+
+                            <!-- Add to Cart -->
+                            <form class="add-to-cart-form" action="${pageContext.request.contextPath}/cart" method="post">
+                                <input type="hidden" name="productId" value="<%= p.getId() %>">
+                                <input type="hidden" name="action" value="add">
+                                <div class="input-group">
+                                    <input type="number"
+                                           name="quantity"
+                                           value="1"
+                                           min="1"
+                                           max="<%= p.getStock() %>"
+                                           class="form-control qty-input"
+                                           style="max-width:80px"
+                                           title="Quantity">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
         </div>
     <% } else { %>
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-            <% for (Product p : products) { %>
+        <p class="text-muted mb-5">No low-stock products at the moment.</p>
+    <% } %>
+
+    <!-- New Arrival Products -->
+    <h2 class="section-title mb-4">New Arrival</h2>
+    <%
+        java.util.List<Product> newArrivalProducts = new java.util.ArrayList<>();
+        if (products != null) {
+            newArrivalProducts.addAll(products);
+            // Sort by ID descending (newest first)
+            newArrivalProducts.sort((a, b) -> Integer.compare(b.getId().intValue(), a.getId().intValue()));
+            // Keep only first 12
+            if (newArrivalProducts.size() > 12) {
+                newArrivalProducts = newArrivalProducts.subList(0, 12);
+            }
+        }
+    %>
+    <% if (!newArrivalProducts.isEmpty()) { %>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+            <% for (Product p : newArrivalProducts) { %>
                 <div class="col">
-                    <div class="card product-card h-100 shadow-sm">
-                        <img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" class="card-img-top" alt="<%= p.getName().replace("\"", "&quot;") %>" style="height: 200px; object-fit: cover;">
+                    <div class="card product-card h-100 shadow-sm border-success-subtle">
+                        <img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" class="card-img-top" alt="<%= p.getName().replace("\"", "&quot;") %>" style="height: 200px; object-fit: contain;">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><%= p.getName() %></h5>
                             <p class="product-price mb-2">
@@ -180,68 +250,16 @@
                 </div>
             <% } %>
         </div>
-
-        <!-- Pagination -->
-        <%
-            Long totalPages = (Long) request.getAttribute("totalPages");
-            Integer pageNumber = (Integer) request.getAttribute("pageNumber");
-            Integer categoryIdStr = currentCategory != null ? currentCategory.getId() : null;
-            if (totalPages != null && totalPages > 1 && categoryIdStr != null) {
-        %>
-        <nav class="mt-5" aria-label="Product pagination">
-            <ul class="pagination justify-content-center">
-                <% if (pageNumber > 1) { %>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=1">First</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= pageNumber - 1 %>">
-                            <i class="bi bi-chevron-left"></i>
-                        </a>
-                    </li>
-                <% } %>
-                
-                <%
-                    long startPage = Math.max(1, pageNumber - 2);
-                    long endPage = Math.min(totalPages, pageNumber + 2);
-                    
-                    if (startPage > 1) {
-                %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=1">1</a></li>
-                        <% if (startPage > 2) { %>
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        <% } %>
-                <%  }
-                    
-                    for (long i = startPage; i <= endPage; i++) {
-                %>
-                        <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
-                            <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= i %>"><%= i %></a>
-                        </li>
-                <%  }
-                    
-                    if (endPage < totalPages) {
-                        if (endPage < totalPages - 1) {
-                %>
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                <%      } %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= totalPages %>"><%= totalPages %></a></li>
-                <%  } %>
-
-                <% if (pageNumber < totalPages) { %>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= pageNumber + 1 %>">
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= totalPages %>">Last</a>
-                    </li>
-                <% } %>
-            </ul>
-        </nav>
-        <% } %>
+    <% } else { %>
+        <p class="text-muted mb-5">No new arrival products at the moment.</p>
     <% } %>
+
+    <!-- Show More Button -->
+    <div class="text-center mt-5">
+        <a href="${pageContext.request.contextPath}/products" class="btn btn-rt-primary btn-lg">
+            <i class="bi bi-arrow-right me-2"></i>Show More Products
+        </a>
+    </div>
 </div>
 
 <footer class="bg-navy text-white mt-5 py-4">

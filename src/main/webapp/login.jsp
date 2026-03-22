@@ -100,7 +100,7 @@
             <a href="${pageContext.request.contextPath}/register" class="fw-semibold text-orange">Create Account</a>
         </p>
         <div class="text-center mt-3">
-            <a href="${pageContext.request.contextPath}/" class="btn btn-sm btn-outline-secondary">
+            <a href="${pageContext.request.contextPath}/home" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i>Back to Store
             </a>
         </div>

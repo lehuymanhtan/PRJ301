@@ -74,31 +74,8 @@
     </div>
 </nav>
 
-<!-- Hero Section -->
-<section class="rt-hero">
-    <div class="container">
-        <h1>Next-Gen Tech is Here 🚀</h1>
-        <p>Discover cutting-edge appliances and upgrade your home with our premium product collection.</p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="#products" class="btn btn-rt-primary btn-lg hero-action-btn">
-                <i class="bi bi-bag me-2"></i>Shop Now
-            </a>
-            <% if (currentUser != null) { %>
-                <a href="${pageContext.request.contextPath}/cart" class="btn btn-rt-outline btn-lg">
-                    <i class="bi bi-cart3 me-2"></i>View Cart
-                </a>
-            <% } else { %>
-                <a href="${pageContext.request.contextPath}/register" class="btn btn-rt-outline btn-lg">
-                    <i class="bi bi-stars me-2"></i>Join Now
-                </a>
-            <% } %>
-        </div>
-    </div>
-</section>
-
 <!-- Main Content -->
 <div class="container py-5" id="products">
-    <!-- Cart Message -->
     <% if (cartMessage != null) { %>
         <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert">
             <i class="bi bi-cart-check me-2"></i><%= cartMessage %>
@@ -106,21 +83,7 @@
         </div>
     <% } %>
 
-    <h2 class="section-title mb-4">Featured Products</h2>
-
-    <!-- Category Pills -->
-    <div class="mb-4">
-        <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-2" style="white-space: nowrap;">
-            <li class="nav-item">
-                <a class="nav-link active" href="${pageContext.request.contextPath}/products">All Products</a>
-            </li>
-            <% if (categories != null) { for (Category c : categories) { %>
-                <li class="nav-item">
-                    <a class="nav-link bg-light text-dark border" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a>
-                </li>
-            <% } } %>
-        </ul>
-    </div>
+    <h2 class="section-title mb-4">Products</h2>
 
     <!-- Products Grid -->
     <% if (products == null || products.isEmpty()) { %>
