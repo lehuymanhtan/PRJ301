@@ -136,7 +136,7 @@
             <% for (Product p : products) { %>
                 <div class="col">
                     <div class="card product-card h-100 shadow-sm">
-                        <img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" class="card-img-top" alt="<%= p.getName().replace("\"", "&quot;") %>" style="height: 200px; object-fit: cover;">
+                        <img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" class="card-img-top" alt="<%= p.getName().replace("\"", "&quot;") %>" style="height: 200px; object-fit: contain;">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><%= p.getName() %></h5>
                             <p class="product-price mb-2">

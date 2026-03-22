@@ -13,7 +13,7 @@ RUN apt-get update \
     && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-prod.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/microsoft-prod.list \
     && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y --no-install-recommends mssql-tools18 unixodbc \
+    && ACCEPT_EULA=Y apt-get install -y --no-install-recommends mssql-tools18 unixodbc python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PATH="${PATH}:/opt/mssql-tools18/bin"
