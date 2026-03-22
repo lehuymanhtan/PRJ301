@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
 <body>
 <%

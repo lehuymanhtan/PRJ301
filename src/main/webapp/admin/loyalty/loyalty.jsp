@@ -19,6 +19,7 @@
         .tier-badge-platinum { background-color: #e5e4e2; color: #000; }
         .tier-badge-diamond { background-color: #b9f2ff; color: #000; }
     </style>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
 <body class="bg-light">
 <%

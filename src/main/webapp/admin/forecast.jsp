@@ -16,6 +16,7 @@
     <style>
         .chart-image { max-width: 100%; height: auto; border-radius: 0.375rem; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); margin-bottom: 1.5rem; }
     </style>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
 <body class="bg-light">
 <%

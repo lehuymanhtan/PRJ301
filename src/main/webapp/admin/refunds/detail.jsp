@@ -20,6 +20,7 @@
         }
         window.onload = function() { toggleReturnAddress(); };
     </script>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
 <body class="bg-light">
 <%

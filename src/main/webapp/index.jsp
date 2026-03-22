@@ -12,6 +12,7 @@
             window.location.replace("${pageContext.request.contextPath}/products");
         }, 2000);
     </script>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
 <body>
 <div class="splash-screen">
