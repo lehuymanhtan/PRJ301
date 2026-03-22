@@ -10,7 +10,7 @@
     <script>
         setTimeout(function() {
             window.location.replace("${pageContext.request.contextPath}/home");
-        }, 2000);
+        }, 250);
     </script>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>

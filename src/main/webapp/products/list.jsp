@@ -22,7 +22,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-rt">
     <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
             <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -38,27 +38,36 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/products">All Products</a></li>
-                        <% if (categories != null) { for (Category c : categories) { %>
+                        <% 
+                            java.util.List<models.Category> navCategories = (java.util.List<models.Category>) request.getAttribute("categories");
+                            if (navCategories != null) { 
+                                for (models.Category c : navCategories) { 
+                        %>
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
                         <% } } %>
                     </ul>
                 </li>
-                <% if (currentUser != null) { %>
-                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
-                <% } %>
             </ul>
             <form class="d-flex mx-3" action="${pageContext.request.contextPath}/products" method="get">
                 <input class="form-control me-2" type="search" name="keyword" placeholder="Search product..." aria-label="Search" value="${not empty keyword ? keyword : ''}">
                 <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
             </form>
             <ul class="navbar-nav">
-                <% if (currentUser != null) { %>
-                    <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                <% 
+                    models.User navUser = (models.User) session.getAttribute("user");
+                    if (navUser != null) { 
+                %>
+                    <% if ("admin".equalsIgnoreCase(navUser.getRole())) { %>
                         <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin</a></li>
                     <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/cart" title="Cart">
+                            <i class="bi bi-cart3 fs-5"></i>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white opacity-75" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <%= currentUser.getName() %>
+                            <%= navUser.getName() %>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Profile</a></li>
