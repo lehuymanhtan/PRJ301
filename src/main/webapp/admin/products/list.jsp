@@ -65,18 +65,19 @@
             <table class="table admin-table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>ID</th><th>Name</th><th>Price</th><th>Stock</th><th>Category</th><th>Import Date</th><th>Supplier</th><th>Actions</th>
+                        <th>ID</th><th>Image</th><th>Name</th><th>Price</th><th>Stock</th><th>Category</th><th>Import Date</th><th>Supplier</th><th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% if (products == null || products.isEmpty()) { %>
-                        <tr><td colspan="8" class="text-center py-4 text-muted"><i class="bi bi-box me-2"></i>No products found. <a href="${pageContext.request.contextPath}/admin/products?action=create">Add your first product</a></td></tr>
+                        <tr><td colspan="9" class="text-center py-4 text-muted"><i class="bi bi-box me-2"></i>No products found. <a href="${pageContext.request.contextPath}/admin/products?action=create">Add your first product</a></td></tr>
                     <% } else { for (Product p : products) {
                         int stock = p.getStock();
                         String stockClass = stock > 50 ? "bg-success" : stock > 10 ? "bg-warning text-dark" : "bg-danger";
                     %>
                     <tr>
                         <td><span class="fw-semibold text-orange">#<%= p.getId() %></span></td>
+                        <td><img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" alt="Product" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;"></td>
                         <td><%= p.getName() %></td>
                         <td class="fw-semibold text-orange"><%= String.format("%,.0f", p.getPrice()) %> ₫</td>
                         <td><span class="badge <%= stockClass %>"><%= stock %></span></td>
