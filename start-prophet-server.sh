@@ -21,6 +21,8 @@ echo "Project Root: $PROJECT_ROOT"
 echo "Model Directory: $MODEL_DIR"
 echo ""
 
+cd "$PROJECT_ROOT"
+
 # Check if Python is installed
 if ! command -v python3 &> /dev/null; then
     echo "[ERROR] Python 3 is not installed"
