@@ -37,7 +37,7 @@
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/forecast">Forecast</a></li>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Shop</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Shop</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
             </ul>
         </div>
@@ -56,7 +56,7 @@
                 <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                     <% if (orders == null || orders.isEmpty()) { %>
-                        <tr><td colspan="5" class="text-center py-4 text-muted"><i class="bi bi-bag me-2"></i>No orders found. <a href="${pageContext.request.contextPath}/">Visit the store</a></td></tr>
+                        <tr><td colspan="5" class="text-center py-4 text-muted"><i class="bi bi-bag me-2"></i>No orders found. <a href="${pageContext.request.contextPath}/home">Visit the store</a></td></tr>
                     <% } else { for (Order o : orders) {
                         String sc; switch(o.getStatus().toLowerCase()) {
                             case "completed": case "delivered": sc="bg-success"; break;

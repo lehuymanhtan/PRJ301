@@ -29,6 +29,14 @@ public class ProductService {
         return productDAO.findPageByCategoryId(categoryId, pageNumber, pageSize);
     }
 
+    public long countByName(String keyword) {
+        return productDAO.countByName(keyword);
+    }
+
+    public List<Product> searchByName(String keyword, int pageNumber, int pageSize) {
+        return productDAO.searchByName(keyword, pageNumber, pageSize);
+    }
+
     public Product findById(Integer id) {
         return productDAO.findById(id);
     }

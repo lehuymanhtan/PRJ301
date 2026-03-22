@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
     <script>
         setTimeout(function() {
-            window.location.replace("${pageContext.request.contextPath}/products");
-        }, 2000);
+            window.location.replace("${pageContext.request.contextPath}/home");
+        }, 250);
     </script>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/img/logo.png">
 </head>
@@ -22,7 +22,7 @@
     <div class="spinner-border text-light mb-3" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
-    <p class="small opacity-75">Taking you to our products...</p>
+    <p class="small opacity-75">Taking you to our homepage...</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

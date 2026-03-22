@@ -32,34 +32,65 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-rt">
     <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
             <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
         </a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
-                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/checkout">Checkout</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categories
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/products">All Products</a></li>
+                        <% 
+                            java.util.List<models.Category> navCategories = (java.util.List<models.Category>) request.getAttribute("categories");
+                            if (navCategories != null) { 
+                                for (models.Category c : navCategories) { 
+                        %>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
+                        <% } } %>
+                    </ul>
+                </li>
             </ul>
+            <form class="d-flex mx-3" action="${pageContext.request.contextPath}/products" method="get">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search product..." aria-label="Search" value="${not empty keyword ? keyword : ''}">
+                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+            </form>
             <ul class="navbar-nav">
-                <% if (currentUser != null) { %>
-                    <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
+                <% 
+                    models.User navUser = (models.User) session.getAttribute("user");
+                    if (navUser != null) { 
+                %>
+                    <% if ("admin".equalsIgnoreCase(navUser.getRole())) { %>
                         <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin</a></li>
                     <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="${pageContext.request.contextPath}/cart" title="Cart">
+                            <i class="bi bi-cart3 fs-5"></i>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white opacity-75" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <%= currentUser.getName() %>
+                            <%= navUser.getName() %>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Profile</a></li>
-                            <li><a class="dropdown-item active" href="${pageContext.request.contextPath}/orders">Orders</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/orders">Orders</a></li>
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users/addresses">Addresses</a></li>
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/points">Point History</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
                         </ul>
                     </li>
+                <% } else { %>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/register">Register</a></li>
                 <% } %>
             </ul>
         </div>
