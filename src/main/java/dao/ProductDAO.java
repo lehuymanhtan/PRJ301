@@ -8,7 +8,7 @@ public class ProductDAO {
 
     public List<Product> findAll() {
         return JpaHelper.query(em ->
-            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier ORDER BY p.id", Product.class)
+            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier LEFT JOIN FETCH p.category ORDER BY p.id", Product.class)
               .getResultList()
         );
     }
@@ -23,7 +23,26 @@ public class ProductDAO {
     public List<Product> findPage(int pageNumber, int pageSize) {
         int offset = (pageNumber - 1) * pageSize;
         return JpaHelper.query(em ->
-            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier ORDER BY p.id", Product.class)
+            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier LEFT JOIN FETCH p.category ORDER BY p.id", Product.class)
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
+    public long countByCategoryId(Integer categoryId) {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(p) FROM Product p WHERE p.category.id = :categoryId", Long.class)
+              .setParameter("categoryId", categoryId)
+              .getSingleResult()
+        );
+    }
+
+    public List<Product> findPageByCategoryId(Integer categoryId, int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier LEFT JOIN FETCH p.category WHERE p.category.id = :categoryId ORDER BY p.id", Product.class)
+              .setParameter("categoryId", categoryId)
               .setFirstResult(offset)
               .setMaxResults(pageSize)
               .getResultList()
@@ -46,6 +65,9 @@ public class ProductDAO {
             if (p.getSupplier() != null && p.getSupplier().getId() != null) {
                 p.setSupplier(em.getReference(models.Supplier.class, p.getSupplier().getId()));
             }
+            if (p.getCategory() != null && p.getCategory().getId() != null) {
+                p.setCategory(em.getReference(models.Category.class, p.getCategory().getId()));
+            }
             em.persist(p);
         });
     }
@@ -54,6 +76,9 @@ public class ProductDAO {
         JpaHelper.execute(em -> {
             if (p.getSupplier() != null && p.getSupplier().getId() != null) {
                 p.setSupplier(em.getReference(models.Supplier.class, p.getSupplier().getId()));
+            }
+            if (p.getCategory() != null && p.getCategory().getId() != null) {
+                p.setCategory(em.getReference(models.Category.class, p.getCategory().getId()));
             }
             em.merge(p);
         });

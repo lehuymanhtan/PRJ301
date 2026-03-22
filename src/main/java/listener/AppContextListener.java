@@ -50,7 +50,12 @@ public class AppContextListener implements ServletContextListener {
 
                 System.out.println("AppContextListener: .env loaded from " + webInfPath);
             } catch (Exception e) {
-                System.err.println("AppContextListener: failed to load .env - " + e.getMessage());
+                System.err.println("AppConte"
+                        + ""
+                        + ""
+                        + ""
+                        + ""
+                        + "xtListener: failed to load .env - " + e.getMessage());
             }
         }
 

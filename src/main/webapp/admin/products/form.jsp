@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="models.Product, models.Supplier, java.util.List" %>
+<%@ page import="models.Product, models.Supplier, models.Category, java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +8,7 @@
     <%
         Product editProduct = (Product) request.getAttribute("product");
         List<Supplier> suppliers = (List<Supplier>) request.getAttribute("suppliers");
+        List<Category> categories = (List<Category>) request.getAttribute("categories");
         boolean isEdit = (editProduct != null);
     %>
     <title><%= isEdit ? "Edit Product" : "Add Product" %> - Ruby Tech Admin</title>
@@ -30,6 +31,7 @@
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
                 <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
@@ -82,9 +84,15 @@
                                value="<%= isEdit ? editProduct.getStock() : "" %>">
                     </div>
                     <div class="col-md-6">
-                        <label for="category" class="form-label fw-semibold">Category</label>
-                        <input type="text" id="category" name="category" class="form-control"
-                               value="<%= isEdit && editProduct.getCategory() != null ? editProduct.getCategory() : "" %>">
+                        <label for="categoryId" class="form-label fw-semibold">Category</label>
+                        <select id="categoryId" name="categoryId" class="form-select">
+                            <option value="">-- None --</option>
+                            <% if (categories != null) { for (Category c : categories) {
+                                boolean selected = isEdit && editProduct.getCategory() != null
+                                    && editProduct.getCategory().getId().equals(c.getId()); %>
+                                <option value="<%= c.getId() %>" <%= selected ? "selected" : "" %>><%= c.getName() %></option>
+                            <% } } %>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label for="importDate" class="form-label fw-semibold">Import Date</label>

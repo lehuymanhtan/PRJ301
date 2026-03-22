@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import models.Product;
 import services.ProductService;
+import services.CategoryService;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class ProductListingServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
+    private final CategoryService categoryService = new CategoryService();
     private static final int PAGE_SIZE = 24;
 
     @Override
@@ -47,6 +49,7 @@ public class ProductListingServlet extends HttpServlet {
         request.setAttribute("pageSize", PAGE_SIZE);
         request.setAttribute("totalCount", totalCount);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("categories", categoryService.findAll());
         request.getRequestDispatcher("/products/list.jsp").forward(request, response);
     }
 }

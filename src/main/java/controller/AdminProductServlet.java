@@ -5,8 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import models.Product;
 import models.Supplier;
+import models.Category;
 import services.ProductService;
 import services.SupplierService;
+import services.CategoryService;
 import jakarta.servlet.annotation.MultipartConfig;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
     private final SupplierService supplierService = new SupplierService();
+    private final CategoryService categoryService = new CategoryService();
     private static final int PAGE_SIZE = 25;
 
     @Override
@@ -115,6 +118,7 @@ public class AdminProductServlet extends HttpServlet {
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("suppliers", supplierService.findAll());
+        request.setAttribute("categories", categoryService.findAll());
         request.getRequestDispatcher("/admin/products/form.jsp").forward(request, response);
     }
 
@@ -128,6 +132,7 @@ public class AdminProductServlet extends HttpServlet {
         }
         request.setAttribute("product", product);
         request.setAttribute("suppliers", supplierService.findAll());
+        request.setAttribute("categories", categoryService.findAll());
         request.getRequestDispatcher("/admin/products/form.jsp").forward(request, response);
     }
 
@@ -143,6 +148,7 @@ public class AdminProductServlet extends HttpServlet {
         } catch (IllegalArgumentException | DateTimeParseException e) {
             request.setAttribute("error", e.getMessage());
             request.setAttribute("suppliers", supplierService.findAll());
+            request.setAttribute("categories", categoryService.findAll());
             request.getRequestDispatcher("/admin/products/form.jsp").forward(request, response);
         }
     }
@@ -165,6 +171,7 @@ public class AdminProductServlet extends HttpServlet {
         } catch (IllegalArgumentException | DateTimeParseException e) {
             request.setAttribute("error", e.getMessage());
             request.setAttribute("suppliers", supplierService.findAll());
+            request.setAttribute("categories", categoryService.findAll());
             request.getRequestDispatcher("/admin/products/form.jsp").forward(request, response);
         }
     }
@@ -191,7 +198,14 @@ public class AdminProductServlet extends HttpServlet {
             p.setImportDate(importDate);
         }
 
-        p.setCategory(request.getParameter("category"));
+        String categoryIdStr = request.getParameter("categoryId");
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            Category category = new Category();
+            category.setId(Integer.parseInt(categoryIdStr));
+            p.setCategory(category);
+        } else {
+            p.setCategory(null);
+        }
 
         String supplierIdStr = request.getParameter("supplierId");
         if (supplierIdStr != null && !supplierIdStr.isEmpty()) {
