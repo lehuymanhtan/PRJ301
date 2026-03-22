@@ -189,6 +189,13 @@
     </div>
 </div>
 
+<footer class="bg-navy text-white mt-5 py-4">
+    <div class="container text-center">
+        <p class="mb-1 fw-semibold">Ruby Tech</p>
+        <p class="mb-0 small text-white-50">&copy; <%= java.time.Year.now().getValue() %> Ruby Tech. All rights reserved.</p>
+    </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
