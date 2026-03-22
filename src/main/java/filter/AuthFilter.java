@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
         }
 
         if (path.startsWith("/admin") && !"admin".equalsIgnoreCase(user.getRole())) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied. Admin only.");
+            res.sendRedirect(req.getContextPath() + "/home");
             return;
         }
 
