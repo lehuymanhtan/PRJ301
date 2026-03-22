@@ -27,6 +27,10 @@
                 <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/users">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/orders">Orders</a></li>
             </ul>
+            <form class="d-flex mx-3" action="${pageContext.request.contextPath}/products" method="get">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search product..." aria-label="Search" value="${not empty keyword ? keyword : ''}">
+                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+            </form>
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
             </ul>

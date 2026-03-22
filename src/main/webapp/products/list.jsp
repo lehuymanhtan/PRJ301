@@ -30,7 +30,7 @@
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a></li>
                 <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,6 +47,10 @@
                     <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
                 <% } %>
             </ul>
+            <form class="d-flex mx-3" action="${pageContext.request.contextPath}/products" method="get">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search product..." aria-label="Search" value="${not empty keyword ? keyword : ''}">
+                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+            </form>
             <ul class="navbar-nav">
                 <% if (currentUser != null) { %>
                     <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>
@@ -162,16 +166,19 @@
         <%
             Long totalPages = (Long) request.getAttribute("totalPages");
             Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+            String kw = (String) request.getAttribute("keyword");
+            String kwParam = (kw != null && !kw.trim().isEmpty()) ? "&keyword=" + java.net.URLEncoder.encode(kw, "UTF-8") : "";
+
             if (totalPages != null && totalPages > 1) {
         %>
         <nav class="mt-5" aria-label="Product pagination">
             <ul class="pagination justify-content-center">
                 <% if (pageNumber > 1) { %>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=1">First</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=1<%= kwParam %>">First</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %>">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %><%= kwParam %>">
                             <i class="bi bi-chevron-left"></i>
                         </a>
                     </li>
@@ -183,7 +190,7 @@
                     
                     if (startPage > 1) {
                 %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=1">1</a></li>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=1<%= kwParam %>">1</a></li>
                         <% if (startPage > 2) { %>
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                         <% } %>
@@ -192,7 +199,7 @@
                     for (long i = startPage; i <= endPage; i++) {
                 %>
                         <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
-                            <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= i %>"><%= i %></a>
+                            <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= i %><%= kwParam %>"><%= i %></a>
                         </li>
                 <%  }
                     
@@ -201,17 +208,17 @@
                 %>
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                 <%      } %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>"><%= totalPages %></a></li>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %><%= kwParam %>"><%= totalPages %></a></li>
                 <%  } %>
 
                 <% if (pageNumber < totalPages) { %>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>">
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %><%= kwParam %>">
                             <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>">Last</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %><%= kwParam %>">Last</a>
                     </li>
                 <% } %>
             </ul>

@@ -37,13 +37,30 @@ public class ProductListingServlet extends HttpServlet {
             }
         }
 
-        long totalCount = productService.countAll();
-        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
-        if (pageNumber > totalPages && totalPages > 0) {
-            pageNumber = (int) totalPages;
+        String keyword = request.getParameter("keyword");
+
+        long totalCount;
+        long totalPages;
+        List<Product> products;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            keyword = keyword.trim();
+            totalCount = productService.countByName(keyword);
+            totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if (pageNumber > totalPages && totalPages > 0) {
+                pageNumber = (int) totalPages;
+            }
+            products = productService.searchByName(keyword, pageNumber, PAGE_SIZE);
+            request.setAttribute("keyword", keyword);
+        } else {
+            totalCount = productService.countAll();
+            totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if (pageNumber > totalPages && totalPages > 0) {
+                pageNumber = (int) totalPages;
+            }
+            products = productService.findPage(pageNumber, PAGE_SIZE);
         }
 
-        List<Product> products = productService.findPage(pageNumber, PAGE_SIZE);
         request.setAttribute("products", products);
         request.setAttribute("pageNumber", pageNumber);
         request.setAttribute("pageSize", PAGE_SIZE);

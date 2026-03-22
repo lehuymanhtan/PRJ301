@@ -31,6 +31,10 @@
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart">Cart</a></li>
             </ul>
+            <form class="d-flex mx-3" action="${pageContext.request.contextPath}/products" method="get">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search product..." aria-label="Search" value="${not empty keyword ? keyword : ''}">
+                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+            </form>
             <ul class="navbar-nav">
                 <% if (currentUser != null) { %>
                     <% if ("admin".equalsIgnoreCase(currentUser.getRole())) { %>

@@ -49,6 +49,25 @@ public class ProductDAO {
         );
     }
 
+    public long countByName(String keyword) {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(p) FROM Product p WHERE LOWER(p.name) LIKE LOWER(:kw)", Long.class)
+              .setParameter("kw", "%" + keyword + "%")
+              .getSingleResult()
+        );
+    }
+
+    public List<Product> searchByName(String keyword, int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.supplier LEFT JOIN FETCH p.category WHERE LOWER(p.name) LIKE LOWER(:kw) ORDER BY p.id", Product.class)
+              .setParameter("kw", "%" + keyword + "%")
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
     public Product findById(Integer id) {
         return JpaHelper.query(em -> {
             Product p = em.find(Product.class, id);
