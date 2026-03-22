@@ -29,6 +29,7 @@
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
                 <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
@@ -81,7 +82,7 @@
                         <td><%= p.getName() %></td>
                         <td class="fw-semibold text-orange"><%= String.format("%,.0f", p.getPrice()) %> ₫</td>
                         <td><span class="badge <%= stockClass %>"><%= stock %></span></td>
-                        <td><% if (p.getCategory() != null && !p.getCategory().isEmpty()) { %><span class="badge bg-light text-dark border"><%= p.getCategory() %></span><% } else { %>-<% } %></td>
+                        <td><% if (p.getCategory() != null) { %><span class="badge bg-light text-dark border"><%= p.getCategory().getName() %></span><% } else { %>-<% } %></td>
                         <td><small class="text-muted"><%= p.getImportDate() != null ? p.getImportDate().toString() : "-" %></small></td>
                         <td><%= p.getSupplier() != null ? p.getSupplier().getName() : "-" %></td>
                         <td>

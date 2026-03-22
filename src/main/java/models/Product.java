@@ -24,8 +24,9 @@ public class Product implements Serializable {
 
     private LocalDate importDate;
 
-    @Column(length = 100)
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "supplierId")
@@ -37,7 +38,7 @@ public class Product implements Serializable {
     public Product() {}
 
     public Product(String name, double price, String description, int stock,
-                   LocalDate importDate, String category, Supplier supplier, String imagePath) {
+                   LocalDate importDate, Category category, Supplier supplier, String imagePath) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -66,8 +67,8 @@ public class Product implements Serializable {
     public LocalDate getImportDate() { return importDate; }
     public void setImportDate(LocalDate importDate) { this.importDate = importDate; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public Supplier getSupplier() { return supplier; }
     public void setSupplier(Supplier supplier) { this.supplier = supplier; }

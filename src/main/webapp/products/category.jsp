@@ -5,7 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Ruby Tech</title>
+    <%
+        Category currentCategory = (Category) request.getAttribute("currentCategory");
+    %>
+    <title><%= currentCategory != null ? currentCategory.getName() : "Category" %> - Ruby Tech</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
@@ -38,7 +41,7 @@
                     <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/products">All Products</a></li>
                         <% if (categories != null) { for (Category c : categories) { %>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
+                            <li><a class="dropdown-item <%= (currentCategory != null && currentCategory.getId().equals(c.getId())) ? "active" : "" %>" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a></li>
                         <% } } %>
                     </ul>
                 </li>
@@ -73,28 +76,6 @@
     </div>
 </nav>
 
-<!-- Hero Section -->
-<section class="rt-hero">
-    <div class="container">
-        <h1>Next-Gen Tech is Here 🚀</h1>
-        <p>Discover cutting-edge appliances and upgrade your home with our premium product collection.</p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="#products" class="btn btn-rt-primary btn-lg hero-action-btn">
-                <i class="bi bi-bag me-2"></i>Shop Now
-            </a>
-            <% if (currentUser != null) { %>
-                <a href="${pageContext.request.contextPath}/cart" class="btn btn-rt-outline btn-lg">
-                    <i class="bi bi-cart3 me-2"></i>View Cart
-                </a>
-            <% } else { %>
-                <a href="${pageContext.request.contextPath}/register" class="btn btn-rt-outline btn-lg">
-                    <i class="bi bi-stars me-2"></i>Join Now
-                </a>
-            <% } %>
-        </div>
-    </div>
-</section>
-
 <!-- Main Content -->
 <div class="container py-5" id="products">
     <!-- Cart Message -->
@@ -105,17 +86,22 @@
         </div>
     <% } %>
 
-    <h2 class="section-title mb-4">Featured Products</h2>
+    <h2 class="section-title mb-4"><%= currentCategory != null ? currentCategory.getName() : "Category" %></h2>
+    <% if (currentCategory != null && currentCategory.getDescription() != null && !currentCategory.getDescription().trim().isEmpty()) { %>
+        <p class="text-muted mb-4"><%= currentCategory.getDescription() %></p>
+    <% } %>
 
     <!-- Category Pills -->
     <div class="mb-4">
         <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-2" style="white-space: nowrap;">
             <li class="nav-item">
-                <a class="nav-link active" href="${pageContext.request.contextPath}/products">All Products</a>
+                <a class="nav-link bg-light text-dark border" href="${pageContext.request.contextPath}/products">All Products</a>
             </li>
-            <% if (categories != null) { for (Category c : categories) { %>
+            <% if (categories != null) { for (Category c : categories) {
+                boolean isActive = currentCategory != null && currentCategory.getId().equals(c.getId());
+            %>
                 <li class="nav-item">
-                    <a class="nav-link bg-light text-dark border" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a>
+                    <a class="nav-link <%= isActive ? "active" : "bg-light text-dark border" %>" href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getName() %></a>
                 </li>
             <% } } %>
         </ul>
@@ -126,9 +112,9 @@
         <div class="text-center py-5">
             <i class="bi bi-box-seam" style="font-size:4rem; color:#cbd5e1"></i>
             <h3 class="mt-3 text-muted">No Products Available</h3>
-            <p class="text-muted">We're working on adding more products. Please check back soon!</p>
-            <a href="${pageContext.request.contextPath}/" class="btn btn-rt-primary">
-                <i class="bi bi-house me-2"></i>Go Home
+            <p class="text-muted">There are no products in this category yet. Please check back soon!</p>
+            <a href="${pageContext.request.contextPath}/products" class="btn btn-rt-primary">
+                <i class="bi bi-arrow-left me-2"></i>Back to All Products
             </a>
         </div>
     <% } else { %>
@@ -198,16 +184,17 @@
         <%
             Long totalPages = (Long) request.getAttribute("totalPages");
             Integer pageNumber = (Integer) request.getAttribute("pageNumber");
-            if (totalPages != null && totalPages > 1) {
+            Integer categoryIdStr = currentCategory != null ? currentCategory.getId() : null;
+            if (totalPages != null && totalPages > 1 && categoryIdStr != null) {
         %>
         <nav class="mt-5" aria-label="Product pagination">
             <ul class="pagination justify-content-center">
                 <% if (pageNumber > 1) { %>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=1">First</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=1">First</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber - 1 %>">
+                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= pageNumber - 1 %>">
                             <i class="bi bi-chevron-left"></i>
                         </a>
                     </li>
@@ -219,7 +206,7 @@
                     
                     if (startPage > 1) {
                 %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=1">1</a></li>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=1">1</a></li>
                         <% if (startPage > 2) { %>
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                         <% } %>
@@ -228,7 +215,7 @@
                     for (long i = startPage; i <= endPage; i++) {
                 %>
                         <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
-                            <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= i %>"><%= i %></a>
+                            <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= i %>"><%= i %></a>
                         </li>
                 <%  }
                     
@@ -237,17 +224,17 @@
                 %>
                             <li class="page-item disabled"><span class="page-link">...</span></li>
                 <%      } %>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>"><%= totalPages %></a></li>
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= totalPages %>"><%= totalPages %></a></li>
                 <%  } %>
 
                 <% if (pageNumber < totalPages) { %>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= pageNumber + 1 %>">
+                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= pageNumber + 1 %>">
                             <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/products?page=<%= totalPages %>">Last</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/category?id=<%= categoryIdStr %>&page=<%= totalPages %>">Last</a>
                     </li>
                 <% } %>
             </ul>

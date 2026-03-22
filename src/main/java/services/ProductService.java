@@ -21,6 +21,14 @@ public class ProductService {
         return productDAO.findPage(pageNumber, pageSize);
     }
 
+    public long countByCategoryId(Integer categoryId) {
+        return productDAO.countByCategoryId(categoryId);
+    }
+
+    public List<Product> findPageByCategoryId(Integer categoryId, int pageNumber, int pageSize) {
+        return productDAO.findPageByCategoryId(categoryId, pageNumber, pageSize);
+    }
+
     public Product findById(Integer id) {
         return productDAO.findById(id);
     }
