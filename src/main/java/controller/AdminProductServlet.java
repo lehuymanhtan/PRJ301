@@ -7,6 +7,8 @@ import models.Product;
 import models.Supplier;
 import services.ProductService;
 import services.SupplierService;
+import jakarta.servlet.annotation.MultipartConfig;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -23,6 +25,11 @@ import java.util.List;
  * POST action=edit → update product, redirect to list
  */
 @WebServlet(urlPatterns = { "/admin/products" })
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2,  // 2 MB
+    maxFileSize = 1024 * 1024 * 10,       // 10 MB
+    maxRequestSize = 1024 * 1024 * 50     // 50 MB
+)
 public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -129,6 +136,9 @@ public class AdminProductServlet extends HttpServlet {
         try {
             Product p = buildFromRequest(request, new Product());
             productService.create(p);
+            
+            processImageUpload(request, p);
+            
             response.sendRedirect(request.getContextPath() + "/admin/products?success=created");
         } catch (IllegalArgumentException | DateTimeParseException e) {
             request.setAttribute("error", e.getMessage());
@@ -148,6 +158,9 @@ public class AdminProductServlet extends HttpServlet {
             }
             buildFromRequest(request, p);
             productService.update(p);
+            
+            processImageUpload(request, p);
+            
             response.sendRedirect(request.getContextPath() + "/admin/products?success=updated");
         } catch (IllegalArgumentException | DateTimeParseException e) {
             request.setAttribute("error", e.getMessage());
@@ -190,5 +203,24 @@ public class AdminProductServlet extends HttpServlet {
         }
 
         return p;
+    }
+
+    private void processImageUpload(HttpServletRequest request, Product p) throws IOException, ServletException {
+        Part filePart = request.getPart("image");
+        if (filePart != null && filePart.getSize() > 0) {
+            String submittedFileName = filePart.getSubmittedFileName();
+            String ext = "";
+            if (submittedFileName != null && submittedFileName.lastIndexOf('.') > 0) {
+                ext = submittedFileName.substring(submittedFileName.lastIndexOf('.'));
+            }
+            String fileName = p.getId() + ext;
+            String uploadPath = request.getServletContext().getRealPath("/assets/img/products");
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+            
+            filePart.write(uploadPath + File.separator + fileName);
+            p.setImagePath("assets/img/products/" + fileName);
+            productService.update(p);
+        }
     }
 }

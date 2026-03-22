@@ -61,7 +61,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="post" action="${pageContext.request.contextPath}/admin/products">
+            <form method="post" action="${pageContext.request.contextPath}/admin/products" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="<%= isEdit ? "edit" : "create" %>">
                 <% if (isEdit) { %><input type="hidden" name="id" value="<%= editProduct.getId() %>"><% } %>
 
@@ -101,6 +101,16 @@
                                 <option value="<%= s.getId() %>" <%= selected ? "selected" : "" %>><%= s.getName() %></option>
                             <% } } %>
                         </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="image" class="form-label fw-semibold">Product Image</label>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                        <% if (isEdit && editProduct.getImagePath() != null && !editProduct.getImagePath().isEmpty()) { %>
+                            <div class="mt-2">
+                                <img src="${pageContext.request.contextPath}/<%= editProduct.getImagePath() %>" alt="Current Image" class="img-thumbnail" style="max-height: 120px;">
+                                <p class="text-muted small mt-1">Current image will be kept if no new file is selected.</p>
+                            </div>
+                        <% } %>
                     </div>
                     <div class="col-12">
                         <label for="description" class="form-label fw-semibold">Description</label>

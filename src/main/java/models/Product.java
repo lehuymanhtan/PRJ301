@@ -31,10 +31,13 @@ public class Product implements Serializable {
     @JoinColumn(name = "supplierId")
     private Supplier supplier;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     public Product() {}
 
     public Product(String name, double price, String description, int stock,
-                   LocalDate importDate, String category, Supplier supplier) {
+                   LocalDate importDate, String category, Supplier supplier, String imagePath) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -42,6 +45,7 @@ public class Product implements Serializable {
         this.importDate = importDate;
         this.category = category;
         this.supplier = supplier;
+        this.imagePath = imagePath;
     }
 
     public Integer getId() { return id; }
@@ -67,4 +71,7 @@ public class Product implements Serializable {
 
     public Supplier getSupplier() { return supplier; }
     public void setSupplier(Supplier supplier) { this.supplier = supplier; }
+
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 }
