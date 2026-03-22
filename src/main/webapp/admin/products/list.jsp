@@ -19,6 +19,7 @@
     String errParam = request.getParameter("error");
     Long totalPages   = (Long)    request.getAttribute("totalPages");
     Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+    String keyword = (String) request.getAttribute("keyword");
 %>
 
 <nav class="navbar navbar-expand-lg navbar-rt">
@@ -47,14 +48,27 @@
 </nav>
 
 <div class="container-fluid py-4 px-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
         <div>
             <h1 class="h3 fw-bold mb-0"><i class="bi bi-box-seam me-2"></i>Product Management</h1>
-            <p class="text-muted small">Manage your product inventory</p>
+            <p class="text-muted small mb-0">Manage your product inventory</p>
         </div>
-        <a href="${pageContext.request.contextPath}/admin/products?action=create" class="btn btn-success">
-            <i class="bi bi-plus-circle me-2"></i>Add Product
-        </a>
+        
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            <form method="get" action="${pageContext.request.contextPath}/admin/products" class="d-flex m-0">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword" placeholder="Search name / category..." value="<%= keyword != null ? keyword : "" %>">
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i> Search</button>
+                    <% if (keyword != null && !keyword.isEmpty()) { %>
+                        <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i></a>
+                    <% } %>
+                </div>
+            </form>
+
+            <a href="${pageContext.request.contextPath}/admin/products?action=create" class="btn btn-success text-nowrap">
+                <i class="bi bi-plus-circle me-2"></i>Add Product
+            </a>
+        </div>
     </div>
 
     <% if ("created".equals(success)) { %><div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i>Product created successfully.</div><% } %>
@@ -99,12 +113,14 @@
         </div>
     </div>
 
-    <% if (totalPages != null && totalPages > 1) { %>
+    <% if (totalPages != null && totalPages > 1) { 
+        String queryStr = (keyword != null && !keyword.isEmpty()) ? "&keyword=" + keyword : "";
+    %>
     <nav class="mt-3">
         <ul class="pagination justify-content-center">
             <% if (pageNumber > 1) { %>
-                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %>">← Prev</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1<%= queryStr %>">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %><%= queryStr %>">← Prev</a></li>
             <% } %>
             
             <%
@@ -113,7 +129,7 @@
                 
                 if (startPage > 1) {
             %>
-                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=1<%= queryStr %>">1</a></li>
                     <% if (startPage > 2) { %>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <% } %>
@@ -122,7 +138,7 @@
                 for (long i = startPage; i <= endPage; i++) {
             %>
                     <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
-                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        <a class="page-link" href="?page=<%= i %><%= queryStr %>"><%= i %></a>
                     </li>
             <%  }
                 
@@ -131,12 +147,12 @@
             %>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
             <%      } %>
-                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a></li>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryStr %>"><%= totalPages %></a></li>
             <%  } %>
 
             <% if (pageNumber < totalPages) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %>">Next →</a></li>
-                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>">Last</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %><%= queryStr %>">Next →</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryStr %>">Last</a></li>
             <% } %>
         </ul>
     </nav>
