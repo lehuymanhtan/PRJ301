@@ -1,9 +1,6 @@
 name: Build Docker Image
 
 on:
-  push:
-    tags:
-      - "v*"
   release:
     types:
       - published
@@ -38,7 +35,6 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=tag
-            type=sha
 
       - name: Build and push image
         uses: docker/build-push-action@v6
