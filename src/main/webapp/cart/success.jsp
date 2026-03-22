@@ -5,299 +5,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Result - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <!-- Page-specific styles -->
-    <style>
-        .result-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-lg);
-        }
-
-        .result-card {
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .result-icon {
-            font-size: 4rem;
-            margin-bottom: var(--space-lg);
-            display: block;
-        }
-
-        .result-icon--success {
-            color: var(--color-success);
-        }
-
-        .result-icon--error {
-            color: var(--color-danger);
-        }
-
-        .result-title {
-            font-size: var(--text-2xl);
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-md);
-        }
-
-        .result-title--success {
-            color: var(--color-success);
-        }
-
-        .result-title--error {
-            color: var(--color-danger);
-        }
-
-        .result-description {
-            color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
-            line-height: 1.6;
-        }
-
-        .result-details {
-            background: var(--surface-tertiary);
-            border: 1px solid var(--border-secondary);
-            border-radius: var(--radius-md);
-            padding: var(--space-md);
-            margin-bottom: var(--space-lg);
-            text-align: left;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-2);
-            font-size: var(--text-sm);
-        }
-
-        .detail-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-label {
-            color: var(--text-secondary);
-        }
-
-        .detail-value {
-            font-weight: var(--font-weight-medium);
-            color: var(--text-primary);
-        }
-
-        .vnpay-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #005baa 0%, #004080 100%);
-            color: var(--text-inverse);
-            font-weight: var(--font-weight-bold);
-            font-size: var(--text-xs);
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-sm);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .warning-text {
-            color: var(--color-danger);
-            font-weight: var(--font-weight-medium);
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-md);
-            justify-content: center;
-            margin-top: var(--space-xl);
-        }
-
-        .action-buttons .btn {
-            flex: 1;
-            min-width: 160px;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-buttons .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-gradient-auth">
+<body class="bg-light">
 <%
-    // ── Detect which flow landed here ──────────────────────────────────────
-    // VNPay return: request attributes set by VNPayReturnServlet (forward)
     Boolean vnpaySuccess = (Boolean) request.getAttribute("vnpaySuccess");
     boolean isVnpay      = (vnpaySuccess != null);
 
-    // COD flow: session attributes set by CheckoutServlet (redirect)
     Integer codOrderId  = (Integer) session.getAttribute("lastOrderId");
     String  codPayment  = (String)  session.getAttribute("lastPaymentMethod");
     if (!isVnpay) {
         session.removeAttribute("lastOrderId");
         session.removeAttribute("lastPaymentMethod");
     }
-
-    if (isVnpay) {
-        // ── VNPay result branch ────────────────────────────────────────────
-        String  orderId       = (String) request.getAttribute("vnpayOrderId");
-        String  transNo       = (String) request.getAttribute("vnpayTransactionNo");
-        String  bankCode      = (String) request.getAttribute("vnpayBankCode");
-        String  amountRaw     = (String) request.getAttribute("vnpayAmount");
-        String  responseCode  = (String) request.getAttribute("vnpayResponseCode");
-        boolean validSig      = Boolean.TRUE.equals(request.getAttribute("vnpayValidSig"));
-
-        long displayAmount = 0;
-        try { if (amountRaw != null) displayAmount = Long.parseLong(amountRaw) / 100L; } catch (Exception ignored) {}
-
-        if (vnpaySuccess) {
 %>
-    <!-- VNPay Success -->
-    <div class="result-container">
-        <div class="glass-card result-card">
-            <span class="result-icon result-icon--success">✅</span>
-            <h1 class="result-title result-title--success">Payment Successful!</h1>
-            <p class="result-description">
-                Your order <strong>#<%= orderId %></strong> has been paid via <span class="vnpay-badge">VNPay</span>.
-            </p>
 
-            <div class="result-details">
-                <div class="detail-row">
-                    <span class="detail-label">Transaction No:</span>
-                    <span class="detail-value"><%= transNo != null ? transNo : "–" %></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Bank:</span>
-                    <span class="detail-value"><%= bankCode != null ? bankCode : "–" %></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Amount Paid:</span>
-                    <span class="detail-value"><%= String.format("%,d VND", displayAmount) %></span>
-                </div>
-            </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
 
-            <p class="result-description">
-                We will process your order shortly. Thank you for shopping with us!
-            </p>
+<% if (isVnpay) {
+    String  orderId      = (String) request.getAttribute("vnpayOrderId");
+    String  transNo      = (String) request.getAttribute("vnpayTransactionNo");
+    String  bankCode     = (String) request.getAttribute("vnpayBankCode");
+    String  amountRaw    = (String) request.getAttribute("vnpayAmount");
+    String  responseCode = (String) request.getAttribute("vnpayResponseCode");
+    boolean validSig     = Boolean.TRUE.equals(request.getAttribute("vnpayValidSig"));
+    long displayAmount = 0;
+    try { if (amountRaw != null) displayAmount = Long.parseLong(amountRaw) / 100L; } catch (Exception ignored) {}
 
-            <div class="action-buttons">
-                <a href="${pageContext.request.contextPath}/orders" class="btn btn--glass-primary">
-                    📋 My Orders
-                </a>
-                <a href="${pageContext.request.contextPath}/products" class="btn btn--glass-secondary">
-                    🛒 Continue Shopping
-                </a>
-            </div>
-        </div>
-    </div>
-<%  } else { %>
-    <!-- VNPay Failure -->
-    <div class="result-container">
-        <div class="glass-card result-card">
-            <span class="result-icon result-icon--error">❌</span>
-            <h1 class="result-title result-title--error">Payment Failed</h1>
-            <p class="result-description">
-                Your payment via <span class="vnpay-badge">VNPay</span> could not be completed.
-            </p>
-
-            <div class="result-details">
-                <% if (responseCode != null && !responseCode.isEmpty()) { %>
-                    <div class="detail-row">
-                        <span class="detail-label">Error Code:</span>
-                        <span class="detail-value"><%= responseCode %></span>
-                    </div>
-                <% } %>
-                <% if (!validSig) { %>
-                    <div class="detail-row">
-                        <span class="detail-label">Security:</span>
-                        <span class="detail-value warning-text">Invalid signature detected</span>
-                    </div>
-                <% } %>
-            </div>
-
-            <p class="result-description">
-                Your order <strong>#<%= orderId %></strong> has been cancelled. No money was deducted.
-            </p>
-
-            <div class="action-buttons">
-                <a href="${pageContext.request.contextPath}/cart" class="btn btn--glass-danger">
-                    🛒 Back to Cart
-                </a>
-                <a href="${pageContext.request.contextPath}/products" class="btn btn--glass-secondary">
-                    🛍️ Continue Shopping
-                </a>
-            </div>
-        </div>
-    </div>
-<%  }
-    } else {
-        // ── COD result branch ──────────────────────────────────────────────
-%>
-    <!-- COD Success -->
-    <div class="result-container">
-        <div class="glass-card result-card">
-            <span class="result-icon result-icon--success">✅</span>
-            <h1 class="result-title result-title--success">Order Placed Successfully!</h1>
-
-            <% if (codOrderId != null) { %>
-                <p class="result-description">
-                    Your order <strong>#<%= codOrderId %></strong> has been received.
-                </p>
-            <% } else { %>
-                <p class="result-description">
-                    Your order has been received.
-                </p>
-            <% } %>
-
-            <% if (codPayment != null) { %>
-                <div class="result-details">
-                    <div class="detail-row">
-                        <span class="detail-label">Payment Method:</span>
-                        <span class="detail-value"><%= codPayment %></span>
+    if (vnpaySuccess) { %>
+            <!-- VNPay Success -->
+            <div class="card shadow-sm text-center border-success">
+                <div class="card-body py-5">
+                    <i class="bi bi-check-circle-fill success-icon"></i>
+                    <h2 class="mt-3 fw-bold text-success">Payment Successful!</h2>
+                    <p class="text-muted">
+                        Your order <strong>#<%= orderId %></strong> has been paid via
+                        <span class="vnpay-badge">VNPAY</span>.
+                    </p>
+                    <table class="table table-sm mx-auto mt-3" style="max-width:320px">
+                        <tbody>
+                            <tr><th class="text-start">Transaction No:</th><td><%= transNo != null ? transNo : "–" %></td></tr>
+                            <tr><th class="text-start">Bank:</th><td><%= bankCode != null ? bankCode : "–" %></td></tr>
+                            <tr><th class="text-start">Amount Paid:</th><td><%= String.format("%,d VND", displayAmount) %></td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-muted small">We will process your order shortly. Thank you for shopping!</p>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <a href="${pageContext.request.contextPath}/orders" class="btn btn-rt-primary">
+                            <i class="bi bi-list-check me-2"></i>My Orders
+                        </a>
+                        <a href="${pageContext.request.contextPath}/products" class="btn btn-outline-secondary">
+                            <i class="bi bi-bag me-2"></i>Continue Shopping
+                        </a>
                     </div>
                 </div>
-            <% } %>
-
-            <p class="result-description">
-                We will process it shortly. Thank you for shopping with us!
-            </p>
-
-            <div class="action-buttons">
-                <a href="${pageContext.request.contextPath}/orders" class="btn btn--glass-primary">
-                    📋 My Orders
-                </a>
-                <a href="${pageContext.request.contextPath}/products" class="btn btn--glass-secondary">
-                    🛒 Continue Shopping
-                </a>
             </div>
+
+    <% } else { %>
+            <!-- VNPay Failure -->
+            <div class="card shadow-sm text-center border-danger">
+                <div class="card-body py-5">
+                    <i class="bi bi-x-circle-fill" style="font-size:4rem; color:#dc2626"></i>
+                    <h2 class="mt-3 fw-bold text-danger">Payment Failed</h2>
+                    <p class="text-muted">Your payment via <span class="vnpay-badge">VNPAY</span> could not be completed.</p>
+                    <% if (responseCode != null && !responseCode.isEmpty()) { %>
+                        <p class="text-muted small">Error Code: <strong><%= responseCode %></strong></p>
+                    <% } %>
+                    <% if (!validSig) { %>
+                        <div class="alert alert-warning small">Invalid signature detected.</div>
+                    <% } %>
+                    <p class="text-muted small">Order <strong>#<%= orderId %></strong> was cancelled. No money was deducted.</p>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <a href="${pageContext.request.contextPath}/cart" class="btn btn-danger">
+                            <i class="bi bi-cart3 me-2"></i>Back to Cart
+                        </a>
+                        <a href="${pageContext.request.contextPath}/products" class="btn btn-outline-secondary">
+                            <i class="bi bi-bag me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+    <% } } else { %>
+            <!-- COD Success -->
+            <div class="card shadow-sm text-center border-success">
+                <div class="card-body py-5">
+                    <i class="bi bi-bag-check-fill success-icon"></i>
+                    <h2 class="mt-3 fw-bold text-success">Order Placed Successfully!</h2>
+                    <% if (codOrderId != null) { %>
+                        <p class="text-muted">Your order <strong>#<%= codOrderId %></strong> has been received.</p>
+                    <% } else { %>
+                        <p class="text-muted">Your order has been received.</p>
+                    <% } %>
+                    <% if (codPayment != null) { %>
+                        <p class="text-muted small">Payment Method: <strong><%= codPayment %></strong></p>
+                    <% } %>
+                    <p class="text-muted small">We will process it shortly. Thank you for shopping!</p>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <a href="${pageContext.request.contextPath}/orders" class="btn btn-rt-primary">
+                            <i class="bi bi-list-check me-2"></i>My Orders
+                        </a>
+                        <a href="${pageContext.request.contextPath}/products" class="btn btn-outline-secondary">
+                            <i class="bi bi-bag me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+    <% } %>
+
         </div>
     </div>
-<% } %>
+</div>
 
-<!-- Glassmorphism Interactive Effects -->
-<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>

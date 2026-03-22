@@ -6,94 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= request.getAttribute("address") != null ? "Edit" : "Add New" %> Address - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <!-- Page-specific styles -->
-    <style>
-        .address-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .address-form-card {
-            max-width: 700px;
-            margin: 0 auto;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
-
-        .form-group-full {
-            grid-column: 1 / -1;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            grid-column: 1 / -1;
-            padding: var(--space-md);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-secondary);
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-        }
-
-        .checkbox-group label {
-            margin: 0;
-            font-weight: var(--font-weight-medium);
-            color: var(--text-primary);
-        }
-
-        .form-actions {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            margin-top: var(--space-xl);
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-md);
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-surface-secondary">
+<body>
 <%
     UserAddress address = (UserAddress) request.getAttribute("address");
     @SuppressWarnings("unchecked")
@@ -102,177 +19,125 @@
     boolean isEdit = (address != null && address.getId() != null);
 %>
 
-    <!-- Page Container -->
-    <div class="page-container">
-        <!-- Back Link -->
-        <div class="mb-lg">
-            <a href="${pageContext.request.contextPath}/users/addresses" class="btn btn--back btn--sm">
-                ← Back to Addresses
-            </a>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/users">Profile</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/users/addresses">Addresses</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
         </div>
+    </div>
+</nav>
 
-        <!-- Address Header -->
-        <div class="address-header">
-            <h1 class="text-3xl font-bold text-primary mb-md">
-                <%= isEdit ? "✏️ Edit Address" : "📍 Add New Address" %>
-            </h1>
-            <p class="text-secondary">
-                <%= isEdit ? "Update your address information" : "Add a new delivery address to your account" %>
-            </p>
-        </div>
+<div class="container py-4" style="max-width:680px">
+    <div class="mb-3">
+        <a href="${pageContext.request.contextPath}/users/addresses" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Addresses
+        </a>
+    </div>
 
-        <!-- Error Message -->
-        <% if (error != null) { %>
-            <div class="message message--error mb-lg">
-                ❌ <%= error %>
-            </div>
-        <% } %>
+    <h1 class="h3 fw-bold mb-1">
+        <i class="bi bi-geo-alt me-2"></i><%= isEdit ? "Edit Address" : "Add New Address" %>
+    </h1>
+    <p class="text-muted mb-4"><%= isEdit ? "Update your address information" : "Add a new delivery address to your account" %></p>
 
-        <!-- Address Form Card -->
-        <div class="surface-card address-form-card">
+    <% if (error != null) { %>
+        <div class="alert alert-danger auto-dismiss"><i class="bi bi-exclamation-circle me-2"></i><%= error %></div>
+    <% } %>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
             <form action="${pageContext.request.contextPath}/users/addresses" method="post">
                 <% if (isEdit) { %>
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="id" value="<%= address.getId() %>">
                 <% } %>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="fullName" class="form-label">Full Name *</label>
-                        <input type="text"
-                               id="fullName"
-                               name="fullName"
-                               class="form-input"
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="fullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" id="fullName" name="fullName" class="form-control"
                                value="<%= address != null && address.getFullName() != null ? address.getFullName() : "" %>"
-                               placeholder="Enter full name"
-                               required>
+                               placeholder="Enter full name" required autofocus>
                     </div>
-
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number *</label>
-                        <input type="tel"
-                               id="phone"
-                               name="phone"
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" id="phone" name="phone" class="form-control"
                                value="<%= address != null && address.getPhone() != null ? address.getPhone() : "" %>"
                                pattern="^0\d{9}$"
                                title="Phone must be 10 digits starting with 0"
-                               placeholder="0123456789"
-                               required>
+                               placeholder="0123456789" required>
                     </div>
-
-                    <div class="form-group-full">
-                        <label for="provinceId" class="form-label">Province/City *</label>
+                    <div class="col-12">
+                        <label for="provinceId" class="form-label fw-semibold">Province/City <span class="text-danger">*</span></label>
                         <select id="provinceId" name="provinceId" class="form-select" required>
                             <option value="">-- Select Province --</option>
                             <% if (provinces != null) {
                                 for (Province prov : provinces) { %>
-                                    <option value="<%= prov.getId() %>"
-                                        <%= address != null && address.getProvinceId() != null && address.getProvinceId().equals(prov.getId()) ? "selected" : "" %>>
-                                        <%= prov.getNameVi() %>
-                                    </option>
-                                <% }
-                            } %>
+                                <option value="<%= prov.getId() %>"
+                                    <%= address != null && address.getProvinceId() != null && address.getProvinceId().equals(prov.getId()) ? "selected" : "" %>>
+                                    <%= prov.getNameVi() %>
+                                </option>
+                            <% } } %>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="district" class="form-label">District *</label>
-                        <input type="text"
-                               id="district"
-                               name="district"
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="district" class="form-label fw-semibold">District <span class="text-danger">*</span></label>
+                        <input type="text" id="district" name="district" class="form-control"
                                value="<%= address != null && address.getDistrict() != null ? address.getDistrict() : "" %>"
-                               placeholder="Enter district"
-                               required>
+                               placeholder="Enter district" required>
                     </div>
-
-                    <div class="form-group">
-                        <label for="ward" class="form-label">Ward/Commune *</label>
-                        <input type="text"
-                               id="ward"
-                               name="ward"
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="ward" class="form-label fw-semibold">Ward/Commune <span class="text-danger">*</span></label>
+                        <input type="text" id="ward" name="ward" class="form-control"
                                value="<%= address != null && address.getWard() != null ? address.getWard() : "" %>"
-                               placeholder="Enter ward/commune"
-                               required>
+                               placeholder="Enter ward/commune" required>
                     </div>
+                    <div class="col-12">
+                        <label for="addressDetail" class="form-label fw-semibold">Address Detail <span class="text-danger">*</span></label>
+                        <textarea id="addressDetail" name="addressDetail" class="form-control"
+                                  rows="3" placeholder="Street, house number, building, etc." required><%= address != null && address.getAddressDetail() != null ? address.getAddressDetail() : "" %></textarea>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="isDefault" name="isDefault"
+                                   <%= address != null && address.isDefault() ? "checked" : "" %>>
+                            <label class="form-check-label fw-semibold" for="isDefault">
+                                <i class="bi bi-house me-1"></i>Set as default address
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="form-group-full">
-                        <label for="addressDetail" class="form-label">Address Detail *</label>
-                        <textarea id="addressDetail"
-                                  name="addressDetail"
-                                  class="form-textarea"
-                                  rows="3"
-                                  placeholder="Street, house number, building, etc."
-                                  required><%= address != null && address.getAddressDetail() != null ? address.getAddressDetail() : "" %></textarea>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <input type="checkbox"
-                               id="isDefault"
-                               name="isDefault"
-                               <%= address != null && address.isDefault() ? "checked" : "" %>>
-                        <label for="isDefault">🏠 Set as default address</label>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn--primary btn--lg">
-                            💾 <%= isEdit ? "Save Changes" : "Add Address" %>
-                        </button>
-                        <a href="${pageContext.request.contextPath}/users/addresses" class="btn btn--secondary btn--lg">
-                            ❌ Cancel
-                        </a>
-                    </div>
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-rt-primary">
+                        <i class="bi bi-floppy me-2"></i><%= isEdit ? "Save Changes" : "Add Address" %>
+                    </button>
+                    <a href="${pageContext.request.contextPath}/users/addresses" class="btn btn-outline-secondary">
+                        <i class="bi bi-x me-1"></i>Cancel
+                    </a>
                 </div>
             </form>
         </div>
     </div>
+</div>
 
-    <!-- Glassmorphism Interactive Effects -->
-    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
-
-    <!-- Page-specific JavaScript -->
-    <script>
-        // Enhanced form validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const phoneInput = document.getElementById('phone');
-
-            // Phone number formatting
-            phoneInput.addEventListener('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                if (value.length > 10) {
-                    value = value.slice(0, 10);
-                }
-                this.value = value;
-            });
-
-            // Real-time validation feedback
-            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    if (this.value.trim() === '') {
-                        this.classList.add('form-input--error');
-                    } else {
-                        this.classList.remove('form-input--error');
-                    }
-                });
-
-                input.addEventListener('input', function() {
-                    if (this.value.trim() !== '') {
-                        this.classList.remove('form-input--error');
-                    }
-                });
-            });
-
-            // Auto-focus first input
-            const fullNameInput = document.getElementById('fullName');
-            if (fullNameInput && !fullNameInput.value) {
-                fullNameInput.focus();
-            }
-        });
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
+<script>
+    document.getElementById('phone').addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+        this.value = value;
+    });
+</script>
 </body>
 </html>

@@ -25,6 +25,7 @@ import java.util.List;
 public class AdminUserServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -73,12 +74,41 @@ public class AdminUserServlet extends HttpServlet {
 
     private void listUsers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int pageNumber = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+                if (pageNumber < 1) pageNumber = 1;
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
         String q = request.getParameter("q");
-        List<User> users = (q != null && !q.trim().isEmpty())
-                ? userService.searchUserByName(q)
-                : userService.getAllUsers();
+        long totalCount;
+        List<User> users;
+
+        if (q != null && !q.trim().isEmpty()) {
+            totalCount = userService.countSearchUsers(q);
+            long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if (pageNumber > totalPages && totalPages > 0) pageNumber = (int) totalPages;
+            users = userService.searchUsersPage(q, pageNumber, PAGE_SIZE);
+        } else {
+            totalCount = userService.countAllUsers();
+            long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if (pageNumber > totalPages && totalPages > 0) pageNumber = (int) totalPages;
+            users = userService.getUsersPage(pageNumber, PAGE_SIZE);
+        }
+
+        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+
         request.setAttribute("users", users);
         request.setAttribute("searchKeyword", q);
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/admin/users/list.jsp").forward(request, response);
     }
 

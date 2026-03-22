@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="models.Supplier" %>
+<%@ page import="models.Supplier, models.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,116 +11,120 @@
     %>
     <title><%= isEdit ? "Edit Supplier" : "Add Supplier" %> - Ruby Tech Admin</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <style>
-        .form-shell { max-width: 840px; margin: 0 auto; }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: var(--space-md);
-        }
-        .full-span { grid-column: 1 / -1; }
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: var(--space-3);
-            margin-top: var(--space-lg);
-        }
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-surface-secondary">
-<div class="admin-layout">
-    <div class="admin-header">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title"><%= isEdit ? "Edit Supplier" : "Create Supplier" %></h1>
-            <p class="dashboard-subtitle">Maintain supplier profile and active status</p>
-        </div>
-        <nav class="admin-nav">
-            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
-            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
-            <a href="${pageContext.request.contextPath}/admin/suppliers" class="active">Suppliers</a>
-            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
-            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
-            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
-            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
-            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
-    </div>
+<body class="bg-light">
+<%
+    User currentUser = (User) session.getAttribute("user");
+%>
 
-    <div class="admin-content">
-        <div class="form-shell">
-            <div class="mb-lg">
-                <a href="${pageContext.request.contextPath}/admin/suppliers" class="btn btn--secondary btn--sm">← Back to Supplier List</a>
+<!-- Admin Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech Admin
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/income">Income</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/forecast">Forecast</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Shop</a></li>
+                <li class="nav-item"><span class="nav-link text-white opacity-75"><%= session.getAttribute("user") != null ? ((models.User)session.getAttribute("user")).getUsername() : "" %></span></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="h3 fw-bold mb-1"><i class="bi bi-<%= isEdit ? "pencil-square" : "building-add" %> me-2"></i><%= isEdit ? "Edit Supplier" : "Create Supplier" %></h1>
+            <p class="text-muted mb-4">Maintain supplier profile and active status</p>
+
+            <div class="mb-4">
+                <a href="${pageContext.request.contextPath}/admin/suppliers" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back to Suppliers</a>
             </div>
 
             <% if (request.getAttribute("error") != null) { %>
-                <div class="message message--danger mb-lg">❌ <%= request.getAttribute("error") %></div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i><%= request.getAttribute("error") %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             <% } %>
 
-            <div class="surface-card surface-card--form">
-                <form method="post" action="${pageContext.request.contextPath}/admin/suppliers">
-                    <input type="hidden" name="action" value="<%= isEdit ? "edit" : "create" %>">
-                    <% if (isEdit) { %>
-                        <input type="hidden" name="id" value="<%= editSupplier.getId() %>">
-                    <% } %>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form method="post" action="${pageContext.request.contextPath}/admin/suppliers">
+                        <input type="hidden" name="action" value="<%= isEdit ? "edit" : "create" %>">
+                        <% if (isEdit) { %>
+                            <input type="hidden" name="id" value="<%= editSupplier.getId() %>">
+                        <% } %>
 
-                    <div class="form-grid">
-                        <div class="form-group full-span">
-                            <label for="name" class="form-label">Name <span class="required">*</span></label>
-                            <input type="text" id="name" name="name" class="form-input" required
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
+                            <input type="text" id="name" name="name" class="form-control" required
                                    value="<%= isEdit ? editSupplier.getName() : "" %>">
                         </div>
 
-                        <div class="form-group">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" id="phone" name="phone" class="form-input"
-                                   value="<%= isEdit && editSupplier.getPhone() != null ? editSupplier.getPhone() : "" %>">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="form-control"
+                                       value="<%= isEdit && editSupplier.getPhone() != null ? editSupplier.getPhone() : "" %>">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label fw-semibold">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                       value="<%= isEdit && editSupplier.getEmail() != null ? editSupplier.getEmail() : "" %>">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" name="email" class="form-input"
-                                   value="<%= isEdit && editSupplier.getEmail() != null ? editSupplier.getEmail() : "" %>">
-                        </div>
-
-                        <div class="form-group full-span">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" id="address" name="address" class="form-input"
+                        <div class="mb-3">
+                            <label for="address" class="form-label fw-semibold">Physical Address</label>
+                            <input type="text" id="address" name="address" class="form-control"
                                    value="<%= isEdit && editSupplier.getAddress() != null ? editSupplier.getAddress() : "" %>">
                         </div>
 
                         <% if (isEdit) { %>
-                        <div class="form-group">
-                            <label for="status" class="form-label">Status</label>
-                            <select id="status" name="status" class="form-input">
+                        <div class="mb-4">
+                            <label for="status" class="form-label fw-semibold">Status</label>
+                            <select id="status" name="status" class="form-select">
                                 <option value="true" <%= editSupplier.isStatus() ? "selected" : "" %>>Active</option>
                                 <option value="false" <%= !editSupplier.isStatus() ? "selected" : "" %>>Inactive</option>
                             </select>
                         </div>
+                        <% } else { %>
+                            <div class="mb-4"></div>
                         <% } %>
-                    </div>
 
-                    <div class="form-actions">
-                        <a href="${pageContext.request.contextPath}/admin/suppliers" class="btn btn--secondary btn--md">Cancel</a>
-                        <button type="submit" class="btn btn--primary btn--md"><%= isEdit ? "Update Supplier" : "Create Supplier" %></button>
-                    </div>
-                </form>
+                        <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+                            <a href="${pageContext.request.contextPath}/admin/suppliers" class="btn btn-light border">Cancel</a>
+                            <button type="submit" class="btn btn-primary"><span class="bi bi-save me-1"></span><%= isEdit ? "Update Supplier" : "Create Supplier" %></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

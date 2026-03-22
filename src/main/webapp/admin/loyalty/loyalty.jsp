@@ -7,83 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loyalty Management - Ruby Tech Admin</title>
 
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <!-- Page-specific styles -->
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    
     <style>
-        .loyalty-header {
-            margin-bottom: var(--space-xl);
-        }
-
-        .loyalty-title {
-            color: var(--text-primary);
-            font-size: var(--text-3xl);
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-2);
-        }
-
-        .loyalty-subtitle {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-        }
-
-        .section-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--space-xl);
-            max-width: 800px;
-        }
-
-        .rate-form {
-            display: flex;
-            align-items: end;
-            gap: var(--space-md);
-            margin-top: var(--space-md);
-        }
-
-        .rate-input-group {
-            flex: 1;
-        }
-
-        .stats-table-container {
-            overflow-x: auto;
-        }
-
-        .stats-table {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .tier-badge {
-            display: inline-block;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-medium);
-            color: var(--text-inverse);
-            background: var(--gradient-primary);
-        }
-
-        .tier-badge--regular { background: var(--surface-tertiary); color: var(--text-primary); }
-        .tier-badge--bronze { background: linear-gradient(135deg, #cd7f32 0%, #a0522d 100%); }
-        .tier-badge--silver { background: linear-gradient(135deg, #c0c0c0 0%, #708090 100%); }
-        .tier-badge--gold { background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%); color: var(--text-primary); }
-        .tier-badge--platinum { background: linear-gradient(135deg, #e5e4e2 0%, #b8860b 100%); color: var(--text-primary); }
-        .tier-badge--diamond { background: linear-gradient(135deg, #b9f2ff 0%, #00bfff 100%); }
-
-        @media (max-width: 768px) {
-            .rate-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
+        .tier-badge-bronze { background-color: #cd7f32; color: #fff; }
+        .tier-badge-silver { background-color: #c0c0c0; color: #000; }
+        .tier-badge-gold { background-color: #ffd700; color: #000; }
+        .tier-badge-platinum { background-color: #e5e4e2; color: #000; }
+        .tier-badge-diamond { background-color: #b9f2ff; color: #000; }
     </style>
 </head>
-<body class="bg-surface-secondary">
+<body class="bg-light">
 <%
     User currentUser = (User) session.getAttribute("user");
     int pointRate    = (Integer) request.getAttribute("pointRate");
@@ -91,118 +28,135 @@
     String success = request.getParameter("success");
 %>
 
-<!-- Admin Layout Container -->
-<div class="admin-layout">
-    <!-- Admin Header -->
-    <div class="admin-header">
-        <div class="loyalty-header">
-            <h1 class="loyalty-title">⭐ Loyalty Management</h1>
-            <p class="loyalty-subtitle">Welcome back, <strong><%= currentUser.getUsername() %></strong></p>
+<!-- Admin Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech Admin
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/income">Income</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/forecast">Forecast</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Shop</a></li>
+                <li class="nav-item"><span class="nav-link text-white opacity-75"><%= session.getAttribute("user") != null ? ((models.User)session.getAttribute("user")).getUsername() : "" %></span></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-star-fill text-warning me-2"></i>Loyalty Management</h1>
+    <p class="text-muted mb-4">Welcome back, <strong><%= currentUser != null ? currentUser.getUsername() : "" %></strong></p>
+
+    <!-- Success Message -->
+    <% if ("updated".equals(success)) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>Point rate updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <div class="row g-4">
+        <!-- Point Conversion Rate Section -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold text-primary mb-3"><i class="bi bi-currency-dollar me-2"></i>Point Conversion Rate</h5>
+                    <p class="text-muted mb-4">
+                        Current rate: <strong class="text-primary fs-5"><%= pointRate %></strong> points per 1,000 VND spent
+                    </p>
+
+                    <form method="post" action="${pageContext.request.contextPath}/admin/loyalty">
+                        <input type="hidden" name="action" value="updateRate">
+                        <div class="mb-3">
+                            <label for="rate" class="form-label fw-semibold">New Rate <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                                <input type="number"
+                                       id="rate"
+                                       name="rate"
+                                       class="form-control form-control-lg"
+                                       value="<%= pointRate %>"
+                                       min="1"
+                                       required
+                                       placeholder="Enter points per 1,000 VND">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">
+                            <i class="bi bi-device-hdd px-1"></i> Save Rate
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <!-- Admin Navigation -->
-        <nav class="admin-nav">
-            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
-            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
-            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
-            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
-            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
-            <a href="${pageContext.request.contextPath}/admin/loyalty" class="active">Loyalty</a>
-            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
-            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
-    </div>
+        <!-- Members by Tier Section -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold text-primary mb-3"><i class="bi bi-people-fill me-2"></i>Members by Tier</h5>
 
-    <!-- Admin Content -->
-    <div class="admin-content">
-        <!-- Success Message -->
-        <% if ("updated".equals(success)) { %>
-            <div class="message message--success mb-lg">
-                ✅ Point rate updated successfully!
-            </div>
-        <% } %>
-
-        <!-- Content Grid -->
-        <div class="section-grid">
-            <!-- Point Conversion Rate Section -->
-            <div class="surface-card">
-                <h2 class="text-xl font-semibold text-primary mb-md">💰 Point Conversion Rate</h2>
-                <p class="text-secondary mb-lg">
-                    Current rate: <strong class="text-primary"><%= pointRate %></strong> points per 1,000 VND spent
-                </p>
-
-                <form method="post" action="${pageContext.request.contextPath}/admin/loyalty" class="rate-form">
-                    <input type="hidden" name="action" value="updateRate">
-                    <div class="rate-input-group">
-                        <label for="rate" class="form-label">New Rate *</label>
-                        <input type="number"
-                               id="rate"
-                               name="rate"
-                               class="form-input"
-                               value="<%= pointRate %>"
-                               min="1"
-                               required
-                               placeholder="Enter points per 1,000 VND">
-                    </div>
-                    <button type="submit" class="btn btn--primary">
-                        💾 Save Rate
-                    </button>
-                </form>
-            </div>
-
-            <!-- Members by Tier Section -->
-            <div class="surface-card">
-                <h2 class="text-xl font-semibold text-primary mb-md">👥 Members by Tier</h2>
-
-                <% if (stats == null || stats.isEmpty()) { %>
-                    <div class="empty-state">
-                        <p class="text-secondary text-center py-lg">No membership data available</p>
-                    </div>
-                <% } else { %>
-                    <div class="stats-table-container">
-                        <table class="table stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Tier Level</th>
-                                    <th>Member Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for (TierStatistic s : stats) {
-                                    String tierClass = s.getTier().toLowerCase().replace(" ", "-");
-                                %>
+                    <% if (stats == null || stats.isEmpty()) { %>
+                        <div class="text-center py-5">
+                            <i class="bi bi-person-x fs-1 text-secondary mb-3 d-block"></i>
+                            <p class="text-muted mb-0">No membership data available</p>
+                        </div>
+                    <% } else { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>
-                                            <span class="tier-badge tier-badge--<%= tierClass %>">
-                                                <%= s.getTier() %>
-                                            </span>
-                                        </td>
-                                        <td class="font-semibold text-primary">
-                                            <%= String.format("%,d", s.getTotal()) %>
-                                        </td>
+                                        <th>Tier Level</th>
+                                        <th class="text-end">Member Count</th>
                                     </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-                <% } %>
+                                </thead>
+                                <tbody>
+                                    <% for (TierStatistic s : stats) {
+                                        String tierClass = s.getTier().toLowerCase().replace(" ", "-");
+                                    %>
+                                        <tr>
+                                            <td>
+                                                <span class="badge tier-badge-<%= tierClass %> px-3 py-2 fw-semibold border">
+                                                    <%= s.getTier() %>
+                                                </span>
+                                            </td>
+                                            <td class="text-end fw-bold fs-5 text-primary">
+                                                <%= String.format("%,d", s.getTotal()) %>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
 
-                <!-- Action Links -->
-                <div class="mt-lg pt-lg border-t border-primary">
-                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn--secondary">
-                        👤 Manage User Points
-                    </a>
+                    <!-- Action Links -->
+                    <div class="mt-4 pt-3 border-top">
+                        <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-person-gear me-2"></i>Manage User Points
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Glassmorphism Interactive Effects -->
-<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

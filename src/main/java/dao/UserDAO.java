@@ -39,6 +39,46 @@ public class UserDAO {
         );
     }
 
+    public long countAll() {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(u) FROM User u", Long.class)
+              .getSingleResult()
+        );
+    }
+
+    public long countSearch(String keyword) {
+        return JpaHelper.query(em ->
+            em.createQuery(
+                "SELECT COUNT(u) FROM User u WHERE LOWER(u.username) LIKE LOWER(:keyword)",
+                Long.class)
+              .setParameter("keyword", "%" + keyword + "%")
+              .getSingleResult()
+        );
+    }
+
+    public List<User> findPage(int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT u FROM User u ORDER BY u.userId DESC", User.class)
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
+    public List<User> searchPage(String keyword, int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery(
+                "SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(:keyword) ORDER BY u.userId DESC",
+                User.class)
+              .setParameter("keyword", "%" + keyword + "%")
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
     public User findById(Integer userId) {
         return JpaHelper.query(em -> em.find(User.class, userId));
     }

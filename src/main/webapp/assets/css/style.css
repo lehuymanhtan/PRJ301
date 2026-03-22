@@ -1,0 +1,468 @@
+/* ================================================
+   Ruby Tech – Custom Bootstrap Theme
+   Appliance Store Branding
+   ================================================ */
+
+/* ── Brand Variables ─────────────────────────── */
+:root {
+    --rt-navy: #0a1628;
+    --rt-navy-mid: #112240;
+    --rt-orange: #f97316;
+    --rt-orange-dk: #ea6a0a;
+    --rt-text: #1e293b;
+    --rt-muted: #64748b;
+    --rt-border: #e2e8f0;
+    --rt-bg: #f1f5f9;
+}
+
+/* ── Base ─────────────────────────────────────── */
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--rt-bg);
+    color: var(--rt-text);
+}
+
+/* ── Navbar ───────────────────────────────────── */
+.navbar-rt {
+    background-color: var(--rt-navy) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    padding: 0.6rem 1.2rem;
+}
+
+.navbar-rt .navbar-brand {
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-rt .navbar-brand img {
+    height: 36px;
+    width: auto;
+}
+
+.navbar-rt .nav-link {
+    color: rgba(255, 255, 255, 0.82) !important;
+    font-weight: 500;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-rt .nav-link:hover,
+.navbar-rt .nav-link.active {
+    color: #fff !important;
+    background-color: rgba(249, 115, 22, 0.18);
+}
+
+.navbar-rt .nav-link.active {
+    color: var(--rt-orange) !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Hero Section ─────────────────────────────── */
+.rt-hero {
+    background: linear-gradient(135deg, var(--rt-navy) 0%, var(--rt-navy-mid) 60%, #1a3a5c 100%);
+    color: #fff;
+    padding: 5rem 1.5rem 4rem;
+    text-align: center;
+}
+
+.rt-hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.rt-hero p {
+    font-size: 1.15rem;
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.btn-rt-primary {
+    background-color: var(--rt-orange);
+    border-color: var(--rt-orange);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-rt-primary:hover {
+    background-color: var(--rt-orange-dk);
+    border-color: var(--rt-orange-dk);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-rt-outline {
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.65rem 1.6rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.btn-rt-outline:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: #fff;
+}
+
+.hero-action-btn {
+    padding: 0.65rem 1.6rem;
+}
+
+/* ── Section Titles ───────────────────────────── */
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--rt-navy);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--rt-orange);
+    display: inline-block;
+}
+
+/* ── Product Cards ────────────────────────────── */
+.product-card {
+    border: 1px solid var(--rt-border);
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.product-card .card-title {
+    font-weight: 700;
+    color: var(--rt-navy);
+    font-size: 1rem;
+}
+
+.product-price {
+    color: var(--rt-orange);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.badge-in-stock {
+    background-color: #16a34a;
+}
+
+.badge-low-stock {
+    background-color: #d97706;
+}
+
+.badge-out-of-stock {
+    background-color: #dc2626;
+}
+
+/* ── Auth Pages ───────────────────────────────── */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--rt-navy) 0%, var(--rt-navy-mid) 100%);
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 460px;
+}
+
+.auth-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.auth-logo img {
+    height: 56px;
+    width: auto;
+}
+
+.auth-logo span {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--rt-navy);
+    margin-top: 0.4rem;
+}
+
+/* ── Admin Navbar ─────────────────────────────── */
+.admin-navbar {
+    background-color: var(--rt-navy) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.admin-navbar .navbar-brand {
+    color: var(--rt-orange) !important;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.admin-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 0.88rem;
+    padding: 0.45rem 0.8rem !important;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.admin-navbar .nav-link:hover,
+.admin-navbar .nav-link.active {
+    background: rgba(249, 115, 22, 0.2);
+    color: #fff !important;
+}
+
+.admin-navbar .nav-link.active {
+    color: var(--rt-orange) !important;
+}
+
+/* ── Dashboard Stat Cards ─────────────────────── */
+.stat-card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card .card-body {
+    padding: 1.5rem;
+}
+
+.stat-card .stat-icon {
+    font-size: 2.2rem;
+    opacity: 0.85;
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.stat-card .stat-label {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card-blue {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #fff;
+}
+
+.stat-card-green {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    color: #fff;
+}
+
+.stat-card-orange {
+    background: linear-gradient(135deg, #c2410c, var(--rt-orange));
+    color: #fff;
+}
+
+.stat-card-purple {
+    background: linear-gradient(135deg, #6d28d9, #a78bfa);
+    color: #fff;
+}
+
+.stat-card-red {
+    background: linear-gradient(135deg, #b91c1c, #f87171);
+    color: #fff;
+}
+
+/* ── Admin Table ──────────────────────────────── */
+.admin-table th {
+    background-color: var(--rt-navy);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border: none;
+    white-space: nowrap;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f0f4ff;
+}
+
+.admin-table td {
+    vertical-align: middle;
+}
+
+/* ── Quick Links Grid ─────────────────────────── */
+.quick-link-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--rt-border);
+    text-decoration: none;
+    color: var(--rt-navy);
+    font-weight: 600;
+    transition: all 0.2s;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.quick-link-card:hover {
+    background: var(--rt-navy);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.quick-link-card .ql-icon {
+    font-size: 1.8rem;
+}
+
+/* ── Chart Container ──────────────────────────── */
+.chart-container {
+    position: relative;
+    height: 320px;
+}
+
+/* ── Cart / Checkout ──────────────────────────── */
+.cart-item td {
+    vertical-align: middle;
+}
+
+.order-total-row td {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.summary-sidebar .card {
+    border-radius: 12px;
+    border: 1px solid var(--rt-border);
+}
+
+/* ── Address / Payment Options ────────────────── */
+.address-option,
+.payment-option {
+    display: block;
+    border: 2px solid var(--rt-border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.15s;
+    margin-bottom: 0.75rem;
+}
+
+.address-option:has(input:checked),
+.payment-option:has(input:checked) {
+    border-color: var(--rt-orange);
+    background-color: #fff7ed;
+}
+
+.address-option input[type="radio"],
+.payment-option input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.vnpay-badge {
+    display: inline-block;
+    background: #0033a0;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* ── Loyalty Points ───────────────────────────── */
+.loyalty-section {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 1px solid #fbbf24;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+}
+
+/* ── Success / Order Confirmation ─────────────── */
+.success-icon {
+    font-size: 4rem;
+    color: #16a34a;
+}
+
+/* ── Welcome / Splash Screen ──────────────────── */
+.splash-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--rt-navy), var(--rt-navy-mid));
+    color: #fff;
+    text-align: center;
+}
+
+.splash-screen img {
+    height: 80px;
+    width: auto;
+    margin-bottom: 1rem;
+}
+
+/* ── Pagination ───────────────────────────────── */
+.page-link {
+    color: var(--rt-navy);
+}
+
+.page-item.active .page-link {
+    background-color: var(--rt-orange);
+    border-color: var(--rt-orange);
+    color: #fff;
+}
+
+.page-link:hover {
+    color: var(--rt-orange);
+}
+
+/* ── Misc Utilities ───────────────────────────── */
+.text-orange {
+    color: var(--rt-orange) !important;
+}
+
+.bg-navy {
+    background-color: var(--rt-navy) !important;
+}
+
+.border-orange {
+    border-color: var(--rt-orange) !important;
+}
+
+.fw-700 {
+    font-weight: 700 !important;
+}

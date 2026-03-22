@@ -6,165 +6,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management - Ruby Tech Admin</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <style>
-        .table-container { overflow-x: auto; }
-        .user-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
-        .user-table th,
-        .user-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-        .user-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .user-table tr:hover { background: rgba(59, 130, 246, 0.04); }
-        .user-actions { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
-        .search-form {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            width: 100%;
-            max-width: 640px;
-        }
-        .tier-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-full);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-semibold);
-            background: var(--surface-tertiary);
-            color: var(--text-primary);
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-surface-secondary">
+<body>
 <%
     User currentUser = (User) session.getAttribute("user");
     List<User> users = (List<User>) request.getAttribute("users");
     String kw = (String) request.getAttribute("searchKeyword");
-    String success = request.getParameter("success");
+    String success  = request.getParameter("success");
     String errParam = request.getParameter("error");
 %>
 
-<div class="admin-layout">
-    <div class="admin-header">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">User Management</h1>
-            <p class="dashboard-subtitle">Manage users, permissions, and loyalty overview</p>
+<!-- Admin Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech Admin
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/income">Income</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/forecast">Forecast</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Shop</a></li>
+                <li class="nav-item"><span class="nav-link text-white opacity-75"><%= session.getAttribute("user") != null ? ((models.User)session.getAttribute("user")).getUsername() : "" %></span></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
         </div>
-
-        <nav class="admin-nav">
-            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/users" class="active">Users</a>
-            <a href="${pageContext.request.contextPath}/admin/products">Products</a>
-            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
-            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
-            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
-            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
-            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
-            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
     </div>
+</nav>
 
-    <div class="admin-content">
-        <% if ("created".equals(success)) { %>
-            <div class="message message--success mb-lg">✅ User created successfully.</div>
-        <% } %>
-        <% if ("updated".equals(success)) { %>
-            <div class="message message--success mb-lg">✅ User updated successfully.</div>
-        <% } %>
-        <% if ("deleted".equals(success)) { %>
-            <div class="message message--success mb-lg">✅ User deleted successfully.</div>
-        <% } %>
-        <% if ("notfound".equals(errParam)) { %>
-            <div class="message message--danger mb-lg">❌ User not found.</div>
-        <% } %>
-        <% if (errParam != null && !"notfound".equals(errParam)) { %>
-            <div class="message message--danger mb-lg">❌ Error: <%= errParam %></div>
-        <% } %>
-
-        <div class="flex justify-between items-center mb-lg" style="gap: var(--space-3); flex-wrap: wrap;">
-            <a href="${pageContext.request.contextPath}/admin/users?action=create" class="btn btn--success btn--md">+ Add User</a>
-
-            <form class="search-form" method="get" action="${pageContext.request.contextPath}/admin/users">
-                <input type="text" name="q" class="form-input" placeholder="Search by username"
-                       value="<%= kw != null ? kw : "" %>">
-                <button type="submit" class="btn btn--primary btn--sm">Search</button>
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div>
+            <h1 class="h3 fw-bold mb-0"><i class="bi bi-people me-2"></i>User Management</h1>
+            <p class="text-muted small">Manage users, permissions, and loyalty overview</p>
+        </div>
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            <form class="d-flex gap-2" method="get" action="${pageContext.request.contextPath}/admin/users">
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Search by username"
+                       value="<%= kw != null ? kw : "" %>" style="min-width:200px">
+                <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-search me-1"></i>Search</button>
                 <% if (kw != null && !kw.isEmpty()) { %>
-                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn--secondary btn--sm">Clear</a>
+                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-sm btn-outline-secondary">Clear</a>
                 <% } %>
             </form>
-        </div>
-
-        <div class="surface-card">
-            <div class="table-container">
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Role</th>
-                            <th>Points</th>
-                            <th>Tier</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (users == null || users.isEmpty()) { %>
-                            <tr>
-                                <td colspan="7" class="text-center py-xl">
-                                    <div class="text-secondary">👤 No users found.</div>
-                                </td>
-                            </tr>
-                        <% } else {
-                            for (User u : users) { %>
-                            <tr>
-                                <td><span class="font-semibold text-primary">#<%= u.getUserId() %></span></td>
-                                <td><span class="font-medium text-primary"><%= u.getUsername() %></span></td>
-                                <td><span class="text-secondary"><%= u.getPassword() %></span></td>
-                                <td><span class="text-secondary"><%= u.getRole() %></span></td>
-                                <td><span class="font-semibold text-primary"><%= String.format("%,d", u.getPoints()) %></span></td>
-                                <td><span class="tier-pill"><%= u.getMembershipTier() %></span></td>
-                                <td>
-                                    <div class="user-actions">
-                                        <a href="${pageContext.request.contextPath}/admin/users?action=edit&id=<%= u.getUserId() %>"
-                                           class="btn btn--primary btn--xs">Edit</a>
-                                        <a href="${pageContext.request.contextPath}/admin/point-history?userId=<%= u.getUserId() %>"
-                                           class="btn btn--info btn--xs">Points</a>
-                                        <% if (!u.getUserId().equals(currentUser.getUserId())) { %>
-                                            <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=<%= u.getUserId() %>"
-                                               class="btn btn--danger btn--xs"
-                                               onclick="return confirm('Delete user <%= u.getUsername().replace("'", "\\'") %>?')">Delete</a>
-                                        <% } %>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% } } %>
-                    </tbody>
-                </table>
-            </div>
+            <a href="${pageContext.request.contextPath}/admin/users?action=create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>Add User
+            </a>
         </div>
     </div>
+
+    <% if (success != null) { %><div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i><%= "created".equals(success) ? "User created." : "updated".equals(success) ? "User updated." : "User deleted." %></div><% } %>
+    <% if (errParam != null) { %><div class="alert alert-danger auto-dismiss"><i class="bi bi-exclamation-circle me-2"></i><%= "notfound".equals(errParam) ? "User not found." : "Error: " + errParam %></div><% } %>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table admin-table table-hover mb-0">
+                <thead><tr><th>ID</th><th>Username</th><th>Password</th><th>Role</th><th>Points</th><th>Tier</th><th>Actions</th></tr></thead>
+                <tbody>
+                    <% if (users == null || users.isEmpty()) { %>
+                        <tr><td colspan="7" class="text-center py-4 text-muted"><i class="bi bi-person me-2"></i>No users found.</td></tr>
+                    <% } else { for (User u : users) { %>
+                    <tr>
+                        <td><span class="fw-semibold text-orange">#<%= u.getUserId() %></span></td>
+                        <td><strong><%= u.getUsername() %></strong></td>
+                        <td><small class="text-muted font-monospace"><%= u.getPassword() %></small></td>
+                        <td><span class="badge <%= "admin".equalsIgnoreCase(u.getRole()) ? "bg-danger" : "bg-secondary" %>"><%= u.getRole() %></span></td>
+                        <td><span class="fw-semibold text-orange"><%= String.format("%,d", u.getPoints()) %></span></td>
+                        <td><span class="badge bg-light text-dark border"><%= u.getMembershipTier() %></span></td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/admin/users?action=edit&id=<%= u.getUserId() %>" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                            <a href="${pageContext.request.contextPath}/admin/point-history?userId=<%= u.getUserId() %>" class="btn btn-sm btn-outline-info me-1">Points</a>
+                            <% if (!u.getUserId().equals(currentUser.getUserId())) { %>
+                                <a href="${pageContext.request.contextPath}/admin/users?action=delete&id=<%= u.getUserId() %>"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Delete user <%= u.getUsername().replace("'", "\\'") %>?')">Delete</a>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <% 
+        Long totalPages = (Long) request.getAttribute("totalPages");
+        Integer pageNumber = (Integer) request.getAttribute("pageNumber");
+        String queryString = (kw != null && !kw.isEmpty()) ? "&q=" + java.net.URLEncoder.encode(kw, "UTF-8") : "";
+    %>
+    <% if (totalPages != null && totalPages > 1) { %>
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center">
+            <% if (pageNumber > 1) { %>
+                <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %><%= queryString %>">← Prev</a></li>
+            <% } %>
+            
+            <%
+                long startPage = Math.max(1, pageNumber - 2);
+                long endPage = Math.min(totalPages, pageNumber + 2);
+                
+                if (startPage > 1) {
+            %>
+                    <li class="page-item"><a class="page-link" href="?page=1<%= queryString %>">1</a></li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+            <%  }
+                for (long i = startPage; i <= endPage; i++) {
+            %>
+                    <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                        <a class="page-link" href="?page=<%= i %><%= queryString %>"><%= i %></a>
+                    </li>
+            <%  }
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+            %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+            <%      } %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>"><%= totalPages %></a></li>
+            <%  } %>
+
+            <% if (pageNumber < totalPages) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %><%= queryString %>">Next →</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %><%= queryString %>">Last</a></li>
+            <% } %>
+        </ul>
+    </nav>
+    <% } %>
+
 </div>
 
-<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>
-

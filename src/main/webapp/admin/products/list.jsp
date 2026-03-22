@@ -6,291 +6,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management - Ruby Tech Admin</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <!-- Page-specific styles -->
-    <style>
-        /* Product management specific enhancements */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--text-sm);
-        }
-
-        .product-table th,
-        .product-table td {
-            padding: var(--space-3) var(--space-4);
-            text-align: left;
-            border-bottom: 1px solid var(--border-primary);
-            vertical-align: middle;
-        }
-
-        .product-table th {
-            background: var(--surface-tertiary);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .product-table tr:hover {
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .product-actions {
-            display: flex;
-            gap: var(--space-2);
-            align-items: center;
-        }
-
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: var(--space-2);
-            margin-top: var(--space-lg);
-            padding: var(--space-lg) 0;
-        }
-
-        .pagination-info {
-            padding: var(--space-2) var(--space-4);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            font-weight: var(--font-weight-medium);
-        }
-
-        .stock-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: var(--space-1) var(--space-2);
-            border-radius: var(--radius-sm);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-semibold);
-        }
-
-        .stock-badge--high {
-            background: var(--surface-success);
-            color: var(--text-success);
-        }
-
-        .stock-badge--medium {
-            background: var(--surface-warning);
-            color: var(--text-warning);
-        }
-
-        .stock-badge--low {
-            background: var(--surface-danger);
-            color: var(--text-danger);
-        }
-
-        .price-display {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: var(--space-1) var(--space-2);
-            background: var(--surface-secondary);
-            color: var(--text-secondary);
-            border-radius: var(--radius-sm);
-            font-size: var(--text-xs);
-            font-weight: var(--font-weight-medium);
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-surface-secondary">
+<body>
 <%
     User currentUser = (User) session.getAttribute("user");
     List<Product> products = (List<Product>) request.getAttribute("products");
     String success  = request.getParameter("success");
     String errParam = request.getParameter("error");
+    Long totalPages   = (Long)    request.getAttribute("totalPages");
+    Integer pageNumber = (Integer) request.getAttribute("pageNumber");
 %>
 
-<!-- Admin Layout Container -->
-<div class="admin-layout">
-    <!-- Admin Header -->
-    <div class="admin-header">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">Product Management</h1>
-            <p class="dashboard-subtitle">Manage your product inventory</p>
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/dashboard"><img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo">Ruby Tech Admin</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/refunds">Refunds</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/income">Income</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/forecast">Forecast</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/">Shop</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
         </div>
+    </div>
+</nav>
 
-        <!-- Admin Navigation -->
-        <nav class="admin-nav">
-            <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/users">Users</a>
-            <a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a>
-            <a href="${pageContext.request.contextPath}/admin/suppliers">Suppliers</a>
-            <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
-            <a href="${pageContext.request.contextPath}/admin/refunds">Refunds</a>
-            <a href="${pageContext.request.contextPath}/admin/income">Income Report</a>
-            <a href="${pageContext.request.contextPath}/admin/loyalty">Loyalty</a>
-            <a href="${pageContext.request.contextPath}/admin/forecast">📈 Forecast</a>
-            <a href="${pageContext.request.contextPath}/">Go to Shop</a>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
-        </nav>
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h3 fw-bold mb-0"><i class="bi bi-box-seam me-2"></i>Product Management</h1>
+            <p class="text-muted small">Manage your product inventory</p>
+        </div>
+        <a href="${pageContext.request.contextPath}/admin/products?action=create" class="btn btn-success">
+            <i class="bi bi-plus-circle me-2"></i>Add Product
+        </a>
     </div>
 
-    <!-- Admin Content -->
-    <div class="admin-content">
-        <!-- Messages -->
-        <% if ("created".equals(success)) { %>
-            <div class="message message--success mb-lg">
-                ✅ Product created successfully.
-            </div>
-        <% } %>
-        <% if ("updated".equals(success)) { %>
-            <div class="message message--success mb-lg">
-                ✅ Product updated successfully.
-            </div>
-        <% } %>
-        <% if ("deleted".equals(success)) { %>
-            <div class="message message--success mb-lg">
-                ✅ Product deleted successfully.
-            </div>
-        <% } %>
-        <% if ("notfound".equals(errParam)) { %>
-            <div class="message message--danger mb-lg">
-                ❌ Product not found.
-            </div>
-        <% } %>
-        <% if (errParam != null && !"notfound".equals(errParam)) { %>
-            <div class="message message--danger mb-lg">
-                ❌ Error: <%= errParam %>
-            </div>
-        <% } %>
+    <% if ("created".equals(success)) { %><div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i>Product created successfully.</div><% } %>
+    <% if ("updated".equals(success)) { %><div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i>Product updated successfully.</div><% } %>
+    <% if ("deleted".equals(success)) { %><div class="alert alert-success auto-dismiss"><i class="bi bi-check-circle me-2"></i>Product deleted successfully.</div><% } %>
+    <% if (errParam != null) { %><div class="alert alert-danger auto-dismiss"><i class="bi bi-exclamation-circle me-2"></i><%= "notfound".equals(errParam) ? "Product not found." : "Error: " + errParam %></div><% } %>
 
-        <!-- Actions Bar -->
-        <div class="flex justify-between items-center mb-lg">
-            <div>
-                <a href="${pageContext.request.contextPath}/admin/products?action=create" class="btn btn--success btn--md">
-                    + Add Product
-                </a>
-            </div>
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table admin-table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Price</th><th>Stock</th><th>Category</th><th>Import Date</th><th>Supplier</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (products == null || products.isEmpty()) { %>
+                        <tr><td colspan="8" class="text-center py-4 text-muted"><i class="bi bi-box me-2"></i>No products found. <a href="${pageContext.request.contextPath}/admin/products?action=create">Add your first product</a></td></tr>
+                    <% } else { for (Product p : products) {
+                        int stock = p.getStock();
+                        String stockClass = stock > 50 ? "bg-success" : stock > 10 ? "bg-warning text-dark" : "bg-danger";
+                    %>
+                    <tr>
+                        <td><span class="fw-semibold text-orange">#<%= p.getId() %></span></td>
+                        <td><%= p.getName() %></td>
+                        <td class="fw-semibold text-orange"><%= String.format("%,.0f", p.getPrice()) %> ₫</td>
+                        <td><span class="badge <%= stockClass %>"><%= stock %></span></td>
+                        <td><% if (p.getCategory() != null && !p.getCategory().isEmpty()) { %><span class="badge bg-light text-dark border"><%= p.getCategory() %></span><% } else { %>-<% } %></td>
+                        <td><small class="text-muted"><%= p.getImportDate() != null ? p.getImportDate().toString() : "-" %></small></td>
+                        <td><%= p.getSupplier() != null ? p.getSupplier().getName() : "-" %></td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=<%= p.getId() %>" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                            <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=<%= p.getId() %>"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Delete product <%= p.getName().replace("'", "\\'") %>?')">Delete</a>
+                        </td>
+                    </tr>
+                    <% } } %>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-        <!-- Products Table -->
-        <div class="surface-card">
-            <div class="table-container">
-                <table class="product-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Category</th>
-                            <th>Import Date</th>
-                            <th>Supplier</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (products == null || products.isEmpty()) { %>
-                            <tr>
-                                <td colspan="8" class="text-center py-xl">
-                                    <div class="text-secondary">
-                                        📦 No products found.
-                                        <a href="${pageContext.request.contextPath}/admin/products?action=create"
-                                           class="text-primary">Add your first product</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% } else {
-                            for (Product p : products) { %>
-                            <tr>
-                                <td>
-                                    <span class="font-semibold text-primary">#<%= p.getId() %></span>
-                                </td>
-                                <td>
-                                    <div class="font-medium"><%= p.getName() %></div>
-                                </td>
-                                <td>
-                                    <span class="price-display"><%= String.format("%,.0f", p.getPrice()) %> ₫</span>
-                                </td>
-                                <td>
-                                    <% int stock = p.getStock(); %>
-                                    <span class="stock-badge <%= stock > 50 ? "stock-badge--high" : stock > 10 ? "stock-badge--medium" : "stock-badge--low" %>">
-                                        <%= stock %>
-                                    </span>
-                                </td>
-                                <td>
-                                    <% if (p.getCategory() != null && !p.getCategory().isEmpty()) { %>
-                                        <span class="category-tag"><%= p.getCategory() %></span>
-                                    <% } else { %>
-                                        <span class="text-tertiary">-</span>
-                                    <% } %>
-                                </td>
-                                <td>
-                                    <span class="text-secondary font-mono text-xs">
-                                        <%= p.getImportDate() != null ? p.getImportDate().toString() : "-" %>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="text-secondary">
-                                        <%= p.getSupplier() != null ? p.getSupplier().getName() : "-" %>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="product-actions">
-                                        <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=<%= p.getId() %>"
-                                           class="btn btn--primary btn--xs">Edit</a>
-                                        <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=<%= p.getId() %>"
-                                           class="btn btn--danger btn--xs"
-                                           onclick="return confirm('Delete product <%= p.getName().replace("'", "\\'") %>?')">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% } } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <%
-            Long totalPages = (Long) request.getAttribute("totalPages");
-            Integer pageNumber = (Integer) request.getAttribute("pageNumber");
-            if (totalPages != null && totalPages > 1) {
-        %>
-        <div class="pagination-container">
+    <% if (totalPages != null && totalPages > 1) { %>
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center">
             <% if (pageNumber > 1) { %>
-                <a href="${pageContext.request.contextPath}/admin/products?page=1"
-                   class="btn btn--secondary btn--sm">First</a>
-                <a href="${pageContext.request.contextPath}/admin/products?page=<%= pageNumber - 1 %>"
-                   class="btn btn--secondary btn--sm">← Previous</a>
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber - 1 %>">← Prev</a></li>
             <% } %>
-
-            <div class="pagination-info">
-                Page <%= pageNumber %> of <%= totalPages %>
-            </div>
+            
+            <%
+                long startPage = Math.max(1, pageNumber - 2);
+                long endPage = Math.min(totalPages, pageNumber + 2);
+                
+                if (startPage > 1) {
+            %>
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+            <%  }
+                
+                for (long i = startPage; i <= endPage; i++) {
+            %>
+                    <li class="page-item <%= (i == pageNumber) ? "active" : "" %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+            <%  }
+                
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+            %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+            <%      } %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a></li>
+            <%  } %>
 
             <% if (pageNumber < totalPages) { %>
-                <a href="${pageContext.request.contextPath}/admin/products?page=<%= pageNumber + 1 %>"
-                   class="btn btn--secondary btn--sm">Next →</a>
-                <a href="${pageContext.request.contextPath}/admin/products?page=<%= totalPages %>"
-                   class="btn btn--secondary btn--sm">Last</a>
+                <li class="page-item"><a class="page-link" href="?page=<%= pageNumber + 1 %>">Next →</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>">Last</a></li>
             <% } %>
-        </div>
-        <% } %>
-    </div>
+        </ul>
+    </nav>
+    <% } %>
 </div>
 
-<!-- Glassmorphism Interactive Features -->
-<script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>
-

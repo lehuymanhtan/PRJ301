@@ -24,6 +24,7 @@ public class AdminRefundServlet extends HttpServlet {
 
     private final RefundService refundService = new RefundServiceImpl();
     private final OrderService  orderService  = new OrderServiceImpl();
+    private static final int PAGE_SIZE = 25;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,8 +57,28 @@ public class AdminRefundServlet extends HttpServlet {
 
     private void listRefunds(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<RefundRequest> refunds = refundService.getAllRefunds();
+        int pageNumber = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                pageNumber = Integer.parseInt(pageParam);
+                if (pageNumber < 1) pageNumber = 1;
+            } catch (NumberFormatException e) {
+                pageNumber = 1;
+            }
+        }
+
+        long totalCount = refundService.countAllRefunds();
+        long totalPages = (totalCount + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (pageNumber > totalPages && totalPages > 0) pageNumber = (int) totalPages;
+
+        List<RefundRequest> refunds = refundService.getRefundsPage(pageNumber, PAGE_SIZE);
+
         request.setAttribute("refunds", refunds);
+        request.setAttribute("pageNumber", pageNumber);
+        request.setAttribute("pageSize", PAGE_SIZE);
+        request.setAttribute("totalCount", totalCount);
+        request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/admin/refunds/list.jsp").forward(request, response);
     }
 

@@ -13,6 +13,23 @@ public class SupplierDAO {
         );
     }
 
+    public long countAll() {
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT COUNT(s) FROM Supplier s", Long.class)
+              .getSingleResult()
+        );
+    }
+
+    public List<Supplier> findPage(int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return JpaHelper.query(em ->
+            em.createQuery("SELECT s FROM Supplier s ORDER BY s.id DESC", Supplier.class)
+              .setFirstResult(offset)
+              .setMaxResults(pageSize)
+              .getResultList()
+        );
+    }
+
     public Supplier findById(Integer id) {
         return JpaHelper.query(em -> em.find(Supplier.class, id));
     }

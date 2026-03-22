@@ -6,169 +6,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - Ruby Tech</title>
-
-    <!-- Glassmorphism Design System -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css">
-
-    <!-- Page-specific styles -->
-    <style>
-        .edit-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .edit-form-card {
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeInScale var(--duration-500) var(--ease-out);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
-
-        .form-group-full {
-            grid-column: 1 / -1;
-        }
-
-        .form-actions {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            margin-top: var(--space-xl);
-        }
-
-        .note {
-            grid-column: 1 / -1;
-            padding: var(--space-3);
-            background: var(--surface-tertiary);
-            border-radius: var(--radius-md);
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            text-align: center;
-            margin-top: var(--space-md);
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-md);
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-actions .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
-<body class="bg-surface-secondary">
+<body>
 <%
     User profileUser = (User) request.getAttribute("profileUser");
 %>
 
-    <!-- Page Container -->
-    <div class="page-container">
-        <!-- Edit Header -->
-        <div class="edit-header">
-            <h1 class="text-3xl font-bold text-primary mb-md">
-                ✏️ Edit Profile
-            </h1>
-            <p class="text-secondary">
-                Update your account information
-            </p>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-rt">
+    <div class="container">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+            <img src="${pageContext.request.contextPath}/assets/img/logo.png" alt="logo"> Ruby Tech
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/users">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/orders">Orders</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </ul>
         </div>
+    </div>
+</nav>
 
-        <!-- Error Message -->
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="message message--error mb-lg">
-                ❌ <%= request.getAttribute("error") %>
-            </div>
-        <% } %>
+<div class="container py-4" style="max-width:680px">
+    <div class="mb-3">
+        <a href="${pageContext.request.contextPath}/users" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Profile
+        </a>
+    </div>
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-pencil me-2"></i>Edit Profile</h1>
+    <p class="text-muted mb-4">Update your account information</p>
 
-        <!-- Edit Form Card -->
-        <div class="surface-card edit-form-card">
+    <% if (request.getAttribute("error") != null) { %>
+        <div class="alert alert-danger auto-dismiss"><i class="bi bi-exclamation-circle me-2"></i><%= request.getAttribute("error") %></div>
+    <% } %>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
             <form method="post" action="${pageContext.request.contextPath}/users">
                 <input type="hidden" name="action" value="edit">
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="username" class="form-label">Username *</label>
-                        <input type="text" id="username" name="username" required
-                               class="form-input"
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                        <input type="text" id="username" name="username" required class="form-control"
                                value="<%= profileUser != null ? profileUser.getUsername() : "" %>">
                     </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password *</label>
-                        <input type="password" id="password" name="password" required
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="password" class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                        <input type="password" id="password" name="password" required class="form-control"
                                value="<%= profileUser != null ? profileUser.getPassword() : "" %>">
                     </div>
-
-                    <div class="form-group-full">
-                        <label for="name" class="form-label">Full Name *</label>
-                        <input type="text" id="name" name="name" required
-                               class="form-input"
+                    <div class="col-12">
+                        <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" id="name" name="name" required class="form-control"
                                value="<%= profileUser != null && profileUser.getName() != null ? profileUser.getName() : "" %>">
                     </div>
-
-                    <div class="form-group">
-                        <label for="gender" class="form-label">Gender *</label>
+                    <div class="col-md-6">
+                        <label for="gender" class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
                         <select id="gender" name="gender" required class="form-select">
                             <option value="">-- Select Gender --</option>
-                            <option value="male"   <%= profileUser != null && "male".equals(profileUser.getGender())   ? "selected" : "" %>>👨 Male</option>
-                            <option value="female" <%= profileUser != null && "female".equals(profileUser.getGender()) ? "selected" : "" %>>👩 Female</option>
-                            <option value="other"  <%= profileUser != null && "other".equals(profileUser.getGender())  ? "selected" : "" %>>🏳️ Other</option>
+                            <option value="male"   <%= profileUser != null && "male".equals(profileUser.getGender())   ? "selected" : "" %>>Male</option>
+                            <option value="female" <%= profileUser != null && "female".equals(profileUser.getGender()) ? "selected" : "" %>>Female</option>
+                            <option value="other"  <%= profileUser != null && "other".equals(profileUser.getGender())  ? "selected" : "" %>>Other</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="dateOfBirth" class="form-label">Date of Birth *</label>
-                        <input type="date" id="dateOfBirth" name="dateOfBirth" required
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="dateOfBirth" class="form-label fw-semibold">Date of Birth <span class="text-danger">*</span></label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required class="form-control"
                                value="<%= profileUser != null && profileUser.getDateOfBirth() != null ? profileUser.getDateOfBirth().toString() : "" %>">
                     </div>
-
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="text" id="phone" name="phone"
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Phone</label>
+                        <input type="text" id="phone" name="phone" class="form-control"
                                placeholder="Enter your phone number"
                                value="<%= profileUser != null && profileUser.getPhone() != null ? profileUser.getPhone() : "" %>">
                     </div>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email *</label>
-                        <input type="email" id="email" name="email" required
-                               class="form-input"
+                    <div class="col-md-6">
+                        <label for="email" class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                        <input type="email" id="email" name="email" required class="form-control"
                                value="<%= profileUser != null ? profileUser.getEmail() : "" %>">
                     </div>
+                </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn--primary btn--lg">
-                            💾 Save Changes
-                        </button>
-                        <a href="${pageContext.request.contextPath}/users" class="btn btn--secondary btn--lg">
-                            ❌ Cancel
-                        </a>
-                    </div>
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-rt-primary">
+                        <i class="bi bi-floppy me-2"></i>Save Changes
+                    </button>
+                    <a href="${pageContext.request.contextPath}/users" class="btn btn-outline-secondary">
+                        <i class="bi bi-x me-1"></i>Cancel
+                    </a>
                 </div>
             </form>
         </div>
     </div>
+</div>
 
-    <!-- Glassmorphism Interactive Effects -->
-    <script src="${pageContext.request.contextPath}/assets/js/glassmorphism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js"></script>
 </body>
 </html>
-
