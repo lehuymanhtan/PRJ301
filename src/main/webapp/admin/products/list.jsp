@@ -77,7 +77,7 @@
                     %>
                     <tr>
                         <td><span class="fw-semibold text-orange">#<%= p.getId() %></span></td>
-                        <td><img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" alt="Product" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                        <td><img src="${pageContext.request.contextPath}/<%= (p.getImagePath() != null && !p.getImagePath().isEmpty()) ? p.getImagePath() : "assets/img/products/default.jpg" %>" alt="Product" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: contain;"></td>
                         <td><%= p.getName() %></td>
                         <td class="fw-semibold text-orange"><%= String.format("%,.0f", p.getPrice()) %> ₫</td>
                         <td><span class="badge <%= stockClass %>"><%= stock %></span></td>
