@@ -16,6 +16,7 @@ DB_IMPORT_RETRIES="${DB_IMPORT_RETRIES:-20}"
 DB_IMPORT_RETRY_DELAY="${DB_IMPORT_RETRY_DELAY:-5}"
 APP_DIR="/usr/local/tomcat/webapps/ROOT"
 WAR_FILE="/usr/local/tomcat/webapps/ROOT.war"
+PROPHET_START_SCRIPT="/opt/app/start-prophet-server.sh"
 
 if [ -z "${DB_URL:-}" ]; then
   DB_URL="jdbc:sqlserver://${DB_HOST}:${DB_PORT};databaseName=${DB_NAME};Encrypt=${DB_ENCRYPT};TrustServerCertificate=${DB_TRUST_SERVER_CERT};${DB_EXTRA_PARAMS}"
@@ -68,6 +69,13 @@ else
       sleep "${DB_IMPORT_RETRY_DELAY}"
     done
   fi
+fi
+
+if [ -x "${PROPHET_START_SCRIPT}" ]; then
+  echo "Starting Prophet server using ${PROPHET_START_SCRIPT}..."
+  "${PROPHET_START_SCRIPT}" &
+else
+  echo "Prophet start script not found or not executable at ${PROPHET_START_SCRIPT}, skipping."
 fi
 
 exec catalina.sh run

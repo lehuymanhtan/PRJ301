@@ -34,8 +34,9 @@ ENV DB_HOST=localhost \
 WORKDIR /opt/app
 COPY --from=builder /build/target/PRJ301-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 COPY database/sql.sql /opt/app/database/sql.sql
+COPY start-prophet-server.sh /opt/app/start-prophet-server.sh
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh /opt/app/start-prophet-server.sh
 
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
